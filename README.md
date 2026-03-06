@@ -1,6 +1,6 @@
 # Peppy Tools Portal
 
-A collection of powerful, fully client-side browser tools. No server required — works offline and can be hosted on GitHub Pages for free.
+A collection of six powerful, fully client-side browser tools. No server required — works offline and can be hosted on GitHub Pages for free.
 
 ---
 
@@ -13,14 +13,30 @@ Host the folder on GitHub Pages or open `index.html` locally in any modern brows
 ## Project Structure
 
 ```
-simple/
-├── index.html              # Portal landing page
+/
+├── index.html                    # Portal landing page
 ├── README.md
 ├── advanced-notepad/
 │   ├── index.html
 │   ├── style.css
 │   └── app.js
-└── table-generator/
+├── table-generator/
+│   ├── index.html
+│   ├── style.css
+│   └── app.js
+├── encoding-tools/
+│   ├── index.html
+│   ├── style.css
+│   └── app.js
+├── qr-barcode/
+│   ├── index.html
+│   ├── style.css
+│   └── app.js
+├── text-tools/
+│   ├── index.html
+│   ├── style.css
+│   └── app.js
+└── json-tools/
     ├── index.html
     ├── style.css
     └── app.js
@@ -54,6 +70,9 @@ simple/
 | All pages | Vanilla HTML5 / CSS3 / ES2020 JS |
 | Markdown rendering | [marked.js v9](https://cdn.jsdelivr.net/npm/marked@9/) |
 | LaTeX rendering | [KaTeX v0.16](https://cdn.jsdelivr.net/npm/katex@0.16/) |
+| QR code generation | [qrcodejs](https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js) |
+| Barcode generation | [JsBarcode](https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js) |
+| YAML parsing | [js-yaml v4](https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js) |
 | Fonts / Icons | System fonts, Unicode symbols |
 | Hosting | GitHub Pages (static) |
 
@@ -61,7 +80,7 @@ simple/
 
 ## Theme System
 
-All three pages share a unified dark / light theme:
+All pages share a unified dark / light theme:
 
 - Persisted in `localStorage` under key `stp-theme` (`"dark"` | `"light"`).
 - Applied via `data-theme` attribute on `<html>` before first paint (no flash).
@@ -148,6 +167,70 @@ All three pages share a unified dark / light theme:
 | ✕ Delete Column | Delete the column containing right-clicked cell |
 | 📋 Copy Cell | Copy right-clicked cell text to internal clipboard + system clipboard |
 | 📄 Paste Cell | Paste clipboard text into all selected cells |
+
+---
+
+## Peppy Encoding & Security Tools
+
+### Features
+
+| Feature | Details |
+|---------|---------|
+| Base64 | Encode / decode plain text (UTF-8 safe) |
+| URL Encoding | Encode / decode via `encodeURIComponent` / `decodeURIComponent` |
+| Hash Generator | MD5, SHA-1, SHA-256, SHA-384, SHA-512 |
+| Password Generator | Configurable length & charset; strength meter; `crypto.getRandomValues` |
+| UUID Generator | UUID v4 (random); nil UUID; 1–100 UUIDs per batch |
+| JWT Decoder | Client-side header + payload inspection (no signature verification) |
+| Dark / Light Theme | Toggle in header, persisted to localStorage |
+
+---
+
+## Peppy QR & Barcode Generator
+
+### Features
+
+| Feature | Details |
+|---------|---------|
+| QR Code | Free-form text / URL input; size, error-correction, and colour options |
+| Barcode | CODE128, CODE39, EAN-13, EAN-8, UPC-A, ITF-14, MSI, Pharmacode |
+| Customisation | Bar width, bar height, line colour, value text toggle |
+| Download | QR → PNG; Barcode → SVG and PNG |
+| Auto-regenerate | Preview updates automatically on any input or option change |
+| Dark / Light Theme | Toggle in header, persisted to localStorage |
+
+---
+
+## Peppy Text Tools
+
+### Features
+
+| Feature | Details |
+|---------|---------|
+| Text Diff | Side-by-side LCS line diff with line numbers and scroll sync |
+| Text Sorter | A→Z, Z→A, length, numeric, shuffle (cryptographically random) |
+| Duplicate Remover | Case-sensitive / insensitive; trim whitespace; remove blank lines |
+| Random Strings | Configurable length, count, charset; `crypto.getRandomValues` |
+| Lorem Ipsum | Words, sentences, or paragraphs; optional standard opening text |
+| Dark / Light Theme | Toggle in header, persisted to localStorage |
+
+---
+
+## Peppy JSON / YAML / XML Tools
+
+### Features
+
+| Feature | Details |
+|---------|---------|
+| JSON Formatter | Format (2-space, 4-space, tab) and minify |
+| JSON Viewer | Interactive collapsible tree with value colour-coding |
+| JSON Validator | Live debounced validation with error position |
+| JSON → CSV | Array-of-objects to RFC 4180 CSV |
+| JSON → YAML | Custom recursive serialiser — no external library |
+| YAML → JSON | Powered by js-yaml v4 safe load |
+| XML Formatter | Format (2-space, 4-space, tab) and minify via browser `DOMParser` |
+| XML → JSON | Converts attributes (`@`-prefix), repeated elements, and text content |
+| Dark / Light Theme | Toggle in header, persisted to localStorage |
 
 ---
 

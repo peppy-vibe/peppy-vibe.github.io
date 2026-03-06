@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peppy Encoding &amp; Security Tools</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Apply theme before paint -->
+  <script>(function(){var t=localStorage.getItem('stp-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+  <!-- App header -->
+  <div class="app-header">
+    <a href="../" class="back-link">&#8592; Portal</a>
+    <h1>Peppy Encoding &amp; Security Tools</h1>
+    <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">&#9728; Light</button>
+  </div>
+
+  <div class="app-body">
+
+    <!-- Sidebar tabs -->
+    <div class="sidebar">
+      <button class="tab-btn active" data-tab="base64"   onclick="showTool('base64')">&#128274; Base64</button>
+      <button class="tab-btn"        data-tab="url"      onclick="showTool('url')">&#128279; URL Encoder</button>
+      <button class="tab-btn"        data-tab="hash"     onclick="showTool('hash')">&#128273; Hash Generator</button>
+      <button class="tab-btn"        data-tab="password" onclick="showTool('password')">&#128272; Password Generator</button>
+      <button class="tab-btn"        data-tab="uuid"     onclick="showTool('uuid')">&#127381; UUID Generator</button>
+      <button class="tab-btn"        data-tab="jwt"      onclick="showTool('jwt')">&#128196; JWT Decoder</button>
+    </div>
+
+    <!-- Tool panels -->
+    <div class="tool-area">
+
+      <!-- ── Base64 ────────────────────────── -->
+      <div class="tool-panel active" id="panel-base64">
+        <div class="panel-title">Base64 Encoder / Decoder</div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input</label>
+            <textarea id="b64-in" class="io-area" placeholder="Enter plain text or Base64 string&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="b64Encode()">Encode &#8594;</button>
+            <button onclick="b64Decode()">&#8592; Decode</button>
+            <button class="btn-secondary" onclick="b64Swap()">&#8644; Swap</button>
+            <button class="btn-secondary" onclick="clearTool('b64-in','b64-out','b64-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output</label>
+            <textarea id="b64-out" class="io-area" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="b64-msg"></span>
+              <button class="copy-btn" onclick="copyOutput('b64-out','b64-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── URL Encoder ───────────────────── -->
+      <div class="tool-panel" id="panel-url">
+        <div class="panel-title">URL Encoder / Decoder</div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input</label>
+            <textarea id="url-in" class="io-area" placeholder="Enter URL or URL-encoded string&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="urlEncode()">Encode &#8594;</button>
+            <button onclick="urlDecode()">&#8592; Decode</button>
+            <button class="btn-secondary" onclick="urlSwap()">&#8644; Swap</button>
+            <button class="btn-secondary" onclick="clearTool('url-in','url-out','url-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output</label>
+            <textarea id="url-out" class="io-area" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="url-msg"></span>
+              <button class="copy-btn" onclick="copyOutput('url-out','url-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Hash Generator ───────────────── -->
+      <div class="tool-panel" id="panel-hash">
+        <div class="panel-title">Hash Generator</div>
+        <div class="form-group">
+          <label>Input Text</label>
+          <textarea id="hash-in" class="io-area single" placeholder="Enter text to hash&#8230;" spellcheck="false"></textarea>
+        </div>
+        <div class="form-row">
+          <label>Algorithm</label>
+          <div class="radio-group">
+            <label><input type="radio" name="hash-algo" value="MD5" checked> MD5</label>
+            <label><input type="radio" name="hash-algo" value="SHA-256"> SHA-256</label>
+            <label><input type="radio" name="hash-algo" value="SHA-1"> SHA-1</label>
+            <label><input type="radio" name="hash-algo" value="SHA-384"> SHA-384</label>
+            <label><input type="radio" name="hash-algo" value="SHA-512"> SHA-512</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <button onclick="computeHash()">&#128273; Generate Hash</button>
+        </div>
+        <div class="result-box">
+          <label class="io-label">Hash Output</label>
+          <div class="hash-result-row">
+            <input type="text" id="hash-out" class="result-input" readonly>
+            <button class="copy-btn" onclick="copyResult('hash-out','hash-msg')">Copy</button>
+          </div>
+          <span class="tool-msg" id="hash-msg"></span>
+        </div>
+      </div>
+
+      <!-- ── Password Generator ───────────── -->
+      <div class="tool-panel" id="panel-password">
+        <div class="panel-title">Password Generator</div>
+        <div class="form-group">
+          <label>Length: <span id="pwd-len-display">16</span></label>
+          <input type="range" id="pwd-len" min="4" max="128" value="16" oninput="document.getElementById('pwd-len-display').textContent=this.value">
+        </div>
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="pwd-upper" checked> Uppercase (A–Z)</label>
+          <label><input type="checkbox" id="pwd-lower" checked> Lowercase (a–z)</label>
+          <label><input type="checkbox" id="pwd-digits" checked> Digits (0–9)</label>
+          <label><input type="checkbox" id="pwd-symbols" checked> Symbols (!@#$…)</label>
+          <label><input type="checkbox" id="pwd-noambig"> Exclude ambiguous (0, O, l, I)</label>
+        </div>
+        <div class="form-row">
+          <button onclick="generatePassword()">&#128272; Generate Password</button>
+          <button class="btn-secondary" onclick="generatePassword()">&#8635; Regenerate</button>
+        </div>
+        <div class="result-box">
+          <label class="io-label">Generated Password</label>
+          <div class="hash-result-row">
+            <input type="text" id="pwd-out" class="result-input" readonly>
+            <button class="copy-btn" onclick="copyResult('pwd-out','pwd-msg')">Copy</button>
+          </div>
+          <div class="pwd-strength">
+            <div class="strength-bar"><div id="strength-fill"></div></div>
+            <span id="strength-label">—</span>
+          </div>
+          <span class="tool-msg" id="pwd-msg"></span>
+        </div>
+      </div>
+
+      <!-- ── UUID Generator ───────────────── -->
+      <div class="tool-panel" id="panel-uuid">
+        <div class="panel-title">UUID Generator</div>
+        <div class="form-row">
+          <label>Version</label>
+          <div class="radio-group">
+            <label><input type="radio" name="uuid-ver" value="4" checked> v4 (random)</label>
+            <label><input type="radio" name="uuid-ver" value="nil"> Nil UUID</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Count</label>
+          <input type="number" id="uuid-count" min="1" max="100" value="1" class="short-input">
+        </div>
+        <div class="form-row">
+          <button onclick="generateUUIDs()">&#127381; Generate</button>
+          <button class="btn-secondary" onclick="clearUUIDs()">Clear</button>
+        </div>
+        <div class="result-box">
+          <label class="io-label">UUIDs</label>
+          <div class="io-footer">
+            <span class="tool-msg" id="uuid-msg"></span>
+            <button class="copy-btn" onclick="copyOutput('uuid-out','uuid-msg')">Copy All</button>
+          </div>
+          <textarea id="uuid-out" class="io-area" readonly spellcheck="false"></textarea>
+        </div>
+      </div>
+
+      <!-- ── JWT Decoder ──────────────────── -->
+      <div class="tool-panel" id="panel-jwt">
+        <div class="panel-title">JWT Decoder</div>
+        <p class="tool-description">Paste a JSON Web Token to inspect its header and payload. No signature verification is performed &mdash; this tool is for inspection only.</p>
+        <div class="form-group">
+          <label class="io-label">JWT Input</label>
+          <textarea id="jwt-in" class="io-area single" placeholder="Paste your JWT here&#8230;" spellcheck="false" oninput="decodeJWT()"></textarea>
+        </div>
+        <div id="jwt-result" class="jwt-parts" style="display:none">
+          <div class="jwt-section">
+            <div class="jwt-section-hdr header-hdr">Header</div>
+            <pre id="jwt-header" class="jwt-pre"></pre>
+          </div>
+          <div class="jwt-section">
+            <div class="jwt-section-hdr payload-hdr">Payload</div>
+            <pre id="jwt-payload" class="jwt-pre"></pre>
+          </div>
+          <div class="jwt-section">
+            <div class="jwt-section-hdr sig-hdr">Signature</div>
+            <div id="jwt-sig" class="jwt-sig-note">Signature is present but not verified by this tool.</div>
+          </div>
+        </div>
+        <span class="tool-msg err" id="jwt-msg"></span>
+      </div>
+
+    </div><!-- end .tool-area -->
+  </div><!-- end .app-body -->
+
+  <!-- Status bar -->
+  <div class="statusbar">
+    <span id="sb-tool">Base64 Encoder / Decoder</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

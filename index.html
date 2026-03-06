@@ -8,39 +8,41 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg-grad-1: #0f0c29;
-      --bg-grad-2: #302b63;
-      --bg-grad-3: #24243e;
+      --bg-grad-1: #0c0a1e;
+      --bg-grad-2: #1e1860;
+      --bg-grad-3: #18133a;
       --card-bg: rgba(255,255,255,0.08);
       --card-border: rgba(255,255,255,0.18);
       --card-hover-bg: rgba(255,255,255,0.15);
       --text: #ffffff;
       --text-muted: rgba(255,255,255,0.75);
-      --btn-bg: rgba(255,255,255,0.22);
-      --btn-hover: rgba(255,255,255,0.38);
+      --btn-bg: #5646F5;
+      --btn-hover: #4535e0;
       --nav-bg: rgba(0,0,0,0.25);
       --theme-btn-bg: rgba(255,255,255,0.15);
       --theme-btn-hover: rgba(255,255,255,0.28);
+      --accent: #5646F5;
     }
 
     [data-theme="light"] {
-      --bg-grad-1: #e8f0fe;
-      --bg-grad-2: #dde8f7;
-      --bg-grad-3: #c9d8f0;
-      --card-bg: rgba(255,255,255,0.75);
-      --card-border: rgba(0,0,0,0.12);
-      --card-hover-bg: rgba(255,255,255,0.95);
-      --text: #1a1a2e;
-      --text-muted: rgba(20,20,60,0.65);
-      --btn-bg: rgba(0,0,0,0.08);
-      --btn-hover: rgba(0,0,0,0.15);
-      --nav-bg: rgba(255,255,255,0.35);
-      --theme-btn-bg: rgba(0,0,0,0.08);
-      --theme-btn-hover: rgba(0,0,0,0.15);
+      --bg-grad-1: #eceaff;
+      --bg-grad-2: #e0ddfb;
+      --bg-grad-3: #d0ccf8;
+      --card-bg: rgba(255,255,255,0.80);
+      --card-border: rgba(86,70,245,0.18);
+      --card-hover-bg: rgba(255,255,255,0.97);
+      --text: #0e0b2e;
+      --text-muted: rgba(14,11,46,0.62);
+      --btn-bg: #5646F5;
+      --btn-hover: #4535e0;
+      --nav-bg: rgba(255,255,255,0.40);
+      --theme-btn-bg: rgba(86,70,245,0.10);
+      --theme-btn-hover: rgba(86,70,245,0.20);
+      --accent: #5646F5;
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       background: linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2), var(--bg-grad-3));
       min-height: 100vh;
       display: flex;
@@ -51,12 +53,12 @@
 
     nav {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
-      padding: 0.75rem 1.5rem;
-      background: var(--nav-bg);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--card-border);
+      padding: 0.5rem 1rem;
+      background: var(--accent);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
     }
 
     #theme-btn {
@@ -67,11 +69,20 @@
       border-radius: 20px;
       cursor: pointer;
       font-size: 0.88rem;
-      font-family: inherit;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       transition: background 0.2s;
       backdrop-filter: blur(4px);
     }
     #theme-btn:hover { background: var(--theme-btn-hover); }
+
+    .nav-title {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      color: #ffffff;
+      font-weight: 700;
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: 0.2px;
+    }
 
     header {
       padding: 3rem 2rem 1.5rem;
@@ -102,7 +113,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
       gap: 2rem;
-      max-width: 820px;
+      max-width: 1100px;
       width: 100%;
     }
 
@@ -155,6 +166,7 @@
       margin-top: 1.4rem;
       padding: 0.5rem 1.25rem;
       background: var(--btn-bg);
+      color: #fff;
       border-radius: 8px;
       font-size: 0.9rem;
       font-weight: 600;
@@ -163,7 +175,8 @@
       align-self: flex-start;
     }
 
-    .card:hover .btn-launch {
+    .card:hover .btn-launch,
+    .btn-launch:hover {
       background: var(--btn-hover);
     }
 
@@ -189,13 +202,9 @@
   </script>
 
   <nav>
+    <p class="nav-title">Peppy Vibe: Tools</p>
     <button id="theme-btn" onclick="togglePortalTheme()">☀ Light</button>
   </nav>
-
-  <header>
-    <h1>&#9889; Peppy Tools Portal</h1>
-    <p>Powerful browser-based utilities &mdash; 100% static, no server required.</p>
-  </header>
 
   <main>
     <div class="cards">
@@ -208,6 +217,8 @@
           <li>Find &amp; Replace with case sensitivity</li>
           <li>Word wrap, font family &amp; size controls</li>
           <li>Realtime split Markdown + LaTeX preview</li>
+          <li>Export Markdown as HTML</li>
+          <li>Text Case Converter</li>
         </ul>
         <span class="btn-launch">Launch &#8594;</span>
       </a>
@@ -222,11 +233,68 @@
         </ul>
         <span class="btn-launch">Launch &#8594;</span>
       </a>
+
+      <a class="card" href="./encoding-tools/">
+        <div class="card-icon">&#128274;</div>
+        <h2>Peppy Encoding &amp; Security Tools</h2>
+        <p>A suite of developer utilities for encoding, hashing, and security token inspection &mdash; fully client-side.</p>
+        <ul>
+          <li>Base64 Encoder / Decoder</li>
+          <li>URL Encoder / Decoder</li>
+          <li>Hash Generator (MD5, SHA-256, SHA-512&hellip;)</li>
+          <li>Password Generator</li>
+          <li>UUID Generator</li>
+          <li>JWT Decoder</li>
+        </ul>
+        <span class="btn-launch">Launch &#8594;</span>
+      </a>
+
+      <a class="card" href="./qr-barcode/">
+        <div class="card-icon">&#9636;</div>
+        <h2>Peppy QR &amp; Barcode Generator</h2>
+        <p>Generate QR codes and barcodes instantly in your browser &mdash; customise colors, download as PNG or SVG.</p>
+        <ul>
+          <li>QR Code with size &amp; error-correction controls</li>
+          <li>Custom dark/light colors &amp; PNG download</li>
+          <li>Barcode: CODE128, EAN-13, UPC-A, CODE39&hellip;</li>
+          <li>Download barcode as SVG or PNG</li>
+        </ul>
+        <span class="btn-launch">Launch &#8594;</span>
+      </a>
+
+      <a class="card" href="./text-tools/">
+        <div class="card-icon">&#128196;</div>
+        <h2>Peppy Text Tools</h2>
+        <p>A collection of text manipulation utilities for developers and writers &mdash; no data leaves your browser.</p>
+        <ul>
+          <li>Side-by-side Text Diff Checker</li>
+          <li>Line Sorter (alpha, numeric, length, shuffle)</li>
+          <li>Duplicate Line Remover</li>
+          <li>Cryptographically secure Random String Generator</li>
+          <li>Lorem Ipsum Generator (words / sentences / paragraphs)</li>
+        </ul>
+        <span class="btn-launch">Launch &#8594;</span>
+      </a>
+
+      <a class="card" href="./json-tools/">
+        <div class="card-icon">&#123;&#125;</div>
+        <h2>Peppy JSON / YAML / XML Tools</h2>
+        <p>Format, validate, convert, and inspect structured data formats entirely in the browser.</p>
+        <ul>
+          <li>JSON Formatter &amp; Minifier</li>
+          <li>Interactive JSON Tree Viewer</li>
+          <li>JSON Validator &amp; JSON &rarr; CSV</li>
+          <li>JSON &harr; YAML Converter</li>
+          <li>XML Formatter &amp; XML &rarr; JSON</li>
+        </ul>
+        <span class="btn-launch">Launch &#8594;</span>
+      </a>
     </div>
   </main>
 
   <footer>
-    <p>Peppy Tools Portal &mdash; Fully client-side &middot; No data leaves your browser</p>
+    <p>Peppy Vibe Tools &mdash; Powerful Browser-Based Utilities</p>
+    <p>open source &middot; fully client-side &middot; no data leaves your browser</p>
   </footer>
 
   <script>

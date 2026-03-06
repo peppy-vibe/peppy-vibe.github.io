@@ -29,6 +29,8 @@
             <hr>
             <button onclick="saveFile()">Save <span class="kbd">Ctrl+S</span></button>
             <button onclick="saveFileAs()">Save As&hellip;</button>
+            <hr>
+            <button onclick="exportAsHtml()">Export as HTML&hellip;</button>
         </div>
         </div>
 
@@ -47,6 +49,8 @@
         <hr>
         <button onclick="openFind()">Find&hellip; <span class="kbd">Ctrl+F</span></button>
         <button onclick="openReplace()">Replace&hellip; <span class="kbd">Ctrl+H</span></button>
+        <hr>
+        <button onclick="openCaseConverter()">Case Converter&hellip;</button>
       </div>
     </div>
 
@@ -221,6 +225,29 @@
           <button onclick="closeDialogs()">Close</button>
         </div>
         <div id="rep-msg" class="dlg-msg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Case Converter dialog -->
+  <div class="dlg-overlay" id="case-overlay" onclick="overlayClick(event, 'case-overlay')">
+    <div class="dlg" role="dialog" aria-modal="true" aria-label="Text Case Converter">
+      <div class="dlg-hdr">
+        <span>Text Case Converter</span>
+        <button class="dlg-x" onclick="closeCaseConverter()" aria-label="Close">&#x2715;</button>
+      </div>
+      <div class="dlg-body">
+        <p class="case-hint">Applies to selected text &mdash; or entire document if nothing is selected.</p>
+        <div class="case-btns">
+          <button onclick="convertCase('upper')">UPPERCASE</button>
+          <button onclick="convertCase('lower')">lowercase</button>
+          <button onclick="convertCase('title')">Title Case</button>
+          <button onclick="convertCase('sentence')">Sentence case</button>
+          <button onclick="convertCase('toggle')">tOGGLE cASE</button>
+          <button onclick="convertCase('camel')">camelCase</button>
+          <button onclick="convertCase('snake')">snake_case</button>
+          <button onclick="convertCase('kebab')">kebab-case</button>
+        </div>
       </div>
     </div>
   </div>

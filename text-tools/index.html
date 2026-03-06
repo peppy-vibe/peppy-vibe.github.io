@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peppy Text Tools</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <script>(function(){var t=localStorage.getItem('stp-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+  <div class="app-header">
+    <a href="../" class="back-link">&#8592; Portal</a>
+    <h1>Peppy Text Tools</h1>
+    <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()">&#9728; Light</button>
+  </div>
+
+  <div class="app-body">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <button class="tab-btn active" data-tab="diff"   onclick="showTool('diff')">&#8644; Text Diff</button>
+      <button class="tab-btn"        data-tab="sort"   onclick="showTool('sort')">&#8693; Sorter</button>
+      <button class="tab-btn"        data-tab="dedup"  onclick="showTool('dedup')">&#9646;&#9646; Dedup Lines</button>
+      <button class="tab-btn"        data-tab="rand"   onclick="showTool('rand')">&#127922; Random String</button>
+      <button class="tab-btn"        data-tab="lorem"  onclick="showTool('lorem')">&#128218; Lorem Ipsum</button>
+    </div>
+
+    <!-- Tool panels -->
+    <div class="tool-area">
+
+      <!-- ── Text Diff ─────────────────────── -->
+      <div class="tool-panel active" id="panel-diff">
+        <div class="panel-title">Text Diff Checker</div>
+
+        <div class="diff-inputs">
+          <div class="io-col">
+            <label class="io-label">Original</label>
+            <textarea id="diff-a" class="io-area" placeholder="Paste original text&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Modified</label>
+            <textarea id="diff-b" class="io-area" placeholder="Paste modified text&#8230;" spellcheck="false"></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <button onclick="runDiff()">&#128269; Compare</button>
+          <button class="btn-secondary" onclick="clearDiff()">Clear</button>
+          <span class="diff-stats" id="diff-stats"></span>
+        </div>
+
+        <div class="diff-output" id="diff-output" style="display:none">
+          <div class="diff-panel">
+            <div class="diff-panel-hdr">Original</div>
+            <div class="diff-content" id="diff-left" onscroll="syncDiffScroll('left')"></div>
+          </div>
+          <div class="diff-panel">
+            <div class="diff-panel-hdr">Modified</div>
+            <div class="diff-content" id="diff-right" onscroll="syncDiffScroll('right')"></div>
+          </div>
+        </div>
+      </div><!-- /panel-diff -->
+
+      <!-- ── Text Sorter ───────────────────── -->
+      <div class="tool-panel" id="panel-sort">
+        <div class="panel-title">Text Sorter</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Sort Mode</label>
+            <select id="sort-mode">
+              <option value="alpha-asc">Alphabetical A→Z</option>
+              <option value="alpha-desc">Alphabetical Z→A</option>
+              <option value="length-asc">Length (shortest first)</option>
+              <option value="length-desc">Length (longest first)</option>
+              <option value="numeric">Numeric</option>
+              <option value="random">Shuffle (random)</option>
+            </select>
+          </div>
+          <label class="checkbox-label"><input type="checkbox" id="sort-case"> Case-sensitive</label>
+          <label class="checkbox-label"><input type="checkbox" id="sort-rm-empty" checked> Remove empty lines</label>
+          <label class="checkbox-label"><input type="checkbox" id="sort-unique"> Remove duplicates</label>
+        </div>
+
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input (one item per line)</label>
+            <textarea id="sort-input" class="io-area large" placeholder="Paste lines to sort&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="sortLines()">Sort &#8693;</button>
+            <button class="btn-secondary" onclick="swapIO('sort-input','sort-output')">&#8644; Swap</button>
+            <button class="btn-secondary" onclick="clearPair('sort-input','sort-output','sort-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output</label>
+            <textarea id="sort-output" class="io-area large" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="sort-msg"></span>
+              <button class="copy-btn" onclick="copyTA('sort-output','sort-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-sort -->
+
+      <!-- ── Duplicate Line Remover ────────── -->
+      <div class="tool-panel" id="panel-dedup">
+        <div class="panel-title">Duplicate Line Remover</div>
+        <div class="form-row">
+          <label class="checkbox-label"><input type="checkbox" id="dedup-case"> Case-sensitive</label>
+          <label class="checkbox-label"><input type="checkbox" id="dedup-trim" checked> Trim whitespace before comparing</label>
+          <label class="checkbox-label"><input type="checkbox" id="dedup-rm-blank"> Remove blank lines</label>
+        </div>
+
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input</label>
+            <textarea id="dedup-input" class="io-area large" placeholder="Paste text with duplicate lines&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="removeDuplicates()">Remove Dupes &#8658;</button>
+            <button class="btn-secondary" onclick="swapIO('dedup-input','dedup-output')">&#8644; Swap</button>
+            <button class="btn-secondary" onclick="clearPair('dedup-input','dedup-output','dedup-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output</label>
+            <textarea id="dedup-output" class="io-area large" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="dedup-msg"></span>
+              <button class="copy-btn" onclick="copyTA('dedup-output','dedup-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-dedup -->
+
+      <!-- ── Random String Generator ──────── -->
+      <div class="tool-panel" id="panel-rand">
+        <div class="panel-title">Random String Generator</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Length</label>
+            <input type="number" id="rand-length" class="short-num" min="1" max="4096" value="16">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Count</label>
+            <input type="number" id="rand-count" class="short-num" min="1" max="1000" value="1">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="checkbox-label"><input type="checkbox" id="rand-upper"   checked> A–Z (uppercase)</label>
+          <label class="checkbox-label"><input type="checkbox" id="rand-lower"   checked> a–z (lowercase)</label>
+          <label class="checkbox-label"><input type="checkbox" id="rand-digits"  checked> 0–9 (digits)</label>
+          <label class="checkbox-label"><input type="checkbox" id="rand-symbols"> Symbols (!@#$…)</label>
+        </div>
+
+        <div class="form-group">
+          <label class="io-label">Custom characters (optional)</label>
+          <input type="text" id="rand-custom" class="io-area"
+            style="height:36px;padding:6px 10px;font-family:Consolas,monospace;font-size:13px;resize:none"
+            placeholder="Add extra characters e.g. &#9618;&#9619;&#9620;" spellcheck="false">
+        </div>
+
+        <div class="btn-row">
+          <button onclick="generateRandom()">&#127922; Generate</button>
+          <button class="btn-secondary" onclick="document.getElementById('rand-output').value='';setMsg('rand-msg','','')">Clear</button>
+        </div>
+
+        <div class="rand-result">
+          <div class="io-footer">
+            <label class="io-label">Output</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="tool-msg" id="rand-msg"></span>
+              <button class="copy-btn" onclick="copyTA('rand-output','rand-msg')">Copy</button>
+            </div>
+          </div>
+          <textarea id="rand-output" class="io-area large" readonly spellcheck="false"></textarea>
+        </div>
+      </div><!-- /panel-rand -->
+
+      <!-- ── Lorem Ipsum Generator ─────────── -->
+      <div class="tool-panel" id="panel-lorem">
+        <div class="panel-title">Lorem Ipsum Generator</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Type</label>
+            <select id="lorem-type">
+              <option value="words">Words</option>
+              <option value="sentences">Sentences</option>
+              <option value="paragraphs" selected>Paragraphs</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="io-label">Count</label>
+            <input type="number" id="lorem-count" class="short-num" min="1" max="500" value="3">
+          </div>
+          <label class="checkbox-label">
+            <input type="checkbox" id="lorem-start" checked>
+            Start with "Lorem ipsum&hellip;"
+          </label>
+        </div>
+
+        <div class="btn-row">
+          <button onclick="generateLorem()">&#128218; Generate</button>
+          <button class="btn-secondary" onclick="document.getElementById('lorem-output').value='';setMsg('lorem-msg','','')">Clear</button>
+        </div>
+
+        <div class="rand-result">
+          <div class="io-footer">
+            <label class="io-label">Output</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="tool-msg" id="lorem-msg"></span>
+              <button class="copy-btn" onclick="copyTA('lorem-output','lorem-msg')">Copy</button>
+            </div>
+          </div>
+          <textarea id="lorem-output" class="io-area large" readonly spellcheck="false"></textarea>
+        </div>
+      </div><!-- /panel-lorem -->
+
+    </div><!-- /tool-area -->
+  </div><!-- /app-body -->
+
+  <div class="statusbar">
+    <span id="sb-tool">Text Diff Checker</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

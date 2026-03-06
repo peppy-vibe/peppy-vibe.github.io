@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peppy JSON / YAML / XML Tools</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <script>(function(){var t=localStorage.getItem('stp-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+  <div class="app-header">
+    <a href="../" class="back-link">&#8592; Portal</a>
+    <h1>Peppy JSON / YAML / XML Tools</h1>
+    <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()">&#9728; Light</button>
+  </div>
+
+  <div class="app-body">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <button class="tab-btn active" data-tab="jf"   onclick="showTool('jf')">&#123;&#125; JSON Formatter</button>
+      <button class="tab-btn"        data-tab="jv"   onclick="showTool('jv')">&#128065; JSON Viewer</button>
+      <button class="tab-btn"        data-tab="jval" onclick="showTool('jval')">&#10004; JSON Validator</button>
+      <button class="tab-btn"        data-tab="jcsv" onclick="showTool('jcsv')">&#8677; JSON → CSV</button>
+      <button class="tab-btn"        data-tab="jy"   onclick="showTool('jy')">&#8677; JSON → YAML</button>
+      <button class="tab-btn"        data-tab="yj"   onclick="showTool('yj')">&#8677; YAML → JSON</button>
+      <button class="tab-btn"        data-tab="xf"   onclick="showTool('xf')">&#60;/&#62; XML Formatter</button>
+      <button class="tab-btn"        data-tab="xj"   onclick="showTool('xj')">&#8677; XML → JSON</button>
+    </div>
+
+    <!-- Tool panels -->
+    <div class="tool-area">
+
+      <!-- ── JSON Formatter ───────────────── -->
+      <div class="tool-panel active" id="panel-jf">
+        <div class="panel-title">JSON Formatter</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Indent</label>
+            <select id="jf-indent">
+              <option value="2" selected>2 spaces</option>
+              <option value="4">4 spaces</option>
+              <option value="tab">Tab</option>
+            </select>
+          </div>
+          <button onclick="jsonFormat()">&#127381; Format</button>
+          <button class="btn-secondary" onclick="jsonMinify()">&#9906; Minify</button>
+          <button class="btn-secondary" onclick="swapIO('jf-input','jf-output')">&#8644; Swap</button>
+          <button class="btn-secondary" onclick="clearPair('jf-input','jf-output','jf-msg')">Clear</button>
+        </div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input JSON</label>
+            <textarea id="jf-input" class="io-area" style="flex:1;resize:none"
+              placeholder="Paste JSON here&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns" style="justify-content:flex-start;padding-top:20px">
+            <button style="padding:6px 10px" onclick="jsonFormat()">&#8594;</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output</label>
+            <textarea id="jf-output" class="io-area" style="flex:1;resize:none" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="jf-msg"></span>
+              <button class="copy-btn" onclick="copyTA('jf-output','jf-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-jf -->
+
+      <!-- ── JSON Viewer (Tree) ────────────── -->
+      <div class="tool-panel" id="panel-jv">
+        <div class="panel-title">JSON Viewer (Tree)</div>
+        <div class="form-group" style="flex-shrink:0">
+          <label class="io-label">Input JSON</label>
+          <textarea id="jv-input" class="io-area" style="height:120px;resize:vertical"
+            placeholder="Paste JSON here&#8230;" spellcheck="false"></textarea>
+        </div>
+        <div class="btn-row">
+          <button onclick="jsonViewTree()">&#128065; View Tree</button>
+          <button class="btn-secondary" onclick="jsonExpandAll()">&#9660; Expand All</button>
+          <button class="btn-secondary" onclick="jsonCollapseAll()">&#9654; Collapse All</button>
+          <button class="btn-secondary" onclick="clearTree()">Clear</button>
+          <span class="tool-msg" id="jv-msg"></span>
+        </div>
+        <div class="tree-container" id="jv-tree"></div>
+      </div><!-- /panel-jv -->
+
+      <!-- ── JSON Validator ───────────────── -->
+      <div class="tool-panel" id="panel-jval">
+        <div class="panel-title">JSON Validator</div>
+        <div class="full-io">
+          <label class="io-label">Input JSON</label>
+          <textarea id="jval-input" class="io-area" placeholder="Paste JSON here&#8230;"
+            spellcheck="false" oninput="jsonValidateLive()"></textarea>
+        </div>
+        <div id="jval-result" class="validator-result" style="display:none"></div>
+        <div class="btn-row">
+          <button onclick="jsonValidate()">&#10004; Validate</button>
+          <button class="btn-secondary" onclick="document.getElementById('jval-input').value='';document.getElementById('jval-result').style.display='none'">Clear</button>
+        </div>
+      </div><!-- /panel-jval -->
+
+      <!-- ── JSON → CSV ────────────────────── -->
+      <div class="tool-panel" id="panel-jcsv">
+        <div class="panel-title">JSON &rarr; CSV Converter</div>
+        <p style="font-size:13px;color:var(--text2);flex-shrink:0">Input must be a JSON array of objects. Nested values are JSON-stringified.</p>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input JSON Array</label>
+            <textarea id="jcsv-input" class="io-area" style="flex:1;resize:none"
+              placeholder='[{"name":"Alice","age":30},{"name":"Bob","age":25}]'
+              spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="jsonToCSV()">Convert &#8594;</button>
+            <button class="btn-secondary" onclick="clearPair('jcsv-input','jcsv-output','jcsv-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output CSV</label>
+            <textarea id="jcsv-output" class="io-area" style="flex:1;resize:none" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="jcsv-msg"></span>
+              <button class="copy-btn" onclick="copyTA('jcsv-output','jcsv-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-jcsv -->
+
+      <!-- ── JSON → YAML ───────────────────── -->
+      <div class="tool-panel" id="panel-jy">
+        <div class="panel-title">JSON &rarr; YAML Converter</div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input JSON</label>
+            <textarea id="jy-input" class="io-area" style="flex:1;resize:none"
+              placeholder="Paste JSON here&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="jsonToYAML()">Convert &#8594;</button>
+            <button class="btn-secondary" onclick="clearPair('jy-input','jy-output','jy-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output YAML</label>
+            <textarea id="jy-output" class="io-area" style="flex:1;resize:none" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="jy-msg"></span>
+              <button class="copy-btn" onclick="copyTA('jy-output','jy-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-jy -->
+
+      <!-- ── YAML → JSON ───────────────────── -->
+      <div class="tool-panel" id="panel-yj">
+        <div class="panel-title">YAML &rarr; JSON Converter</div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input YAML</label>
+            <textarea id="yj-input" class="io-area" style="flex:1;resize:none"
+              placeholder="Paste YAML here&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="yamlToJSON()">Convert &#8594;</button>
+            <button class="btn-secondary" onclick="clearPair('yj-input','yj-output','yj-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output JSON</label>
+            <textarea id="yj-output" class="io-area" style="flex:1;resize:none" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="yj-msg"></span>
+              <button class="copy-btn" onclick="copyTA('yj-output','yj-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-yj -->
+
+      <!-- ── XML Formatter ────────────────── -->
+      <div class="tool-panel" id="panel-xf">
+        <div class="panel-title">XML Formatter</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Indent</label>
+            <select id="xf-indent">
+              <option value="2" selected>2 spaces</option>
+              <option value="4">4 spaces</option>
+              <option value="tab">Tab</option>
+            </select>
+          </div>
+          <button onclick="xmlFormat()">&#127381; Format</button>
+          <button class="btn-secondary" onclick="xmlMinify()">&#9906; Minify</button>
+          <button class="btn-secondary" onclick="swapIO('xf-input','xf-output')">&#8644; Swap</button>
+          <button class="btn-secondary" onclick="clearPair('xf-input','xf-output','xf-msg')">Clear</button>
+        </div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input XML</label>
+            <textarea id="xf-input" class="io-area" style="flex:1;resize:none"
+              placeholder="Paste XML here&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns" style="justify-content:flex-start;padding-top:20px">
+            <button style="padding:6px 10px" onclick="xmlFormat()">&#8594;</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output</label>
+            <textarea id="xf-output" class="io-area" style="flex:1;resize:none" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="xf-msg"></span>
+              <button class="copy-btn" onclick="copyTA('xf-output','xf-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-xf -->
+
+      <!-- ── XML → JSON ────────────────────── -->
+      <div class="tool-panel" id="panel-xj">
+        <div class="panel-title">XML &rarr; JSON Converter</div>
+        <p style="font-size:13px;color:var(--text2);flex-shrink:0">Attributes are prefixed with <code>@</code>. Repeated tags become arrays. Text content becomes <code>#text</code>.</p>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input XML</label>
+            <textarea id="xj-input" class="io-area" style="flex:1;resize:none"
+              placeholder="Paste XML here&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="xmlToJSON()">Convert &#8594;</button>
+            <button class="btn-secondary" onclick="clearPair('xj-input','xj-output','xj-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output JSON</label>
+            <textarea id="xj-output" class="io-area" style="flex:1;resize:none" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="xj-msg"></span>
+              <button class="copy-btn" onclick="copyTA('xj-output','xj-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-xj -->
+
+    </div><!-- /tool-area -->
+  </div><!-- /app-body -->
+
+  <div class="statusbar">
+    <span id="sb-tool">JSON Formatter</span>
+  </div>
+
+  <!-- js-yaml for YAML → JSON parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>

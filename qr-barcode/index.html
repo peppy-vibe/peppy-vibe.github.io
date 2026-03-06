@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peppy QR &amp; Barcode Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <script>(function(){var t=localStorage.getItem('stp-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+  <div class="app-header">
+    <a href="../" class="back-link">&#8592; Portal</a>
+    <h1>Peppy QR &amp; Barcode Generator</h1>
+    <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()">&#9728; Light</button>
+  </div>
+
+  <div class="app-body">
+
+    <!-- Sidebar tabs -->
+    <div class="sidebar">
+      <button class="tab-btn active" data-tab="qr"      onclick="showTool('qr')">&#9636; QR Code</button>
+      <button class="tab-btn"        data-tab="barcode" onclick="showTool('barcode')">&#10074;&#10074;&#10074; Barcode</button>
+    </div>
+
+    <!-- Tool panels -->
+    <div class="tool-area">
+
+      <!-- ── QR Code ───────────────────────── -->
+      <div class="tool-panel active" id="panel-qr">
+        <div class="panel-title">QR Code Generator</div>
+        <div class="qr-layout">
+
+          <div class="qr-controls">
+            <div class="form-group">
+              <label class="io-label">Text / URL</label>
+              <textarea id="qr-input" class="io-area qr-textarea"
+                placeholder="Enter text or URL to encode&#8230;"
+                spellcheck="false" oninput="qrGenerate()"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="io-label">Size: <span id="qr-size-label">256px</span></label>
+              <div class="slider-row">
+                <input type="range" id="qr-size" min="128" max="512" step="32" value="256"
+                  oninput="qrUpdateSize(this.value)">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="io-label">Error Correction Level</label>
+              <select id="qr-ecl" onchange="qrGenerate()">
+                <option value="L">L — Low (7%)</option>
+                <option value="M" selected>M — Medium (15%)</option>
+                <option value="Q">Q — Quartile (25%)</option>
+                <option value="H">H — High (30%)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="io-label">Colors</label>
+              <div class="color-pair">
+                <div class="form-group">
+                  <label class="io-label">Dark</label>
+                  <input type="color" id="qr-dark"  value="#000000" oninput="qrGenerate()">
+                </div>
+                <div class="form-group">
+                  <label class="io-label">Light</label>
+                  <input type="color" id="qr-light" value="#ffffff" oninput="qrGenerate()">
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-row">
+              <button onclick="qrDownload()">&#8659; Download PNG</button>
+              <button class="btn-secondary" onclick="qrClear()">Clear</button>
+            </div>
+            <span class="tool-msg" id="qr-msg"></span>
+          </div>
+
+          <!-- Preview pane -->
+          <div class="qr-preview" id="qr-preview-area">
+            <div id="qr-output"></div>
+            <p class="qr-hint" id="qr-hint">Enter text above to generate a QR code</p>
+          </div>
+
+        </div>
+      </div><!-- /panel-qr -->
+
+      <!-- ── Barcode ───────────────────────── -->
+      <div class="tool-panel" id="panel-barcode">
+        <div class="panel-title">Barcode Generator</div>
+        <div class="qr-layout">
+
+          <div class="qr-controls">
+            <div class="form-group">
+              <label class="io-label">Value</label>
+              <input type="text" id="bc-input" class="io-input"
+                placeholder="Enter barcode value&#8230;" oninput="bcGenerate()">
+            </div>
+
+            <div class="form-group">
+              <label class="io-label">Format</label>
+              <select id="bc-format" onchange="bcGenerate()">
+                <option value="CODE128" selected>CODE128 (auto, any text)</option>
+                <option value="CODE39">CODE39 (uppercase + digits)</option>
+                <option value="EAN13">EAN-13 (13 digits)</option>
+                <option value="EAN8">EAN-8 (8 digits)</option>
+                <option value="UPC">UPC-A (12 digits)</option>
+                <option value="ITF14">ITF-14 (14 digits)</option>
+                <option value="MSI">MSI (numeric)</option>
+                <option value="pharmacode">Pharmacode (numeric)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="io-label">Bar Width: <span id="bc-width-label">2</span></label>
+              <div class="slider-row">
+                <input type="range" id="bc-width" min="1" max="4" step="0.5" value="2"
+                  oninput="bcUpdateWidth(this.value)">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="io-label">Bar Height: <span id="bc-height-label">100px</span></label>
+              <div class="slider-row">
+                <input type="range" id="bc-height" min="40" max="200" step="10" value="100"
+                  oninput="bcUpdateHeight(this.value)">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="io-label">Line Color</label>
+              <input type="color" id="bc-color" value="#000000" oninput="bcGenerate()">
+            </div>
+
+            <div class="form-row">
+              <label class="checkbox-label">
+                <input type="checkbox" id="bc-display-value" checked onchange="bcGenerate()">
+                Display value text
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="bc-flat" onchange="bcGenerate()">
+                Flat bars
+              </label>
+            </div>
+
+            <div class="btn-row">
+              <button onclick="bcDownloadSVG()">&#8659; SVG</button>
+              <button onclick="bcDownloadPNG()">&#8659; PNG</button>
+              <button class="btn-secondary" onclick="bcClear()">Clear</button>
+            </div>
+            <span class="tool-msg" id="bc-msg"></span>
+          </div>
+
+          <!-- Preview pane -->
+          <div class="qr-preview">
+            <svg id="bc-output"></svg>
+            <p class="qr-hint" id="bc-hint">Enter a value above to generate a barcode</p>
+          </div>
+
+        </div>
+      </div><!-- /panel-barcode -->
+
+    </div><!-- /tool-area -->
+  </div><!-- /app-body -->
+
+  <div class="statusbar">
+    <span id="sb-tool">QR Code Generator</span>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
