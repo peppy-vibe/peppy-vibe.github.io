@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peppy Advanced Notepad</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.css">
+</head>
+<body>
+
+    <!-- Apply theme before paint -->
+    <script>(function(){var t=localStorage.getItem('stp-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+    <!-- App header -->
+    <div class="app-header">
+        <a href="../" class="back-link">&#8592; Portal</a>
+        <h1>Peppy Advance Notepad</h1>
+        <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">☀ Light</button>
+    </div>
+
+    <!-- Menu bar -->
+    <div class="menubar" id="menubar">
+        <div class="menu-item" id="mi-file">
+        File
+        <div class="dropdown">
+            <button onclick="newFile()">New <span class="kbd">Ctrl+N</span></button>
+            <button onclick="openFile()">Open&hellip; <span class="kbd">Ctrl+O</span></button>
+            <hr>
+            <button onclick="saveFile()">Save <span class="kbd">Ctrl+S</span></button>
+            <button onclick="saveFileAs()">Save As&hellip;</button>
+        </div>
+        </div>
+
+    <div class="menu-item" id="mi-edit">
+      Edit
+      <div class="dropdown">
+        <button onclick="doUndo()">Undo <span class="kbd">Ctrl+Z</span></button>
+        <button onclick="doRedo()">Redo <span class="kbd">Ctrl+Y</span></button>
+        <hr>
+        <button onclick="doCut()">Cut <span class="kbd">Ctrl+X</span></button>
+        <button onclick="doCopy()">Copy <span class="kbd">Ctrl+C</span></button>
+        <button onclick="doPaste()">Paste <span class="kbd">Ctrl+V</span></button>
+        <hr>
+        <button onclick="selectAll()">Select All <span class="kbd">Ctrl+A</span></button>
+        <button onclick="deleteSelection()">Delete</button>
+        <hr>
+        <button onclick="openFind()">Find&hellip; <span class="kbd">Ctrl+F</span></button>
+        <button onclick="openReplace()">Replace&hellip; <span class="kbd">Ctrl+H</span></button>
+      </div>
+    </div>
+
+    <div class="menu-item" id="mi-format">
+      Format
+      <div class="dropdown">
+        <button onclick="toggleWordWrap()">Word Wrap <span id="ww-check">&#10003;</span></button>
+        <button onclick="toggleLineNumbers()">Line Numbers <span id="ln-check"></span></button>
+        <hr>
+        <button onclick="togglePreview()">Markdown Preview <span id="prev-check"></span> <span class="kbd">Ctrl+P</span></button>
+        <button onclick="toggleSplit()">Split Preview <span id="split-check"></span> <span class="kbd">Ctrl+Shift+P</span></button>
+      </div>
+    </div>
+
+    <div class="menu-item" id="mi-view">
+      View
+      <div class="dropdown">
+        <button onclick="zoomIn()">Zoom In <span class="kbd">Ctrl++</span></button>
+        <button onclick="zoomOut()">Zoom Out <span class="kbd">Ctrl+&minus;</span></button>
+        <button onclick="zoomReset()">Reset Zoom <span class="kbd">Ctrl+0</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="tb-group">
+      <button title="New (Ctrl+N)" onclick="newFile()">New</button>
+      <button title="Open (Ctrl+O)" onclick="openFile()">Open</button>
+      <button title="Save (Ctrl+S)" onclick="saveFile()">Save</button>
+      <button title="Save As" onclick="saveFileAs()">Save As</button>
+    </div>
+    <div class="tb-sep"></div>
+    <div class="tb-group">
+      <label>Font</label>
+      <select id="sel-font" onchange="applyFont()">
+        <option value="Consolas, 'Courier New', monospace">Consolas</option>
+        <option value="'Courier New', monospace">Courier New</option>
+        <option value="'Lucida Console', monospace">Lucida Console</option>
+        <option value="'Segoe UI', Tahoma, sans-serif">Segoe UI</option>
+        <option value="Arial, sans-serif">Arial</option>
+        <option value="'Times New Roman', serif">Times New Roman</option>
+        <option value="Georgia, serif">Georgia</option>
+      </select>
+    </div>
+    <div class="tb-group">
+      <label>Size</label>
+      <select id="sel-size" onchange="applyFont()">
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12" selected>12</option>
+        <option value="14">14</option>
+        <option value="16">16</option>
+        <option value="18">18</option>
+        <option value="20">20</option>
+        <option value="24">24</option>
+        <option value="28">28</option>
+        <option value="32">32</option>
+        <option value="36">36</option>
+        <option value="48">48</option>
+        <option value="72">72</option>
+      </select>
+    </div>
+    <div class="tb-sep"></div>
+    <div class="tb-group">
+      <button title="Find (Ctrl+F)" onclick="openFind()">Find</button>
+      <button title="Replace (Ctrl+H)" onclick="openReplace()">Replace</button>
+    </div>
+    <div class="tb-sep"></div>
+    <div class="tb-group">
+      <button id="btn-split" title="Toggle Preview (Ctrl+Shift+P)" onclick="toggleSplit()">&#128065; Preview</button>
+    </div>
+  </div>
+
+  <!-- Editor area -->
+  <div class="editor-wrap" id="editor-wrap">
+    <div class="line-nums" id="line-nums"></div>
+    <textarea
+      id="editor"
+      spellcheck="false"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      aria-label="Text editor"
+    ></textarea>
+    <div class="pane-splitter" id="pane-splitter" title="Drag to resize"></div>
+    <div class="preview-panel" id="preview-panel">
+      <div class="preview-header">
+        <span>Preview</span>
+        <button class="prev-expand-btn" id="btn-prev-expand" onclick="togglePreviewExpand()" title="Expand to full area">&#x2922;</button>
+        <button class="prev-close-btn" onclick="hideSplitPreview()" title="Close split preview">&#x2715;</button>
+      </div>
+      <div id="preview-pane" aria-label="Markdown preview" tabindex="0"></div>
+    </div>
+  </div>
+
+  <!-- Status bar -->
+  <div class="statusbar">
+    <span id="sb-pos">Ln 1, Col 1</span>
+    <span id="sb-sel"></span>
+    <span id="sb-chars">0 chars</span>
+    <span id="sb-lines">1 line</span>
+    <span id="sb-ww">Word Wrap: On</span>
+    <span id="sb-words">0 words</span>
+    <span class="sb-zoom-group">
+      <button class="sb-btn" onclick="zoomOut()" title="Zoom Out">A&#8315;</button>
+      <span id="sb-zoom">100%</span>
+      <button class="sb-btn" onclick="zoomIn()" title="Zoom In">A+</button>
+      <button class="sb-btn" onclick="zoomReset()" title="Reset Zoom">&#8857;</button>
+    </span>
+    <span id="sb-file" class="sb-file">Untitled</span>
+  </div>
+
+  <!-- Hidden file input -->
+  <input
+    type="file"
+    id="file-input"
+    accept=".txt,.log,.md,.js,.ts,.css,.html,.json,.xml,.csv,.yaml,.yml,.sh,.bat,.py,.rb,.java,.c,.cpp,.h"
+    style="display:none"
+    onchange="handleFileOpen(event)"
+  >
+
+  <!-- Find dialog -->
+  <div class="dlg-overlay" id="find-overlay" onclick="overlayClick(event, 'find-overlay')">
+    <div class="dlg" role="dialog" aria-modal="true" aria-label="Find">
+      <div class="dlg-hdr">
+        <span>Find</span>
+        <button class="dlg-x" onclick="closeDialogs()" aria-label="Close">&#x2715;</button>
+      </div>
+      <div class="dlg-body">
+        <div class="frow">
+          <label for="find-q">Find:</label>
+          <input type="text" id="find-q" autocomplete="off" onkeydown="findKeydown(event)">
+        </div>
+        <div class="frow frow-opts">
+          <label><input type="checkbox" id="find-case"> Match case</label>
+          <label><input type="checkbox" id="find-word"> Whole word</label>
+        </div>
+        <div class="dlg-btns">
+          <button onclick="findNext()">Find Next</button>
+          <button onclick="findPrev()">Find Prev</button>
+          <button onclick="closeDialogs()">Close</button>
+        </div>
+        <div id="find-msg" class="dlg-msg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Replace dialog -->
+  <div class="dlg-overlay" id="replace-overlay" onclick="overlayClick(event, 'replace-overlay')">
+    <div class="dlg" role="dialog" aria-modal="true" aria-label="Find and Replace">
+      <div class="dlg-hdr">
+        <span>Find &amp; Replace</span>
+        <button class="dlg-x" onclick="closeDialogs()" aria-label="Close">&#x2715;</button>
+      </div>
+      <div class="dlg-body">
+        <div class="frow">
+          <label for="rep-find">Find:</label>
+          <input type="text" id="rep-find" autocomplete="off">
+        </div>
+        <div class="frow">
+          <label for="rep-with">Replace:</label>
+          <input type="text" id="rep-with" autocomplete="off">
+        </div>
+        <div class="frow frow-opts">
+          <label><input type="checkbox" id="rep-case"> Match case</label>
+        </div>
+        <div class="dlg-btns">
+          <button onclick="replaceCurrent()">Replace</button>
+          <button onclick="replaceAll()">Replace All</button>
+          <button onclick="findNextFromReplace()">Find Next</button>
+          <button onclick="closeDialogs()">Close</button>
+        </div>
+        <div id="rep-msg" class="dlg-msg"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

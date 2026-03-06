@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peppy Table Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <script>(function(){var t=localStorage.getItem('stp-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+  <!-- App header -->
+  <div class="app-header">
+    <a href="../" class="back-link">&#8592; Portal</a>
+    <h1>Peppy Table Generator</h1>
+    <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">☀ Light</button>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="tb-group">
+      <span class="tb-label">Rows/Cols</span>
+      <button onclick="addRow()" title="Add row below">+ Row</button>
+      <button onclick="removeLastRow()" title="Remove last row">&minus; Row</button>
+      <button onclick="addCol()" title="Add column right">+ Col</button>
+      <button onclick="removeLastCol()" title="Remove last column">&minus; Col</button>
+    </div>
+    <div class="tb-sep"></div>
+    <div class="tb-group">
+      <span class="tb-label">Size</span>
+      <label>R:<input type="number" id="inp-rows" min="1" max="50"  value="3" onchange="resizeTable()"></label>
+      <label>C:<input type="number" id="inp-cols" min="1" max="30"  value="3" onchange="resizeTable()"></label>
+    </div>
+    <div class="tb-sep"></div>
+    <div class="tb-group">
+      <span class="tb-label">Cells</span>
+      <button onclick="mergeCells()"  title="Merge selected cells">Merge</button>
+      <button onclick="splitCell()"   title="Split merged cell">Split</button>
+      <button onclick="clearCells()"  title="Clear cell content">Clear</button>
+    </div>
+    <div class="tb-sep"></div>
+    <div class="tb-group">
+      <span class="tb-label">Headers</span>
+      <button id="btn-hrow" onclick="toggleHeaderRow()" title="Toggle header row">Header Row</button>
+      <button id="btn-hcol" onclick="toggleHeaderCol()" title="Toggle header column">Header Col</button>
+    </div>
+  </div>
+
+  <!-- Main content: table + settings panel -->
+  <div class="main-area">
+
+    <!-- Table canvas -->
+    <div class="table-canvas" id="table-canvas">
+      <div id="table-wrap">
+        <div id="tbl-container"></div>
+      </div>
+    </div>
+
+    <!-- Settings panel -->
+    <div class="settings-panel" id="settings-panel">
+      <div class="panel-tabs">
+        <button class="ptab active" data-tab="tab-table" onclick="switchTab(this, 'tab-table')">Table</button>
+        <button class="ptab"        data-tab="tab-cell"  onclick="switchTab(this, 'tab-cell')">Cell</button>
+      </div>
+
+      <!-- Table settings -->
+      <div class="tab-pane" id="tab-table">
+        <div class="sg">
+          <label>Border</label>
+          <input type="number" id="ts-border-w" min="0" max="10" value="1" onchange="applyTableSettings()">
+          <span>px</span>
+          <input type="color"  id="ts-border-c" value="#000000"             onchange="applyTableSettings()">
+        </div>
+        <div class="sg">
+          <label>Width</label>
+          <input type="text" id="ts-width" value="100%" onchange="applyTableSettings()" placeholder="e.g. 100%">
+        </div>
+        <div class="sg">
+          <label>Align</label>
+          <select id="ts-align" onchange="applyTableSettings()">
+            <option value="left">Left</option>
+            <option value="center" selected>Center</option>
+            <option value="right">Right</option>
+          </select>
+        </div>
+        <div class="sg">
+          <label>Table BG</label>
+          <input type="color" id="ts-bg" value="#ffffff" onchange="applyTableSettings()">
+          <label class="chk-lbl"><input type="checkbox" id="ts-bg-none" onchange="applyTableSettings()"> None</label>
+        </div>
+        <div class="sg">
+          <label>Cell pad</label>
+          <input type="text" id="ts-pad" value="6px" onchange="applyTableSettings()">
+        </div>
+      </div>
+
+      <!-- Cell settings -->
+      <div class="tab-pane hidden" id="tab-cell">
+        <p class="hint-text">Select cell(s) then apply:</p>
+        <div class="sg">
+          <label>H-Align</label>
+          <div class="btn-trio">
+            <button class="style-btn" onclick="applyCellStyle('textAlign','left')"   title="Left">&#8676;</button>
+            <button class="style-btn" onclick="applyCellStyle('textAlign','center')" title="Center">&#8596;</button>
+            <button class="style-btn" onclick="applyCellStyle('textAlign','right')"  title="Right">&#8677;</button>
+          </div>
+        </div>
+        <div class="sg">
+          <label>V-Align</label>
+          <select id="cs-valign" onchange="applyCellStyle('verticalAlign', this.value)">
+            <option value="top">Top</option>
+            <option value="middle">Middle</option>
+            <option value="bottom">Bottom</option>
+          </select>
+        </div>
+        <div class="sg">
+          <label>Font size</label>
+          <input type="text" id="cs-fsize" placeholder="e.g. 14px" onchange="applyCellStyle('fontSize', this.value)">
+        </div>
+        <div class="sg">
+          <label>Weight</label>
+          <div class="btn-trio">
+            <button class="style-btn" onclick="applyCellStyle('fontWeight','bold')"  title="Bold"><b>B</b></button>
+            <button class="style-btn" onclick="applyCellStyle('fontWeight','normal')" title="Normal">N</button>
+            <button class="style-btn" onclick="applyCellStyle('fontStyle','italic')"  title="Italic"><i>I</i></button>
+          </div>
+        </div>
+        <div class="sg">
+          <label>Color</label>
+          <input type="color" id="cs-color" value="#000000" onchange="applyCellStyle('color', this.value)">
+        </div>
+        <div class="sg">
+          <label>BG</label>
+          <input type="color" id="cs-bg" value="#ffffff" onchange="applyCellStyle('backgroundColor', this.value)">
+          <label class="chk-lbl"><input type="checkbox" id="cs-bg-none" onchange="clearCellBg()"> None</label>
+        </div>
+        <div class="sg">
+          <label>Padding</label>
+          <input type="text" id="cs-pad" placeholder="e.g. 8px" onchange="applyCellStyle('padding', this.value)">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export / Import bar -->
+  <div class="export-bar">
+    <span class="tb-label">Export:</span>
+    <button onclick="exportAs('html')">HTML</button>
+    <button onclick="exportAs('markdown')">Markdown</button>
+    <button onclick="exportAs('latex')">LaTeX</button>
+    <button onclick="exportAs('csv')">CSV</button>
+    <button onclick="copyHTMLToClipboard()">Copy HTML</button>
+    <span class="bar-sep"></span>
+    <span class="tb-label">Import:</span>
+    <button onclick="showImportDlg('html')">From HTML</button>
+    <button onclick="showImportDlg('csv')">From CSV</button>
+  </div>
+
+  <!-- Import dialog -->
+  <div class="dlg-overlay" id="import-overlay" onclick="overlayClose(event,'import-overlay')">
+    <div class="dlg">
+      <div class="dlg-hdr">
+        <span id="import-title">Import</span>
+        <button class="dlg-x" onclick="closeDlg('import-overlay')">&#x2715;</button>
+      </div>
+      <div class="dlg-body">
+        <textarea id="import-ta" rows="9" placeholder="Paste here&hellip;"></textarea>
+        <div class="dlg-btns">
+          <button onclick="doImport()">Import</button>
+          <button onclick="closeDlg('import-overlay')">Cancel</button>
+        </div>
+        <div id="import-msg" class="dlg-msg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview / export dialog -->
+  <div class="dlg-overlay" id="preview-overlay" onclick="overlayClose(event,'preview-overlay')">
+    <div class="dlg dlg-wide">
+      <div class="dlg-hdr">
+        <span id="preview-title">Output</span>
+        <button class="dlg-x" onclick="closeDlg('preview-overlay')">&#x2715;</button>
+      </div>
+      <div class="dlg-body">
+        <div class="dlg-btns">
+          <button onclick="copyPreview()">Copy</button>
+          <button onclick="downloadPreview()">Download</button>
+          <button onclick="closeDlg('preview-overlay')">Close</button>
+        </div>
+        <pre id="preview-code" class="preview-code"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right-click context menu -->
+  <div id="ctx-menu" class="ctx-menu" role="menu">
+    <button onclick="ctxInsertRowAbove()">&#8593; Insert Row Above</button>
+    <button onclick="ctxInsertRowBelow()">&#8595; Insert Row Below</button>
+    <hr>
+    <button onclick="ctxInsertColLeft()">&#8592; Insert Column Left</button>
+    <button onclick="ctxInsertColRight()">&#8594; Insert Column Right</button>
+    <hr>
+    <button onclick="ctxDeleteRow()" class="ctx-danger">&#10005; Delete Row</button>
+    <button onclick="ctxDeleteCol()" class="ctx-danger">&#10005; Delete Column</button>
+    <hr>
+    <button onclick="ctxCopyCell()">&#128203; Copy Cell</button>
+    <button onclick="ctxPasteCell()">&#128196; Paste Cell</button>
+  </div>
+
+  <!-- Status bar -->
+  <div class="tbl-statusbar" id="tbl-statusbar">
+    <span id="sb-dims">3 × 3</span>
+    <span id="sb-sel-info"></span>
+    <span id="sb-hint">Click cells to select · Shift+click to extend</span>
+    <span class="sb-zoom-group">
+      <button class="sb-btn" onclick="tableZoomOut()" title="Zoom Out">A&#8315;</button>
+      <span id="sb-tbl-zoom">100%</span>
+      <button class="sb-btn" onclick="tableZoomIn()" title="Zoom In">A+</button>
+      <button class="sb-btn" onclick="tableZoomReset()" title="Reset Zoom">&#8857;</button>
+    </span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
