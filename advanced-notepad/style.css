@@ -21,7 +21,7 @@ body {
   align-items: center;
   gap: 14px;
   padding: 8px 16px;
-  background: #0078d4;
+  background: #5646F5;
   color: #fff;
   flex-shrink: 0;
 }
@@ -107,7 +107,7 @@ body {
 }
 
 .dropdown button:hover {
-  background: #0078d4;
+  background: #5646F5;
   color: #fff;
 }
 
@@ -160,7 +160,7 @@ body {
 
 .toolbar button:hover {
   background: #e5f0fb;
-  border-color: #0078d4;
+  border-color: #5646F5;
 }
 
 .toolbar label {
@@ -220,7 +220,7 @@ body {
   overflow-x: hidden;
   background: #fff;
   color: #1e1e1e;
-  caret-color: #0078d4;
+  caret-color: #5646F5;
 }
 
 /* ── Markdown preview pane ─────────────────── */
@@ -253,7 +253,7 @@ body {
 #preview-pane ul, #preview-pane ol { padding-left: 1.8em; margin: 0.5em 0; }
 #preview-pane li { margin: 0.2em 0; }
 #preview-pane blockquote {
-  border-left: 4px solid #0078d4;
+  border-left: 4px solid #5646F5;
   margin: 0.8em 0;
   padding: 4px 12px;
   background: #f0f6ff;
@@ -293,7 +293,7 @@ body {
   text-align: left;
 }
 #preview-pane th { background: #f0f0f0; font-weight: 600; }
-#preview-pane a  { color: #0078d4; }
+#preview-pane a  { color: #5646F5; }
 #preview-pane hr { border: none; border-top: 1px solid #ddd; margin: 1em 0; }
 #preview-pane img { max-width: 100%; }
 
@@ -302,9 +302,9 @@ body {
 
 /* Preview active button state */
 #btn-preview.active {
-  background: #0078d4;
+  background: #5646F5;
   color: #fff;
-  border-color: #006abc;
+  border-color: #4535e0;
 }
 
 /* ── Status bar ────────────────────────────── */
@@ -312,11 +312,11 @@ body {
   display: flex;
   align-items: center;
   gap: 0;
-  background: #0078d4;
+  background: #5646F5;
   color: #fff;
   font-size: 12px;
   flex-shrink: 0;
-  border-top: 1px solid #006abc;
+  border-top: 1px solid #4535e0;
   overflow: hidden;
 }
 
@@ -429,8 +429,8 @@ body {
 }
 
 .frow input[type="text"]:focus {
-  border-color: #0078d4;
-  box-shadow: 0 0 0 2px rgba(0,120,212,0.2);
+  border-color: #5646F5;
+  box-shadow: 0 0 0 2px rgba(86,70,245,0.2);
 }
 
 .dlg-btns {
@@ -449,9 +449,9 @@ body {
 }
 
 .dlg-btns button:hover {
-  background: #0078d4;
+  background: #5646F5;
   color: #fff;
-  border-color: #0078d4;
+  border-color: #5646F5;
 }
 
 .dlg-msg {
@@ -488,7 +488,7 @@ body {
   transition: background 0.15s;
 }
 .pane-splitter:hover,
-.pane-splitter.dragging { background: #0078d4; }
+.pane-splitter.dragging { background: #5646F5; }
 
 .preview-panel {
   display: none;
@@ -534,7 +534,7 @@ body {
   line-height: 1;
   margin-right: auto;
 }
-.prev-expand-btn:hover { color: #0078d4; }
+.prev-expand-btn:hover { color: #5646F5; }
 
 /* In split mode the preview-panel and splitter appear */
 .editor-wrap.split-mode .pane-splitter    { display: block; }
@@ -552,9 +552,9 @@ body {
 
 /* Active state for split button */
 #btn-split.active {
-  background: #0078d4;
+  background: #5646F5;
   color: #fff;
-  border-color: #006abc;
+  border-color: #4535e0;
 }
 
 /* ── Status-bar zoom group ─────────────────── */
@@ -580,6 +580,47 @@ body {
 
 #sb-zoom { min-width: 34px; text-align: center; }
 
+/* ── Case Converter dialog ─────────────────── */
+.case-hint {
+  font-size: 12px;
+  color: var(--np-text2, #555);
+  padding: 2px 0;
+}
+
+.case-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.case-btns button {
+  padding: 6px 14px;
+  border: 1px solid #bbb;
+  background: #f0f0f0;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: Consolas, 'Courier New', monospace;
+}
+
+.case-btns button:hover {
+  background: #5646F5;
+  color: #fff;
+  border-color: #5646F5;
+}
+
+[data-theme="dark"] .case-hint { color: var(--np-text2); }
+[data-theme="dark"] .case-btns button {
+  background: var(--np-bg3);
+  border-color: var(--np-border);
+  color: var(--np-text);
+}
+[data-theme="dark"] .case-btns button:hover {
+  background: var(--np-accent);
+  border-color: var(--np-accent);
+  color: #1e1e1e;
+}
+
 /* ── Dark mode overrides ───────────────────── */
 :root {
   --np-bg: #ffffff;
@@ -588,8 +629,8 @@ body {
   --np-border: #d4d4d4;
   --np-text: #1e1e1e;
   --np-text2: #555555;
-  --np-accent: #0078d4;
-  --np-header-bg: #0078d4;
+  --np-accent: #5646F5;
+  --np-header-bg: #5646F5;
   --np-header-text: #ffffff;
 }
 
@@ -600,8 +641,8 @@ body {
   --np-border: #3e3e42;
   --np-text: #cccccc;
   --np-text2: #888888;
-  --np-accent: #4fc3f7;
-  --np-header-bg: #003a6e;
+  --np-accent: #8b83f7;
+  --np-header-bg: #3c2fd4;
   --np-header-text: #ffffff;
 }
 

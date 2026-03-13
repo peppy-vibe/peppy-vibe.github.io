@@ -4,43 +4,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Peppy Tools Portal</title>
+  <meta name="description" content="Peppy Vibe Tools — a suite of six free, fully client-side browser apps: notepad, table generator, dev tools, random tools, people tools, and QR &amp; barcode generator.">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg-grad-1: #0f0c29;
-      --bg-grad-2: #302b63;
-      --bg-grad-3: #24243e;
+      --bg-grad-1: #0c0a1e;
+      --bg-grad-2: #1e1860;
+      --bg-grad-3: #18133a;
       --card-bg: rgba(255,255,255,0.08);
       --card-border: rgba(255,255,255,0.18);
       --card-hover-bg: rgba(255,255,255,0.15);
       --text: #ffffff;
       --text-muted: rgba(255,255,255,0.75);
-      --btn-bg: rgba(255,255,255,0.22);
-      --btn-hover: rgba(255,255,255,0.38);
+      --btn-bg: #5646F5;
+      --btn-hover: #4535e0;
       --nav-bg: rgba(0,0,0,0.25);
       --theme-btn-bg: rgba(255,255,255,0.15);
       --theme-btn-hover: rgba(255,255,255,0.28);
+      --accent: #5646F5;
     }
 
     [data-theme="light"] {
-      --bg-grad-1: #e8f0fe;
-      --bg-grad-2: #dde8f7;
-      --bg-grad-3: #c9d8f0;
-      --card-bg: rgba(255,255,255,0.75);
-      --card-border: rgba(0,0,0,0.12);
-      --card-hover-bg: rgba(255,255,255,0.95);
-      --text: #1a1a2e;
-      --text-muted: rgba(20,20,60,0.65);
-      --btn-bg: rgba(0,0,0,0.08);
-      --btn-hover: rgba(0,0,0,0.15);
-      --nav-bg: rgba(255,255,255,0.35);
-      --theme-btn-bg: rgba(0,0,0,0.08);
-      --theme-btn-hover: rgba(0,0,0,0.15);
+      --bg-grad-1: #eceaff;
+      --bg-grad-2: #e0ddfb;
+      --bg-grad-3: #d0ccf8;
+      --card-bg: rgba(255,255,255,0.80);
+      --card-border: rgba(86,70,245,0.18);
+      --card-hover-bg: rgba(255,255,255,0.97);
+      --text: #0e0b2e;
+      --text-muted: rgba(14,11,46,0.62);
+      --btn-bg: #5646F5;
+      --btn-hover: #4535e0;
+      --nav-bg: rgba(255,255,255,0.40);
+      --theme-btn-bg: rgba(86,70,245,0.10);
+      --theme-btn-hover: rgba(86,70,245,0.20);
+      --accent: #5646F5;
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       background: linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2), var(--bg-grad-3));
       min-height: 100vh;
       display: flex;
@@ -51,12 +54,12 @@
 
     nav {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
-      padding: 0.75rem 1.5rem;
-      background: var(--nav-bg);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--card-border);
+      padding: 0.5rem 1rem;
+      background: var(--accent);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
     }
 
     #theme-btn {
@@ -67,11 +70,20 @@
       border-radius: 20px;
       cursor: pointer;
       font-size: 0.88rem;
-      font-family: inherit;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       transition: background 0.2s;
       backdrop-filter: blur(4px);
     }
     #theme-btn:hover { background: var(--theme-btn-hover); }
+
+    .nav-title {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      color: #ffffff;
+      font-weight: 700;
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: 0.2px;
+    }
 
     header {
       padding: 3rem 2rem 1.5rem;
@@ -102,7 +114,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
       gap: 2rem;
-      max-width: 820px;
+      max-width: 1100px;
       width: 100%;
     }
 
@@ -155,6 +167,7 @@
       margin-top: 1.4rem;
       padding: 0.5rem 1.25rem;
       background: var(--btn-bg);
+      color: #fff;
       border-radius: 8px;
       font-size: 0.9rem;
       font-weight: 600;
@@ -163,7 +176,8 @@
       align-self: flex-start;
     }
 
-    .card:hover .btn-launch {
+    .card:hover .btn-launch,
+    .btn-launch:hover {
       background: var(--btn-hover);
     }
 
@@ -178,6 +192,15 @@
       header h1 { font-size: 1.9rem; }
       .cards { gap: 1.25rem; }
     }
+
+    #offline-banner {
+      background: #f59e0b;
+      color: #1c1002;
+      text-align: center;
+      padding: 0.45rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -188,14 +211,12 @@
     })();
   </script>
 
+  <div id="offline-banner" hidden>&#9888; You are offline — all tools still work from cache.</div>
+
   <nav>
+    <p class="nav-title">Peppy Vibe: Tools</p>
     <button id="theme-btn" onclick="togglePortalTheme()">☀ Light</button>
   </nav>
-
-  <header>
-    <h1>&#9889; Peppy Tools Portal</h1>
-    <p>Powerful browser-based utilities &mdash; 100% static, no server required.</p>
-  </header>
 
   <main>
     <div class="cards">
@@ -208,6 +229,8 @@
           <li>Find &amp; Replace with case sensitivity</li>
           <li>Word wrap, font family &amp; size controls</li>
           <li>Realtime split Markdown + LaTeX preview</li>
+          <li>Export Markdown as HTML</li>
+          <li>Text Case Converter</li>
         </ul>
         <span class="btn-launch">Launch &#8594;</span>
       </a>
@@ -222,11 +245,78 @@
         </ul>
         <span class="btn-launch">Launch &#8594;</span>
       </a>
+
+      <a class="card" href="./pdf-tools/">
+        <div class="card-icon">&#128196;</div>
+        <h2>Peppy PDF Tools</h2>
+        <p>20 powerful PDF utilities &mdash; all client-side, no uploads, nothing leaves your browser.</p>
+        <ul>
+          <li>Merge, Split, Extract, Delete &amp; Rearrange pages</li>
+          <li>Rotate pages, Add Watermark &amp; Page Numbers</li>
+          <li>Convert Images to PDF &amp; PDF Viewer</li>
+          <li>Compress, Crop, Resize &amp; Flatten</li>
+          <li>Password protect, Remove password, Lock &amp; Redact</li>
+          <li>Remove metadata &amp; hidden data</li>
+        </ul>
+        <span class="btn-launch">Launch &#8594;</span>
+      </a>
+
+      <a class="card" href="./random-tools/">
+        <div class="card-icon">&#127922;</div>
+        <h2>Peppy Random Tools</h2>
+        <p>10 decision &amp; randomization tools for choices, games, and activities &mdash; all in one app.</p>
+        <ul>
+          <li>Wheel Spinner, Yes/No Generator, Option &amp; Winner Picker</li>
+          <li>Number, Dice, Coin, Card, Day &amp; Time Generators</li>
+        </ul>
+        <span class="btn-launch">Launch &#8594;</span>
+      </a>
+
+      <a class="card" href="./people-tools/">
+        <div class="card-icon">&#128101;</div>
+        <h2>Peppy People &amp; Group Tools</h2>
+        <p>11 tools for teams, classrooms, and events &mdash; pickers, team builder, pairs, seating, Secret Santa, and more.</p>
+        <ul>
+          <li>Random Person Picker, Host Picker &amp; Speaker Selector</li>
+          <li>Team Generator, Pair Generator &amp; Group Creator</li>
+          <li>Attendance Roll Call, Seating Chart &amp; Name Shuffler</li>
+          <li>Secret Santa with reveal &amp; export</li>
+        </ul>
+        <span class="btn-launch">Launch &#8594;</span>
+      </a>
+
+      <a class="card" href="./qr-barcode/">
+        <div class="card-icon">&#9636;</div>
+        <h2>Peppy QR &amp; Barcode Tools</h2>
+        <p>Generate, scan, and export QR codes and barcodes &mdash; fully client-side, no uploads.</p>
+        <ul>
+          <li>QR Generator: URL, Text, WiFi, vCard, Email, SMS, Phone</li>
+          <li>Logo overlay, color pickers &amp; batch QR export</li>
+          <li>QR Scanner via device camera</li>
+          <li>Barcode Generator in 15+ formats with SVG &amp; PNG export</li>
+        </ul>
+        <span class="btn-launch">Launch &#8594;</span>
+      </a>
+
+      <a class="card" href="./dev-tools/">
+        <div class="card-icon">&#128736;</div>
+        <h2>Peppy Dev Tools</h2>
+        <p>All developer utility suites in one unified app with a grouped, collapsible sidebar &mdash; no switching between tabs.</p>
+        <ul>
+          <li>Encoding &amp; Security (Base64, URL, Hash, Password, UUID, JWT, HTML Entities)</li>
+          <li>Text Tools (Diff, Sort, Dedup, Random, Lorem, Stats)</li>
+          <li>JSON / YAML / XML (8 tools)</li>
+          <li>Color Tools &amp; Timestamps &amp; Regex</li>
+        </ul>
+        <span class="btn-launch">Launch &#8594;</span>
+      </a>
+
     </div>
   </main>
 
   <footer>
-    <p>Peppy Tools Portal &mdash; Fully client-side &middot; No data leaves your browser</p>
+    <p>Peppy Vibe Tools V.0.1.0 &mdash; Powerful Browser-Based Utilities</p>
+    <p>open source &middot; fully client-side &middot; no data leaves your browser</p>
   </footer>
 
   <script>
@@ -242,6 +332,20 @@
       updatePortalThemeBtn();
     }
     updatePortalThemeBtn();
+
+    /* Service Worker registration */
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(function() {});
+    }
+
+    /* Offline indicator */
+    (function() {
+      var banner = document.getElementById('offline-banner');
+      function sync() { if (banner) banner.hidden = navigator.onLine; }
+      window.addEventListener('online',  sync);
+      window.addEventListener('offline', sync);
+      sync();
+    })();
   </script>
 </body>
 </html>

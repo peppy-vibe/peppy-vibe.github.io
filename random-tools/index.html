@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peppy Random Tools</title>
+  <meta name="description" content="10 decision and randomisation tools: wheel spinner, dice roller, coin flip, card picker, yes/no generator, number generator, and more.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <script>(function(){var t=localStorage.getItem('stp-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+  <div class="app-header">
+    <a href="../index.html" class="back-link">&#8592; Home</a>
+    <h1>Peppy Random Tools</h1>
+    <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()">&#9728; Light</button>
+  </div>
+
+  <div class="app-body">
+
+    <!-- ══ Sidebar ══ -->
+    <div class="sidebar">
+      <div class="sidebar-top-nav" id="sidebar-top-nav">
+        <button class="grp-nav-btn active" data-grp="decision" title="Decision &amp; Random Choice" onclick="jumpGroup('decision')">&#127922;</button>
+      </div>
+
+      <div class="sidebar-groups" id="sidebar-groups">
+
+        <!-- Group 1: Decision & Random Choice -->
+        <div class="sidebar-group" id="grp-decision">
+          <button class="grp-hdr" onclick="toggleGroup('decision')">
+            <span>&#127922; Decision &amp; Random</span>
+            <span class="grp-chevron">&#9660;</span>
+          </button>
+          <div class="grp-tools">
+            <button class="tab-btn active" data-tool="wheel"         data-grp="decision" onclick="showTool('wheel')">Wheel Spinner</button>
+            <button class="tab-btn"        data-tool="yesno"         data-grp="decision" onclick="showTool('yesno')">Yes / No Generator</button>
+            <button class="tab-btn"        data-tool="option-picker" data-grp="decision" onclick="showTool('option-picker')">Option Picker</button>
+            <button class="tab-btn"        data-tool="winner"        data-grp="decision" onclick="showTool('winner')">Winner Picker</button>
+            <button class="tab-btn"        data-tool="number-gen"    data-grp="decision" onclick="showTool('number-gen')">Number Generator</button>
+            <button class="tab-btn"        data-tool="dice"          data-grp="decision" onclick="showTool('dice')">Dice Roller</button>
+            <button class="tab-btn"        data-tool="coin"          data-grp="decision" onclick="showTool('coin')">Coin Flip</button>
+            <button class="tab-btn"        data-tool="card"          data-grp="decision" onclick="showTool('card')">Card Picker</button>
+            <button class="tab-btn"        data-tool="day"           data-grp="decision" onclick="showTool('day')">Day Picker</button>
+            <button class="tab-btn"        data-tool="time-gen"      data-grp="decision" onclick="showTool('time-gen')">Time Generator</button>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /sidebar -->
+
+    <!-- ══ Tool Area ══ -->
+    <div class="tool-area" id="tool-area">
+
+      <!-- ── 1. Wheel Spinner ── -->
+      <div class="tool-panel active" id="tool-wheel">
+        <div class="panel-title">&#127921; Random Wheel Spinner</div>
+        <div class="wheel-layout">
+          <div class="wheel-left">
+            <div class="form-group">
+              <label class="io-label">Options (one per line)</label>
+              <textarea class="io-area" id="wheel-options" rows="9" placeholder="Apple&#10;Banana&#10;Cherry&#10;Option D">Apple
+Banana
+Cherry
+Option D
+Option E
+Option F</textarea>
+            </div>
+            <div class="btn-row">
+              <button onclick="buildWheel()">Update Wheel</button>
+              <button id="spin-btn" onclick="spinWheel()">&#127922; Spin!</button>
+              <button class="btn-secondary" onclick="resetWheel()">Reset</button>
+            </div>
+          </div>
+          <div class="wheel-right">
+            <div class="wheel-container">
+              <div class="wheel-pointer">&#9660;</div>
+              <canvas id="wheel-canvas" width="300" height="300"></canvas>
+            </div>
+            <div class="wheel-result-text" id="wheel-result">&nbsp;</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 2. Yes / No Generator ── -->
+      <div class="tool-panel" id="tool-yesno">
+        <div class="panel-title">&#10067; Yes / No Decision Generator</div>
+        <div class="form-group">
+          <label class="io-label">Your question (optional)</label>
+          <input type="text" id="yesno-q" class="io-area" placeholder="Should I go for it?" style="height:auto;padding:8px 10px;">
+        </div>
+        <div class="yesno-center">
+          <div class="yesno-display" id="yesno-display">?</div>
+          <button onclick="decideYesNo()" style="font-size:1rem;padding:10px 32px;">&#127922; Decide!</button>
+          <div id="yesno-msg" style="font-size:0.9rem;color:var(--text2);text-align:center;min-height:1.2rem;"></div>
+        </div>
+      </div>
+
+      <!-- ── 3. Option Picker ── -->
+      <div class="tool-panel" id="tool-option-picker">
+        <div class="panel-title">&#127919; Random Option Picker</div>
+        <div class="form-group">
+          <label class="io-label">Options (one per line)</label>
+          <textarea class="io-area" id="option-list" rows="8" placeholder="Option A&#10;Option B&#10;Option C"></textarea>
+        </div>
+        <div class="btn-row">
+          <button onclick="pickOption()">&#127922; Pick One!</button>
+          <button class="btn-secondary" onclick="clearEl('option-result')">Clear</button>
+        </div>
+        <div class="big-result" id="option-result" style="display:none;">
+          <div class="result-label">Selected</div>
+          <div class="result-value" id="option-result-val"></div>
+        </div>
+        <div class="result-box" id="option-list-result" style="display:none;">
+          <div class="io-label" style="margin-bottom:8px;">All options</div>
+          <div id="option-list-display"></div>
+        </div>
+      </div>
+
+      <!-- ── 4. Winner Picker ── -->
+      <div class="tool-panel" id="tool-winner">
+        <div class="panel-title">&#127942; Random Winner Picker</div>
+        <div class="form-group">
+          <label class="io-label">Participants (one per line)</label>
+          <textarea class="io-area" id="winner-list" rows="8" placeholder="Alice&#10;Bob&#10;Charlie&#10;Diana"></textarea>
+        </div>
+        <div class="form-row">
+          <label class="io-label">Number of winners:</label>
+          <input type="number" id="winner-count" value="1" min="1" style="width:70px;">
+          <label class="checkbox-label"><input type="checkbox" id="winner-unique" checked> No repeats</label>
+        </div>
+        <div class="btn-row">
+          <button onclick="pickWinners()">&#127942; Pick Winners!</button>
+          <button class="btn-secondary" onclick="clearEl('winner-result-wrap')">Clear</button>
+        </div>
+        <div id="winner-result-wrap" style="display:none;">
+          <div class="winners-list" id="winner-result"></div>
+        </div>
+      </div>
+
+      <!-- ── 5. Number Generator ── -->
+      <div class="tool-panel" id="tool-number-gen">
+        <div class="panel-title">&#128257; Random Number Generator</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Min</label>
+            <input type="number" id="num-min" value="1" style="width:100px;">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Max</label>
+            <input type="number" id="num-max" value="100" style="width:100px;">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Count</label>
+            <input type="number" id="num-count" value="1" min="1" max="100" style="width:80px;">
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="checkbox-label"><input type="checkbox" id="num-unique"> Unique numbers only</label>
+          <label class="checkbox-label"><input type="checkbox" id="num-sort"> Sort results</label>
+        </div>
+        <div class="btn-row">
+          <button onclick="generateNumbers()">&#127922; Generate</button>
+          <button class="btn-secondary" onclick="clearEl('num-result')">Clear</button>
+        </div>
+        <div class="number-results" id="num-result"></div>
+        <div id="num-msg" class="tool-msg"></div>
+      </div>
+
+      <!-- ── 6. Dice Roller ── -->
+      <div class="tool-panel" id="tool-dice">
+        <div class="panel-title">&#127922; Dice Roller</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Dice Type</label>
+            <select id="dice-type">
+              <option value="4">d4</option>
+              <option value="6" selected>d6</option>
+              <option value="8">d8</option>
+              <option value="10">d10</option>
+              <option value="12">d12</option>
+              <option value="20">d20</option>
+              <option value="100">d100</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="io-label">Number of Dice</label>
+            <input type="number" id="dice-count" value="2" min="1" max="20" style="width:80px;">
+          </div>
+          <div style="align-self:flex-end;">
+            <button onclick="rollDice()">&#127922; Roll!</button>
+          </div>
+        </div>
+        <div class="dice-grid" id="dice-result"></div>
+        <div class="die-total" id="dice-total"></div>
+      </div>
+
+      <!-- ── 7. Coin Flip ── -->
+      <div class="tool-panel" id="tool-coin">
+        <div class="panel-title">&#129689; Coin Flip</div>
+        <div class="coin-wrap">
+          <div class="coin" id="coin" onclick="flipCoin()">
+            <div class="coin-inner" id="coin-inner">
+              <div class="coin-face" id="coin-face">H</div>
+              <div class="coin-back" id="coin-back">T</div>
+            </div>
+          </div>
+          <div class="coin-label" id="coin-label">Click the coin or button to flip</div>
+          <button onclick="flipCoin()" style="font-size:1rem;padding:10px 32px;">&#129689; Flip Coin!</button>
+          <div style="font-size:0.88rem;color:var(--text2);">Heads: <strong id="coin-heads">0</strong> &nbsp;|&nbsp; Tails: <strong id="coin-tails">0</strong> &nbsp;|&nbsp; <button class="btn-secondary" onclick="resetCoin()" style="font-size:12px;padding:3px 10px;">Reset Stats</button></div>
+        </div>
+      </div>
+
+      <!-- ── 8. Card Picker ── -->
+      <div class="tool-panel" id="tool-card">
+        <div class="panel-title">&#127183; Random Card Picker</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Number of Cards</label>
+            <input type="number" id="card-count" value="5" min="1" max="52" style="width:80px;">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Deck</label>
+            <select id="card-deck-reset">
+              <option value="full">Full 52-card deck</option>
+              <option value="jokers">With Jokers (54)</option>
+            </select>
+          </div>
+          <div style="align-self:flex-end;">
+            <button onclick="pickCards()">&#127183; Pick Cards</button>
+          </div>
+          <div style="align-self:flex-end;">
+            <button class="btn-secondary" onclick="resetDeck()">New Deck</button>
+          </div>
+        </div>
+        <div id="card-msg" class="tool-msg"></div>
+        <div class="cards-grid" id="card-result"></div>
+      </div>
+
+      <!-- ── 9. Day Picker ── -->
+      <div class="tool-panel" id="tool-day">
+        <div class="panel-title">&#128197; Random Day Picker</div>
+        <div class="form-group">
+          <label class="io-label">Mode</label>
+          <div class="form-row">
+            <label class="checkbox-label"><input type="radio" name="day-mode" value="weekday" checked onchange="toggleDayMode()"> Day of the Week</label>
+            <label class="checkbox-label"><input type="radio" name="day-mode" value="date" onchange="toggleDayMode()"> Random Date in Range</label>
+          </div>
+        </div>
+        <div id="day-range-opts" style="display:none;" class="form-row">
+          <div class="form-group">
+            <label class="io-label">From</label>
+            <input type="date" id="day-from" style="padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text);">
+          </div>
+          <div class="form-group">
+            <label class="io-label">To</label>
+            <input type="date" id="day-to" style="padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text);">
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="io-label">Count:</label>
+          <input type="number" id="day-count" value="1" min="1" max="30" style="width:70px;">
+          <button onclick="pickDay()">&#127922; Pick!</button>
+          <button class="btn-secondary" onclick="clearEl('day-result')">Clear</button>
+        </div>
+        <div id="day-result"></div>
+      </div>
+
+      <!-- ── 10. Time Generator ── -->
+      <div class="tool-panel" id="tool-time-gen">
+        <div class="panel-title">&#128336; Random Time Generator</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">From</label>
+            <input type="time" id="time-from" value="08:00">
+          </div>
+          <div class="form-group">
+            <label class="io-label">To</label>
+            <input type="time" id="time-to" value="17:00">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Count</label>
+            <input type="number" id="time-count" value="5" min="1" max="50" style="width:70px;">
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="checkbox-label"><input type="checkbox" id="time-sort" checked> Sort results</label>
+          <label class="checkbox-label"><input type="checkbox" id="time-unique"> Unique only</label>
+          <label class="checkbox-label"><input type="checkbox" id="time-seconds"> Include seconds</label>
+        </div>
+        <div class="btn-row">
+          <button onclick="generateTimes()">&#128336; Generate</button>
+          <button class="btn-secondary" onclick="clearEl('time-result')">Clear</button>
+        </div>
+        <div class="number-results" id="time-result" style="flex-direction:column;align-items:flex-start;"></div>
+        <div id="time-msg" class="tool-msg"></div>
+      </div>
+
+    </div><!-- /tool-area -->
+  </div><!-- /app-body -->
+
+  <script src="app.js"></script>
+</body>
+</html>

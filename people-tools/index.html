@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>People &amp; Group Tools</title>
+<meta name="description" content="11 tools for teams, classrooms and events: person picker, team generator, Secret Santa, seating chart, pair generator, attendance tracker, and more.">
+<link rel="stylesheet" href="style.css" />
+<script>
+  (function(){
+    var t = localStorage.getItem('stp-theme');
+    document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+  })();
+</script>
+</head>
+<body>
+
+<!-- ═══ APP HEADER ═══════════════════════════════════════════ -->
+<header class="app-header">
+  <a href="../index.html" class="back-link">&#8592; Home</a>
+  <h1>👥 People &amp; Group Tools</h1>
+  <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">&#9728; Light</button>
+</header>
+
+<!-- ═══ APP BODY ═══════════════════════════════════════════ -->
+<div class="app-body">
+  <!-- ── SIDEBAR ── -->
+  <div class="sidebar">
+    <!-- Saved Lists -->
+    <div class="savedlist-bar">
+      <span class="io-label" style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;font-weight:700;">Saved Lists</span>
+      <select class="savedlist-select" id="savedListSelect" onchange="loadSavedList()">
+        <option value="">— select a list —</option>
+      </select>
+      <div class="savedlist-btns">
+        <button onclick="saveCurrentList()">Save</button>
+        <button onclick="renameSavedList()">Rename</button>
+        <button onclick="deleteSavedList()">Delete</button>
+      </div>
+    </div>
+    <!-- Tool Groups -->
+    <div class="sidebar-groups">
+      <!-- Pickers -->
+      <div class="sidebar-group" id="grp-pickers">
+        <button class="grp-hdr" onclick="toggleGroup('grp-pickers')">
+          <span>🎯 Pickers</span><span class="grp-chevron">▼</span>
+        </button>
+        <div class="grp-tools">
+          <button class="tab-btn active" onclick="showTool('tool-person')">👤 Person Picker</button>
+          <button class="tab-btn"        onclick="showTool('tool-meeting-host')">🎤 Host Picker</button>
+          <button class="tab-btn"        onclick="showTool('tool-attendance')">📋 Attendance</button>
+          <button class="tab-btn"        onclick="showTool('tool-speaker')">🗣 Speaker Selector</button>
+          <button class="tab-btn"        onclick="showTool('tool-winner')">🏆 Winner Picker</button>
+        </div>
+      </div>
+      <!-- Teams -->
+      <div class="sidebar-group" id="grp-teams">
+        <button class="grp-hdr" onclick="toggleGroup('grp-teams')">
+          <span>🤝 Teams &amp; Groups</span><span class="grp-chevron">▼</span>
+        </button>
+        <div class="grp-tools">
+          <button class="tab-btn" onclick="showTool('tool-team-gen')">👥 Team Generator</button>
+          <button class="tab-btn" onclick="showTool('tool-pair-gen')">👫 Pair Generator</button>
+          <button class="tab-btn" onclick="showTool('tool-group-creator')">📦 Group Creator</button>
+          <button class="tab-btn" onclick="showTool('tool-seating')">💺 Seating Chart</button>
+        </div>
+      </div>
+      <!-- Events -->
+      <div class="sidebar-group" id="grp-events">
+        <button class="grp-hdr" onclick="toggleGroup('grp-events')">
+          <span>🎉 Events</span><span class="grp-chevron">▼</span>
+        </button>
+        <div class="grp-tools">
+          <button class="tab-btn" onclick="showTool('tool-name-shuffle')">🔀 Name Shuffler</button>
+          <button class="tab-btn" onclick="showTool('tool-secret-santa')">🎁 Secret Santa</button>
+        </div>
+      </div>
+    </div>
+  </div><!--/.sidebar-->
+
+  <!-- ── TOOL AREA ── -->
+  <div class="tool-area">
+
+    <!-- ═══════════════════════════════════════════
+         1. PERSON PICKER
+    ═══════════════════════════════════════════ -->
+    <div class="tool-panel active" id="tool-person">
+      <div class="panel-title">👤 Random Person Picker</div>
+      <p class="tool-desc">Pick one name at a time without repeats. Everyone is picked before the pool resets. Uses round-robin tracking.</p>
+
+      <div class="names-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="io-label">Participants</span>
+          <span class="names-count" id="person-count">0 names</span>
+        </div>
+        <div class="names-toolbar">
+          <button onclick="bulkAddNames('person-names')">+ Bulk Add</button>
+          <button onclick="importNames('person-names')">↑ Import</button>
+          <button onclick="exportText('person-names','participants')">↓ Export</button>
+          <button class="btn-secondary" onclick="clearArea('person-names')">Clear</button>
+        </div>
+        <textarea id="person-names" class="io-area" rows="5"
+          placeholder="One name per line&#10;Alice&#10;Bob&#10;Carol&#10;Dave"
+          oninput="countNames('person-names','person-count')">Alice
+Bob
+Carol
+Dave
+Eve</textarea>
+      </div>
+
+      <div class="form-row">
+        <label class="checkbox-label"><input type="checkbox" id="person-rr" checked /> Round-robin (no repeats)</label>
+        <label class="checkbox-label"><input type="checkbox" id="person-exclude-last" checked /> Exclude last picked</label>
+      </div>
+
+      <div class="slot-display" id="person-slot">Press Pick!</div>
+
+      <div class="form-row">
+        <button onclick="pickPerson()" style="flex:1">🎯 Pick Person</button>
+        <button class="btn-secondary" onclick="resetPersonPool()">↺ Reset Pool</button>
+      </div>
+
+      <div id="person-pool-wrap" style="display:none">
+        <div class="io-label" style="margin-bottom:4px;">Pool Status</div>
+        <div class="pool-chips" id="person-pool-chips"></div>
+      </div>
+
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span class="io-label">History</span>
+          <button class="btn-secondary" style="font-size:11px;padding:2px 8px" onclick="clearPersonHistory()">Clear</button>
+        </div>
+        <div class="history-list" id="person-history"></div>
+      </div>
+
+      <div class="export-bar" id="person-export" style="display:none">
+        <span class="io-label">Export:</span>
+        <button onclick="exportHistory('person-history','person_picks')">↓ Download</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         2. MEETING HOST PICKER
+    ═══════════════════════════════════════════ -->
+    <div class="tool-panel" id="tool-meeting-host">
+      <div class="panel-title">🎤 Meeting Host Picker</div>
+      <p class="tool-desc">Fairly rotate who runs the meeting. Tracks full rotation history so no one hosts twice until everyone has hosted.</p>
+
+      <div class="names-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="io-label">Team Members</span>
+          <span class="names-count" id="host-count">0 names</span>
+        </div>
+        <div class="names-toolbar">
+          <button onclick="bulkAddNames('host-names')">+ Bulk Add</button>
+          <button onclick="importNames('host-names')">↑ Import</button>
+          <button onclick="exportText('host-names','team_members')">↓ Export</button>
+          <button class="btn-secondary" onclick="clearArea('host-names')">Clear</button>
+        </div>
+        <textarea id="host-names" class="io-area" rows="4"
+          placeholder="One name per line"
+          oninput="countNames('host-names','host-count')">Alice
+Bob
+Carol
+Dave</textarea>
+      </div>
+
+      <div class="slot-display" id="host-slot">Press Pick!</div>
+
+      <div class="form-row">
+        <button onclick="pickHost()" style="flex:1">🎤 Pick Host</button>
+        <button class="btn-secondary" onclick="resetHostHistory()">↺ New Round</button>
+      </div>
+
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <span class="io-label">Round Status</span>
+          <span id="host-round-label" style="font-size:11px;color:var(--text2)"></span>
+        </div>
+        <div class="rr-grid" id="host-rr-grid"></div>
+      </div>
+
+      <div>
+        <div class="io-label" style="margin-bottom:6px">History</div>
+        <div class="history-list" id="host-history"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         3. ATTENDANCE PICKER
+    ═══════════════════════════════════════════ -->
+    <div class="tool-panel" id="tool-attendance">
+      <div class="panel-title">📋 Attendance Picker</div>
+      <p class="tool-desc">Pick from a list of absent or available people, or check roll call. Great for virtual meetings.</p>
+
+      <div class="names-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="io-label">Attendee List</span>
+          <span class="names-count" id="att-count">0 names</span>
+        </div>
+        <div class="names-toolbar">
+          <button onclick="bulkAddNames('att-names')">+ Bulk Add</button>
+          <button onclick="importNames('att-names')">↑ Import</button>
+          <button class="btn-secondary" onclick="clearArea('att-names')">Clear</button>
+        </div>
+        <textarea id="att-names" class="io-area" rows="4"
+          placeholder="One name per line"
+          oninput="countNames('att-names','att-count')">Alice
+Bob
+Carol
+Dave
+Eve</textarea>
+      </div>
+
+      <div class="slot-display" id="att-slot">Press Pick!</div>
+
+      <div class="form-row">
+        <button onclick="pickAttendance()" style="flex:1">📋 Pick One</button>
+        <button class="btn-secondary" onclick="resetAttendancePool()">↺ Reset</button>
+      </div>
+
+      <div>
+        <div class="io-label" style="margin-bottom:6px">Roll Call Table</div>
+        <div class="btn-row" style="margin-bottom:8px">
+          <button onclick="buildRollCall()" class="btn-secondary">Build Roll Call</button>
+          <button onclick="toggleAllPresent(true)"  class="btn-secondary" style="font-size:11px">All Present</button>
+          <button onclick="toggleAllPresent(false)" class="btn-secondary" style="font-size:11px">All Absent</button>
+          <button onclick="exportRollCall()">↓ Export CSV</button>
+        </div>
+        <div id="roll-call-wrap"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         4. SPEAKER SELECTOR
+    ═══════════════════════════════════════════ -->
+    <div class="tool-panel" id="tool-speaker">
+      <div class="panel-title">🗣 Speaker Selector</div>
+      <p class="tool-desc">Pick the next speaker in a queue, with skip and memory so you always know who's spoken and who is next.</p>
+
+      <div class="names-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="io-label">Speakers</span>
+          <span class="names-count" id="spk-count">0 names</span>
+        </div>
+        <div class="names-toolbar">
+          <button onclick="bulkAddNames('spk-names')">+ Bulk Add</button>
+          <button onclick="importNames('spk-names')">↑ Import</button>
+          <button class="btn-secondary" onclick="clearArea('spk-names')">Clear</button>
+        </div>
+        <textarea id="spk-names" class="io-area" rows="4"
+          placeholder="One name per line"
+          oninput="countNames('spk-names','spk-count')">Alice
+Bob
+Carol
+Dave</textarea>
+      </div>
+
+      <div class="slot-display" id="spk-slot">Press Select!</div>
+
+      <div class="form-row">
+        <label class="checkbox-label"><input type="checkbox" id="spk-order" /> Ordered queue (don't shuffle)</label>
+      </div>
+
+      <div class="form-row">
+        <button onclick="selectSpeaker()" style="flex:1">🗣 Next Speaker</button>
+        <button class="btn-secondary" onclick="resetSpeakerHistory()">↺ Reset</button>
+      </div>
+
+      <div>
+        <div class="io-label" style="margin-bottom:4px">Queue Status</div>
+        <div class="rr-grid" id="spk-rr-grid"></div>
+      </div>
+
+      <div>
+        <div class="io-label" style="margin-bottom:6px">History</div>
+        <div class="history-list" id="spk-history"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         5. WINNER PICKER
+    ═══════════════════════════════════════════ -->
+    <div class="tool-panel" id="tool-winner">
+      <div class="panel-title">🏆 Winner Picker</div>
+      <p class="tool-desc">Pick 1st, 2nd, 3rd, or more winners from a list. Great for giveaways and raffle draws.</p>
+
+      <div class="names-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="io-label">Entries / Participants</span>
+          <span class="names-count" id="win-count">0 names</span>
+        </div>
+        <div class="names-toolbar">
+          <button onclick="bulkAddNames('win-names')">+ Bulk Add</button>
+          <button onclick="importNames('win-names')">↑ Import</button>
+          <button class="btn-secondary" onclick="clearArea('win-names')">Clear</button>
+        </div>
+        <textarea id="win-names" class="io-area" rows="5"
+          placeholder="One name per line. Duplicate entries increase chances."
+          oninput="countNames('win-names','win-count')">Alice
+Bob
+Carol
+Dave
+Eve
+Frank</textarea>
+      </div>
+
+      <div class="form-row">
+        <label for="win-count-num" class="io-label" style="color:var(--text)">Number of winners:</label>
+        <input type="number" id="win-count-num" min="1" max="50" value="1" style="width:70px" />
+        <label class="checkbox-label"><input type="checkbox" id="win-allow-dupe" /> Allow duplicates</label>
+      </div>
+
+      <div class="form-row">
+        <button onclick="pickWinners()" style="flex:1">🏆 Pick Winners!</button>
+        <button onclick="printResults('win-results')" class="btn-secondary">🖨 Print</button>
+      </div>
+
+      <div id="win-results" class="winners-list"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         6. TEAM GENERATOR
+    ═══════════════════════════════════════════ -->
+    <div class="tool-panel" id="tool-team-gen">
+      <div class="panel-title">👥 Team Generator</div>
+      <p class="tool-desc">Split a list of names into balanced, randomised teams. You can name each team.</p>
+
+      <div class="names-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="io-label">Participants</span>
+          <span class="names-count" id="tg-count">0 names</span>
+        </div>
+        <div class="names-toolbar">
+          <button onclick="bulkAddNames('tg-names')">+ Bulk Add</button>
+          <button onclick="importNames('tg-names')">↑ Import</button>
+          <button onclick="exportText('tg-names','participants')">↓ Export</button>
+          <button class="btn-secondary" onclick="clearArea('tg-names')">Clear</button>
+        </div>
+        <textarea id="tg-names" class="io-area" rows="5"
+          placeholder="One name per line"
+          oninput="countNames('tg-names','tg-count')">Alice
+Bob
+Carol
+Dave
+Eve
+Frank
+Grace
+Hank</textarea>
+      </div>
+
+      <div class="form-row">
+        <label for="tg-num" class="io-label" style="color:var(--text)">Number of teams:</label>
+        <input type="number" id="tg-num" min="2" max="50" value="2" style="width:70px" />
+        <label class="checkbox-label"><input type="checkbox" id="tg-custom-names" onchange="toggleTeamNameInputs()" /> Custom team names</label>
+      </div>
+
+      <div id="tg-custom-names-section" style="display:none">
+        <span class="io-label">Team Names (one per line)</span>
+        <textarea id="tg-team-names" class="io-area" rows="3" placeholder="Red&#10;Blue&#10;Green"></textarea>
+      </div>
+
+      <div class="form-row">
+        <button onclick="generateTeams()" style="flex:1">🔀 Generate Teams</button>
+        <button onclick="exportTeamsText()" class="btn-secondary">↓ Export</button>
+        <button onclick="printResults('tg-results')" class="btn-secondary">🖨 Print</button>
+      </div>
+
+      <div id="tg-results" class="teams-grid"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         7. PAIR GENERATOR
+    ═══════════════════════════════════════════ -->
+    <div class="tool-panel" id="tool-pair-gen">
+      <div class="panel-title">👫 Pair Generator</div>
+      <p class="tool-desc">Create random pairs from a list. Odd numbers produce one trio. Useful for buddy systems, code reviews, or activities.</p>
+
+      <div class="names-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="io-label">Participants</span>
+          <span class="names-count" id="pg-count">0 names</span>
+        </div>
+        <div class="names-toolbar">
+          <button onclick="bulkAddNames('pg-names')">+ Bulk Add</button>
+          <button onclick="importNames('pg-names')">↑ Import</button>
+          <button class="btn-secondary" onclick="clearArea('pg-names')">Clear</button>
+        </div>
+        <textarea id="pg-names" class="io-area" rows="5"
+          placeholder="One name per line"
+          oninput="countNames('pg-names','pg-count')">Alice
+Bob
+Carol
+Dave
+Eve
+Frank</textarea>
+      </div>
+
+      <div class="btn-row">
+        <button onclick="generatePairs()">🔀 Generate Pairs</button>
+        <button onclick="exportPairs()" class="btn-secondary">↓ Export</button>
+        <button onclick="printResults('pg-results')" class="btn-secondary">🖨 Print</button>
+      </div>
+
+      <div id="pg-results" class="pairs-list"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         8. GROUP CREATOR
+    ═══════════════════════════════════════════ -->
+    <div class="tool-panel" id="tool-group-creator">
+      <div class="panel-title">📦 Group Creator</div>
+      <p class="tool-desc">Create groups either by specifying how many groups, or the size of each group.</p>
+
+      <div class="names-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="io-label">Participants</span>
+          <span class="names-count" id="gc-count">0 names</span>
+        </div>
+        <div class="names-toolbar">
+          <button onclick="bulkAddNames('gc-names')">+ Bulk Add</button>
+          <button onclick="importNames('gc-names')">↑ Import</button>
+          <button class="btn-secondary" onclick="clearArea('gc-names')">Clear</button>
+        </div>
+        <textarea id="gc-names" class="io-area" rows="5"
+          placeholder="One name per line"
+          oninput="countNames('gc-names','gc-count')">Alice
+Bob
+Carol
+Dave
+Eve
+Frank
+Grace
+Hank</textarea>
+      </div>
+
+      <div class="form-row">
+        <label class="checkbox-label"><input type="radio" name="gc-mode" value="by-count" checked onchange="toggleGroupMode(this.value)" /> By number of groups</label>
+        <label class="checkbox-label"><input type="radio" name="gc-mode" value="by-size" onchange="toggleGroupMode(this.value)" /> By group size</label>
+      </div>
+
+      <div class="form-row" id="gc-input-row">
+        <span class="io-label" id="gc-lbl" style="color:var(--text)">Number of groups:</span>
+        <input type="number" id="gc-num" min="1" max="100" value="3" style="width:80px" />
+      </div>
+
+      <div class="form-row">
+        <button onclick="createGroups()" style="flex:1">📦 Create Groups</button>
+        <button onclick="printResults('gc-results')" class="btn-secondary">🖨 Print</button>
+      </div>
+
+      <div id="gc-results" class="teams-grid"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         9. SEATING CHART
+    ═══════════════════════════════════════════ -->
+    <div class="tool-panel" id="tool-seating">
+      <div class="panel-title">💺 Seating Chart</div>
+      <p class="tool-desc">Generate a randomized seating arrangement. Set the number of columns to match your room layout.</p>
+
+      <div class="names-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="io-label">Participants</span>
+          <span class="names-count" id="seat-count">0 names</span>
+        </div>
+        <div class="names-toolbar">
+          <button onclick="bulkAddNames('seat-names')">+ Bulk Add</button>
+          <button onclick="importNames('seat-names')">↑ Import</button>
+          <button class="btn-secondary" onclick="clearArea('seat-names')">Clear</button>
+        </div>
+        <textarea id="seat-names" class="io-area" rows="4"
+          placeholder="One name per line"
+          oninput="countNames('seat-names','seat-count')">Alice
+Bob
+Carol
+Dave
+Eve
+Frank
+Grace</textarea>
+      </div>
+
+      <div class="form-row">
+        <label for="seat-cols" class="io-label" style="color:var(--text)">Seats per row:</label>
+        <input type="number" id="seat-cols" min="1" max="20" value="4" style="width:70px" />
+        <label class="checkbox-label"><input type="checkbox" id="seat-row-labels" checked /> Row labels</label>
+        <label class="checkbox-label"><input type="checkbox" id="seat-show-empty" /> Show empty seats</label>
+      </div>
+
+      <div class="btn-row">
+        <button onclick="generateSeating()">💺 Generate Seating</button>
+        <button onclick="printResults('seating-grid-display')" class="btn-secondary">🖨 Print</button>
+      </div>
+
+      <div class="seating-grid-wrap">
+        <div id="seating-grid-display" class="seating-grid"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         10. NAME SHUFFLER
+    ═══════════════════════════════════════════ -->
+    <div class="tool-panel" id="tool-name-shuffle">
+      <div class="panel-title">🔀 Name Shuffler</div>
+      <p class="tool-desc">Randomize the order of any list. Export the shuffled result as text or CSV.</p>
+
+      <div class="names-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="io-label">List to Shuffle</span>
+          <span class="names-count" id="ns-count">0 names</span>
+        </div>
+        <div class="names-toolbar">
+          <button onclick="bulkAddNames('ns-names')">+ Bulk Add</button>
+          <button onclick="importNames('ns-names')">↑ Import</button>
+          <button class="btn-secondary" onclick="clearArea('ns-names')">Clear</button>
+        </div>
+        <textarea id="ns-names" class="io-area" rows="5"
+          placeholder="One name per line"
+          oninput="countNames('ns-names','ns-count')">Alice
+Bob
+Carol
+Dave
+Eve
+Frank</textarea>
+      </div>
+
+      <div class="btn-row">
+        <button onclick="shuffleNames()">🔀 Shuffle</button>
+        <button onclick="exportText('ns-result','shuffled_order')" class="btn-secondary">↓ Export</button>
+        <button onclick="printResults('ns-result-display')" class="btn-secondary">🖨 Print</button>
+      </div>
+
+      <div>
+        <div class="io-label" style="margin-bottom:6px">Shuffled Order</div>
+        <div class="ordered-list" id="ns-result-display"></div>
+        <textarea id="ns-result" class="io-area" rows="5" readonly placeholder="Result will appear here…" style="margin-top:8px"></textarea>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         11. SECRET SANTA
+    ═══════════════════════════════════════════ -->
+    <div class="tool-panel" id="tool-secret-santa">
+      <div class="panel-title">🎁 Secret Santa</div>
+      <p class="tool-desc">Generate assignments so everyone gives a gift to exactly one person. Supports exclusion pairs so partners don't give to each other.</p>
+
+      <div class="names-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="io-label">Participants</span>
+          <span class="names-count" id="ss-count">0 names</span>
+        </div>
+        <div class="names-toolbar">
+          <button onclick="bulkAddNames('ss-names')">+ Bulk Add</button>
+          <button onclick="importNames('ss-names')">↑ Import</button>
+          <button class="btn-secondary" onclick="clearArea('ss-names')">Clear</button>
+        </div>
+        <textarea id="ss-names" class="io-area" rows="4"
+          placeholder="One name per line (4+ recommended)"
+          oninput="countNames('ss-names','ss-count')">Alice
+Bob
+Carol
+Dave
+Eve</textarea>
+      </div>
+
+      <div class="form-group">
+        <div class="io-label">Exclusion Pairs (comma-separated, one pair per line)</div>
+        <textarea id="ss-exclusions" class="io-area" rows="2"
+          placeholder="Alice, Bob&#10;Carol, Dave  ← these two won't give to each other"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button onclick="generateSanta()">🎁 Generate</button>
+        <button onclick="revealAllSanta()" class="btn-secondary">👁 Reveal All</button>
+        <button onclick="hideAllSanta()" class="btn-secondary">🙈 Hide All</button>
+        <button onclick="exportSanta()" class="btn-secondary">↓ Export</button>
+      </div>
+
+      <div id="ss-msg" class="tool-msg"></div>
+      <div class="santa-list" id="ss-results"></div>
+    </div>
+
+  </div><!--/.tool-area-->
+</div><!--/.app-body-->
+
+<script src="app.js"></script>
+</body>
+</html>

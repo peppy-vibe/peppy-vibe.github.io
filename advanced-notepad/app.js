@@ -256,8 +256,12 @@ document.querySelectorAll('.menu-item').forEach(item => {
     // If the user is clicking a button inside the dropdown, let the click event
     // fire normally. e.preventDefault() keeps the textarea's focus and selection
     // intact (critical for Cut / Copy / Delete operations).
+    // e.stopPropagation() prevents the document-level mousedown from calling
+    // closeMenus() before the click event fires (which would hide the dropdown
+    // and swallow the click on the button).
     if (e.target.closest('.dropdown button')) {
       e.preventDefault();
+      e.stopPropagation();
       return;
     }
     e.stopPropagation();
@@ -663,6 +667,128 @@ function loadDraft() {
     }
   } catch {}
 })();
+
+/* ── Markdown → HTML Export ────────────────── */
+function exportAsHtml() {
+  if (typeof marked === 'undefined') { alert('Preview libraries not loaded yet — please wait a moment and try again.'); return; }
+
+  const src = editor.value;
+  const mathStore = [];
+  function stash(expr, display) { mathStore.push({ expr, display }); return `\x02MATH${mathStore.length - 1}\x03`; }
+
+  let safe = src
+    .replace(/\$\$([\s\S]+?)\$\$/g, (_, e) => stash(e, true))
+    .replace(/\$([^\n$]+?)\$/g, (_, e) => stash(e, false));
+
+  marked.use({ gfm: true, breaks: false });
+  let body = marked.parse(safe);
+
+  if (typeof katex !== 'undefined') {
+    body = body.replace(/\x02MATH(\d+)\x03/g, (_, i) => {
+      const { expr, display } = mathStore[+i];
+      try { return katex.renderToString(expr, { displayMode: display, throwOnError: false }); }
+      catch { const e2 = expr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); return display ? `<pre>$$${e2}$$</pre>` : `<code>$${e2}$</code>`; }
+    });
+  }
+
+  const title = currentFilename.replace(/\.[^.]+$/, '') || 'document';
+  const full = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${title.replace(/</g, '&lt;')}</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.css">
+<style>
+  body { max-width: 860px; margin: 2rem auto; padding: 0 1rem; font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.75; color: #1e1e1e; }
+  pre  { background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 6px; overflow-x: auto; }
+  code { background: #f4f4f4; padding: 2px 5px; border-radius: 3px; font-family: Consolas, monospace; }
+  pre code { background: none; padding: 0; }
+  table { border-collapse: collapse; width: 100%; } th, td { border: 1px solid #ccc; padding: 6px 12px; }
+  th { background: #f0f0f0; }
+  blockquote { border-left: 4px solid #0078d4; margin: 0.8em 0; padding: 4px 12px; background: #f0f6ff; }
+  a { color: #0078d4; }
+</style>
+</head>
+<body>
+${body}
+</body>
+</html>`;
+
+  const blob = new Blob([full], { type: 'text/html;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = title + '.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* ── Text Case Converter ────────────────────── */
+function openCaseConverter() {
+  closeMenus();
+  document.getElementById('case-overlay').classList.add('visible');
+}
+
+function closeCaseConverter() {
+  document.getElementById('case-overlay').classList.remove('visible');
+  editor.focus();
+}
+
+function convertCase(type) {
+  const s  = editor.selectionStart;
+  const e2 = editor.selectionEnd;
+  const hasSel = s !== e2;
+  const text = hasSel ? editor.value.substring(s, e2) : editor.value;
+
+  let result;
+  switch (type) {
+    case 'upper':
+      result = text.toUpperCase(); break;
+    case 'lower':
+      result = text.toLowerCase(); break;
+    case 'title':
+      result = text.replace(/\b\w/g, c => c.toUpperCase()); break;
+    case 'sentence':
+      result = text.toLowerCase()
+        .replace(/(^\s*)([\w\u00C0-\u024F])/, (_, sp, c) => sp + c.toUpperCase())
+        .replace(/([.!?]+\s+)([\w\u00C0-\u024F])/g, (_, p, c) => p + c.toUpperCase());
+      break;
+    case 'toggle':
+      result = [...text].map(c => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join(''); break;
+    case 'camel': {
+      const words = text.trim().split(/[\s_\-]+/);
+      result = words.map((w, i) => i === 0 ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('');
+      break;
+    }
+    case 'snake':
+      result = text
+        .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
+        .replace(/[\s\-]+/g, '_')
+        .toLowerCase();
+      break;
+    case 'kebab':
+      result = text
+        .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+        .replace(/[\s_]+/g, '-')
+        .toLowerCase();
+      break;
+    default: return;
+  }
+
+  if (hasSel) {
+    editor.setRangeText(result, s, e2, 'select');
+  } else {
+    editor.value = result;
+  }
+  isModified = true;
+  updateTitle();
+  if (showLN) rebuildLineNums();
+  updateStatus();
+  saveDraft();
+  closeCaseConverter();
+}
 
 /* ── Insert Date/Time (Ctrl+Shift+D) ───────── */
 function insertDateTime() {

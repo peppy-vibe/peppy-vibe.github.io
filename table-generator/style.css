@@ -21,7 +21,7 @@ body {
   align-items: center;
   gap: 14px;
   padding: 8px 16px;
-  background: #0078d4;
+  background: #5646F5;
   color: #fff;
   flex-shrink: 0;
 }
@@ -94,13 +94,13 @@ body {
 
 .toolbar button:hover {
   background: #e5f0fb;
-  border-color: #0078d4;
+  border-color: #5646F5;
 }
 
 .toolbar button.active {
-  background: #0078d4;
+  background: #5646F5;
   color: #fff;
-  border-color: #006abc;
+  border-color: #4535e0;
 }
 
 .toolbar label {
@@ -168,9 +168,9 @@ body {
 
 #tbl-container td.sel,
 #tbl-container th.sel {
-  outline: 2px solid #0078d4 !important;
+  outline: 2px solid #5646F5 !important;
   outline-offset: -2px;
-  background-color: rgba(0,120,212,0.10) !important;
+  background-color: rgba(86,70,245,0.10) !important;
 }
 
 /* ── Settings panel ────────────────────────── */
@@ -202,8 +202,8 @@ body {
 
 .ptab.active {
   background: #fff;
-  border-bottom-color: #0078d4;
-  color: #0078d4;
+  border-bottom-color: #5646F5;
+  color: #5646F5;
   font-weight: 600;
 }
 
@@ -283,9 +283,9 @@ body {
 }
 
 .style-btn:hover {
-  background: #0078d4;
+  background: #5646F5;
   color: #fff;
-  border-color: #006abc;
+  border-color: #4535e0;
 }
 
 .hint-text {
@@ -316,9 +316,9 @@ body {
 }
 
 .export-bar button:hover {
-  background: #0078d4;
+  background: #5646F5;
   color: #fff;
-  border-color: #006abc;
+  border-color: #4535e0;
 }
 
 .bar-sep {
@@ -416,9 +416,9 @@ body {
 }
 
 .dlg-btns button:hover {
-  background: #0078d4;
+  background: #5646F5;
   color: #fff;
-  border-color: #006abc;
+  border-color: #4535e0;
 }
 
 .dlg-msg {
@@ -473,7 +473,7 @@ body {
 }
 
 .ctx-menu button:hover {
-  background: #0078d4;
+  background: #5646F5;
   color: #fff;
 }
 
@@ -521,11 +521,11 @@ body {
   display: flex;
   align-items: center;
   gap: 0;
-  background: #0078d4;
+  background: #5646F5;
   color: #fff;
   font-size: 12px;
   flex-shrink: 0;
-  border-top: 1px solid #006abc;
+  border-top: 1px solid #4535e0;
   padding: 0;
 }
 .tbl-statusbar span {
@@ -575,10 +575,10 @@ body {
   --tg-border: #dddddd;
   --tg-text: #1e1e1e;
   --tg-text2: #888888;
-  --tg-accent: #0078d4;
+  --tg-accent: #5646F5;
   --tg-canvas: #ffffff;
   --tg-cell-bg: #ffffff;
-  --tg-header-bg: #0078d4;
+  --tg-header-bg: #5646F5;
 }
 
 [data-theme="dark"] {
@@ -588,10 +588,10 @@ body {
   --tg-border: #3e3e42;
   --tg-text: #cccccc;
   --tg-text2: #888888;
-  --tg-accent: #4fc3f7;
+  --tg-accent: #8b83f7;
   --tg-canvas: #2d2d30;
   --tg-cell-bg: #1e1e1e;
-  --tg-header-bg: #003a6e;
+  --tg-header-bg: #3c2fd4;
 }
 
 [data-theme="dark"] body {
@@ -613,7 +613,7 @@ body {
   color: var(--tg-text);
 }
 [data-theme="dark"] .toolbar button:hover {
-  background: #1a3a5c;
+  background: #2d1fa8;
   border-color: var(--tg-accent);
   color: var(--tg-text);
 }
@@ -670,7 +670,7 @@ body {
   color: var(--tg-text);
 }
 [data-theme="dark"] .export-bar button:hover {
-  background: #1a3a5c;
+  background: #2d1fa8;
   border-color: var(--tg-accent);
 }
 [data-theme="dark"] .bar-sep { background: var(--tg-border); }
@@ -719,6 +719,6 @@ body {
 [data-theme="dark"] .ctx-menu hr { border-top-color: var(--tg-border); }
 [data-theme="dark"] .tbl-statusbar {
   background: var(--tg-header-bg);
-  border-top-color: #002a5e;
+  border-top-color: #3221c0;
 }
 

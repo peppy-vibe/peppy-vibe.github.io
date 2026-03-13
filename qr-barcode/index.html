@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QR &amp; Barcode Tools</title>
+<meta name="description" content="Generate and scan QR codes (URL, WiFi, vCard, email, SMS) and barcodes (CODE128, EAN-13, UPC-A and more). Fully client-side — no data leaves your browser.">
+<link rel="stylesheet" href="style.css" />
+<!-- QR Code library (local vendor - offline support) -->
+<script src="../vendor/qrcode.min.js"></script>
+<!-- JsBarcode library (local vendor - offline support) -->
+<script src="../vendor/JsBarcode.all.min.js"></script>
+<script>
+  (function(){
+    var t = localStorage.getItem('stp-theme');
+    document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+  })();
+</script>
+</head>
+<body>
+
+<!-- ═══ APP HEADER ═══════════════════════════════════════════ -->
+<header class="app-header">
+  <a href="../index.html" class="back-link">&#8592; Home</a>
+  <h1>〣 QR &amp; Barcode Tools</h1>
+  <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">&#9728; Light</button>
+</header>
+
+<!-- ═══ APP BODY ═══════════════════════════════════════════ -->
+<div class="app-body">
+  <!-- ── SIDEBAR ── -->
+  <div class="sidebar">
+    <div class="sidebar-top-nav">
+      <button class="grp-nav-btn active" title="QR Codes"   onclick="jumpGroup('grp-qr',this)">⬛</button>
+      <button class="grp-nav-btn"        title="Barcodes"   onclick="jumpGroup('grp-bc',this)">▬</button>
+    </div>
+    <div class="sidebar-groups">
+      <!-- QR Group -->
+      <div class="sidebar-group" id="grp-qr">
+        <button class="grp-hdr" onclick="toggleGroup('grp-qr')">
+          <span>⬛ QR Code</span><span class="grp-chevron">▼</span>
+        </button>
+        <div class="grp-tools">
+          <button class="tab-btn active" onclick="showTool('panel-qr')">QR Generator</button>
+          <button class="tab-btn"        onclick="showTool('panel-qr-batch')">Batch QR</button>
+          <button class="tab-btn"        onclick="showTool('panel-qr-scan')">QR Scanner</button>
+        </div>
+      </div>
+      <!-- Barcode Group -->
+      <div class="sidebar-group" id="grp-bc">
+        <button class="grp-hdr" onclick="toggleGroup('grp-bc')">
+          <span>▬ Barcode</span><span class="grp-chevron">▼</span>
+        </button>
+        <div class="grp-tools">
+          <button class="tab-btn" onclick="showTool('panel-barcode')">Barcode Generator</button>
+          <button class="tab-btn" onclick="showTool('panel-bc-batch')">Batch Barcodes</button>
+        </div>
+      </div>
+    </div>
+  </div><!--/.sidebar-->
+
+  <!-- ── TOOL AREA ── -->
+  <div class="tool-area">
+
+    <!-- ═══════════════════════════════════════════
+         QR CODE GENERATOR
+    ═══════════════════════════════════════════ -->
+    <div class="tool-panel active" id="panel-qr">
+      <div class="panel-title">⬛ QR Code Generator</div>
+      <p class="tool-desc">Generate QR codes for URLs, WiFi, contacts, email, SMS, phone numbers, or plain text. Supports logo overlay and color customization.</p>
+
+      <!-- QR Type Selector -->
+      <div class="form-group">
+        <span class="io-label">QR Type</span>
+        <div class="qr-types">
+          <button class="qr-type-btn active" onclick="qrSetType('url',this)">🔗 URL</button>
+          <button class="qr-type-btn"        onclick="qrSetType('text',this)">📝 Text</button>
+          <button class="qr-type-btn"        onclick="qrSetType('wifi',this)">📶 WiFi</button>
+          <button class="qr-type-btn"        onclick="qrSetType('vcard',this)">👤 Contact</button>
+          <button class="qr-type-btn"        onclick="qrSetType('email',this)">✉ Email</button>
+          <button class="qr-type-btn"        onclick="qrSetType('sms',this)">💬 SMS</button>
+          <button class="qr-type-btn"        onclick="qrSetType('phone',this)">📞 Phone</button>
+        </div>
+      </div>
+
+      <!-- Input blocks (only one active at a time) -->
+      <div class="qr-input-block active" id="qri-url">
+        <span class="io-label">URL</span>
+        <input type="text" id="qr-url-val" placeholder="https://example.com" oninput="qrGenerate()" style="width:100%" />
+      </div>
+
+      <div class="qr-input-block" id="qri-text">
+        <span class="io-label">Text / Message</span>
+        <textarea id="qr-text-val" class="io-area" rows="3" placeholder="Any text…" oninput="qrGenerate()"></textarea>
+      </div>
+
+      <div class="qr-input-block" id="qri-wifi">
+        <span class="io-label">WiFi Network Name (SSID)</span>
+        <input type="text" id="qr-wifi-ssid" placeholder="MyNetwork" oninput="qrGenerate()" style="width:100%;margin-bottom:6px" />
+        <span class="io-label">Password</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="password" id="qr-wifi-pass" placeholder="password" oninput="qrGenerate()" style="flex:1" />
+          <label class="checkbox-label" style="font-size:12px"><input type="checkbox" onchange="this.closest('div').querySelector('input[type=password]').type=this.checked?'text':'password'"/>Show</label>
+        </div>
+        <div class="form-row" style="margin-top:6px">
+          <span class="io-label" style="color:var(--text)">Security:</span>
+          <select id="qr-wifi-sec" onchange="qrGenerate()">
+            <option value="WPA">WPA/WPA2</option>
+            <option value="WEP">WEP</option>
+            <option value="nopass">None (open)</option>
+          </select>
+          <label class="checkbox-label"><input type="checkbox" id="qr-wifi-hidden" onchange="qrGenerate()" /> Hidden network</label>
+        </div>
+      </div>
+
+      <div class="qr-input-block" id="qri-vcard">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div><span class="io-label">First Name</span>
+            <input type="text" id="qr-vc-fname" placeholder="John" oninput="qrGenerate()" style="width:100%" /></div>
+          <div><span class="io-label">Last Name</span>
+            <input type="text" id="qr-vc-lname" placeholder="Doe" oninput="qrGenerate()" style="width:100%" /></div>
+        </div>
+        <span class="io-label" style="margin-top:2px">Phone</span>
+        <input type="tel" id="qr-vc-phone" placeholder="+1 555 000 0000" oninput="qrGenerate()" style="width:100%;margin-bottom:6px" />
+        <span class="io-label">Email</span>
+        <input type="email" id="qr-vc-email" placeholder="john@example.com" oninput="qrGenerate()" style="width:100%;margin-bottom:6px" />
+        <span class="io-label">Organisation</span>
+        <input type="text" id="qr-vc-org" placeholder="Acme Corp" oninput="qrGenerate()" style="width:100%;margin-bottom:6px" />
+        <span class="io-label">Website</span>
+        <input type="text" id="qr-vc-url" placeholder="https://example.com" oninput="qrGenerate()" style="width:100%" />
+      </div>
+
+      <div class="qr-input-block" id="qri-email">
+        <span class="io-label">To (email address)</span>
+        <input type="email" id="qr-em-to" placeholder="recipient@example.com" oninput="qrGenerate()" style="width:100%;margin-bottom:6px" />
+        <span class="io-label">Subject</span>
+        <input type="text" id="qr-em-sub" placeholder="Hello!" oninput="qrGenerate()" style="width:100%;margin-bottom:6px" />
+        <span class="io-label">Body</span>
+        <textarea id="qr-em-body" class="io-area" rows="2" placeholder="Message…" oninput="qrGenerate()"></textarea>
+      </div>
+
+      <div class="qr-input-block" id="qri-sms">
+        <span class="io-label">Phone Number</span>
+        <input type="tel" id="qr-sms-num" placeholder="+1 555 000 0000" oninput="qrGenerate()" style="width:100%;margin-bottom:6px" />
+        <span class="io-label">Message</span>
+        <textarea id="qr-sms-msg" class="io-area" rows="2" placeholder="Your pre-filled message…" oninput="qrGenerate()"></textarea>
+      </div>
+
+      <div class="qr-input-block" id="qri-phone">
+        <span class="io-label">Phone Number</span>
+        <input type="tel" id="qr-phone-val" placeholder="+1 555 000 0000" oninput="qrGenerate()" style="width:100%" />
+      </div>
+
+      <!-- QR Settings + Preview -->
+      <div class="qr-layout">
+        <div class="qr-controls">
+          <!-- Size -->
+          <div class="form-group">
+            <span class="io-label">Size</span>
+            <div class="slider-row">
+              <input type="range" id="qr-size" min="128" max="512" step="32" value="256"
+                     oninput="qrUpdateSize(this.value)" />
+              <span class="slider-val" id="qr-size-lbl">256 px</span>
+            </div>
+          </div>
+          <!-- Error Correction -->
+          <div class="form-row">
+            <span class="io-label" style="color:var(--text)">Error Correction:</span>
+            <select id="qr-ecl" onchange="qrGenerate()">
+              <option value="L">L — Low (7%)</option>
+              <option value="M" selected>M — Medium (15%)</option>
+              <option value="Q">Q — Quartile (25%)</option>
+              <option value="H">H — High (30%)</option>
+            </select>
+          </div>
+          <!-- Colors -->
+          <div class="form-row">
+            <span class="io-label" style="color:var(--text)">QR Color:</span>
+            <input type="color" id="qr-dark"  value="#000000" oninput="qrGenerate()" />
+            <span class="io-label" style="color:var(--text)">Background:</span>
+            <input type="color" id="qr-light" value="#ffffff" oninput="qrGenerate()" />
+          </div>
+          <!-- Logo overlay -->
+          <div class="form-group">
+            <span class="io-label">Logo Overlay (optional)</span>
+            <div class="logo-section">
+              <img id="logo-preview" class="logo-preview" src="" alt="" style="display:none" />
+              <button class="btn-secondary" onclick="document.getElementById('logo-input').click()">📁 Upload Logo</button>
+              <button class="btn-secondary" onclick="clearLogo()">✕ Remove</button>
+              <input type="file" id="logo-input" accept="image/*" style="display:none" onchange="loadLogo(this)" />
+              <span style="font-size:11px;color:var(--text2)">Use H error correction for best results with logos.</span>
+            </div>
+          </div>
+          <!-- Action buttons -->
+          <div class="btn-row">
+            <button onclick="qrDownload()">↓ Download PNG</button>
+            <button onclick="qrCopyClipboard()" class="btn-secondary">📋 Copy</button>
+            <button onclick="qrClear()" class="btn-secondary">✕ Clear</button>
+          </div>
+        </div>
+        <!-- Preview -->
+        <div class="qr-preview-box">
+          <div id="qr-output"></div>
+          <p class="qr-hint" id="qr-hint">Enter content above to generate a QR code.</p>
+        </div>
+      </div>
+    </div><!--/#panel-qr-->
+
+    <!-- ═══════════════════════════════════════════
+         BATCH QR
+    ═══════════════════════════════════════════ -->
+    <div class="tool-panel" id="panel-qr-batch">
+      <div class="panel-title">⬛ Batch QR Generator</div>
+      <p class="tool-desc">Generate multiple QR codes at once — one per line. Each QR code can be downloaded individually or all at once.</p>
+
+      <div class="form-group">
+        <span class="io-label">Items — one per line (URL, text, or value)</span>
+        <textarea id="batch-input" class="io-area" rows="6"
+          placeholder="https://example.com&#10;https://github.com&#10;Hello World&#10;another item…"></textarea>
+      </div>
+
+      <div class="form-row">
+        <span class="io-label" style="color:var(--text)">Size:</span>
+        <select id="batch-size">
+          <option value="128">128 px</option>
+          <option value="192" selected>192 px</option>
+          <option value="256">256 px</option>
+        </select>
+        <span class="io-label" style="color:var(--text)">Error correction:</span>
+        <select id="batch-ecl">
+          <option value="L">L</option>
+          <option value="M" selected>M</option>
+          <option value="Q">Q</option>
+          <option value="H">H</option>
+        </select>
+      </div>
+
+      <div class="btn-row">
+        <button onclick="batchGenerate()">⬛ Generate All</button>
+        <button onclick="batchDownloadAll()" class="btn-secondary" id="batch-dl-all" disabled>↓ Download All</button>
+        <button onclick="clearBatch()" class="btn-secondary">✕ Clear</button>
+      </div>
+
+      <div class="batch-info" id="batch-info"></div>
+      <div class="batch-grid" id="batch-results"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         QR SCANNER
+    ═══════════════════════════════════════════ -->
+    <div class="tool-panel" id="panel-qr-scan">
+      <div class="panel-title">📷 QR Code Scanner</div>
+      <p class="tool-desc">Use your camera to scan a QR code. Click Start Scanner to activate the camera, then point it at a QR code.</p>
+
+      <div class="scanner-area">
+        <video id="scan-video" class="scanner-video" autoplay playsinline muted></video>
+        <canvas id="scan-canvas" style="display:none"></canvas>
+        <div class="btn-row">
+          <button id="scan-start-btn" onclick="startScanner()">▶ Start Scanner</button>
+          <button id="scan-stop-btn"  onclick="stopScanner()" class="btn-secondary" disabled>■ Stop</button>
+        </div>
+        <p id="scan-status" class="tool-msg">Camera is off.</p>
+      </div>
+
+      <div class="form-group">
+        <span class="io-label">Scan Result</span>
+        <div class="scan-result-box" id="scan-result">Waiting for scan…</div>
+        <div class="btn-row" style="margin-top:6px">
+          <button onclick="copyScanResult()" class="btn-secondary">📋 Copy Result</button>
+          <button onclick="openScanResult()" class="btn-secondary">🔗 Open URL</button>
+          <button onclick="clearScanResult()" class="btn-secondary">✕ Clear</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="io-label" style="margin-bottom:6px">Scan History</div>
+        <div id="scan-history" style="display:flex;flex-direction:column;gap:4px;max-height:180px;overflow-y:auto"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         BARCODE GENERATOR
+    ═══════════════════════════════════════════ -->
+    <div class="tool-panel" id="panel-barcode">
+      <div class="panel-title">▬ Barcode Generator</div>
+      <p class="tool-desc">Generate barcodes in a wide range of formats. Customize size, colors, and label display.</p>
+
+      <div class="qr-layout">
+        <div class="qr-controls">
+          <!-- Input -->
+          <div class="form-group">
+            <span class="io-label">Value</span>
+            <input type="text" id="bc-input" placeholder="123456789012" oninput="bcGenerate()" style="width:100%" value="123456789012" />
+          </div>
+          <!-- Format -->
+          <div class="form-row">
+            <span class="io-label" style="color:var(--text)">Format:</span>
+            <select id="bc-format" onchange="bcFormatChanged()">
+              <optgroup label="Common">
+                <option value="CODE128" selected>CODE128 (auto, any text)</option>
+                <option value="CODE128A">CODE128A</option>
+                <option value="CODE128B">CODE128B</option>
+                <option value="CODE128C">CODE128C</option>
+                <option value="CODE39">CODE39</option>
+                <option value="CODE93">CODE93</option>
+              </optgroup>
+              <optgroup label="Retail / EAN">
+                <option value="EAN13">EAN-13</option>
+                <option value="EAN8">EAN-8</option>
+                <option value="EAN5">EAN-5</option>
+                <option value="EAN2">EAN-2</option>
+                <option value="UPC">UPC-A</option>
+                <option value="UPCE">UPC-E</option>
+              </optgroup>
+              <optgroup label="Logistics">
+                <option value="ITF14">ITF-14</option>
+                <option value="ITF">ITF (Interleaved 2of5)</option>
+                <option value="MSI">MSI</option>
+                <option value="MSI10">MSI10</option>
+                <option value="MSI11">MSI11</option>
+                <option value="MSI1010">MSI1010</option>
+                <option value="MSI1110">MSI1110</option>
+              </optgroup>
+              <optgroup label="Pharmaceutical">
+                <option value="pharmacode">Pharmacode</option>
+              </optgroup>
+              <optgroup label="1D Other">
+                <option value="codabar">Codabar</option>
+              </optgroup>
+            </select>
+          </div>
+          <div id="bc-format-hint" style="font-size:11px;color:var(--text2)"></div>
+
+          <!-- Bar Width -->
+          <div class="form-group">
+            <span class="io-label">Bar Width</span>
+            <div class="slider-row">
+              <input type="range" id="bc-width" min="1" max="4" step="0.5" value="2" oninput="bcUpdateWidth(this.value)" />
+              <span class="slider-val" id="bc-width-lbl">2</span>
+            </div>
+          </div>
+          <!-- Bar Height -->
+          <div class="form-group">
+            <span class="io-label">Bar Height</span>
+            <div class="slider-row">
+              <input type="range" id="bc-height" min="40" max="250" step="10" value="100" oninput="bcUpdateHeight(this.value)" />
+              <span class="slider-val" id="bc-height-lbl">100 px</span>
+            </div>
+          </div>
+          <!-- Colors -->
+          <div class="form-row">
+            <span class="io-label" style="color:var(--text)">Bar Color:</span>
+            <input type="color" id="bc-color" value="#000000" oninput="bcGenerate()" />
+            <span class="io-label" style="color:var(--text)">Background:</span>
+            <input type="color" id="bc-bg" value="#ffffff" oninput="bcGenerate()" />
+          </div>
+          <!-- Options -->
+          <div class="form-row">
+            <label class="checkbox-label"><input type="checkbox" id="bc-display-val" checked onchange="bcGenerate()" /> Display value</label>
+            <label class="checkbox-label"><input type="checkbox" id="bc-flat" onchange="bcGenerate()" /> Flat bars</label>
+          </div>
+          <!-- Font size for label -->
+          <div class="form-row">
+            <span class="io-label" style="color:var(--text)">Label font size:</span>
+            <input type="number" id="bc-font-size" min="8" max="32" value="16" style="width:60px" oninput="bcGenerate()" />
+          </div>
+          <!-- Action buttons -->
+          <div class="btn-row">
+            <button onclick="bcDownloadSVG()">↓ SVG</button>
+            <button onclick="bcDownloadPNG()" class="btn-secondary">↓ PNG</button>
+            <button onclick="bcClear()" class="btn-secondary">✕ Clear</button>
+          </div>
+          <div id="bc-msg" class="tool-msg"></div>
+        </div>
+        <!-- Preview -->
+        <div class="bc-preview-box">
+          <svg id="bc-output"></svg>
+          <p class="qr-hint" id="bc-hint">Enter a value above to generate a barcode.</p>
+        </div>
+      </div>
+    </div><!--/#panel-barcode-->
+
+    <!-- ═══════════════════════════════════════════
+         BATCH BARCODES
+    ═══════════════════════════════════════════ -->
+    <div class="tool-panel" id="panel-bc-batch">
+      <div class="panel-title">▬ Batch Barcode Generator</div>
+      <p class="tool-desc">Generate multiple barcodes at once — one value per line. Download each individually.</p>
+
+      <div class="form-group">
+        <span class="io-label">Values — one per line</span>
+        <textarea id="bcbatch-input" class="io-area" rows="6"
+          placeholder="123456789012&#10;987654321098&#10;111222333444"></textarea>
+      </div>
+
+      <div class="form-row">
+        <span class="io-label" style="color:var(--text)">Format:</span>
+        <select id="bcbatch-format">
+          <option value="CODE128" selected>CODE128</option>
+          <option value="EAN13">EAN-13</option>
+          <option value="CODE39">CODE39</option>
+          <option value="UPC">UPC-A</option>
+        </select>
+        <span class="io-label" style="color:var(--text)">Height:</span>
+        <input type="number" id="bcbatch-height" value="80" min="40" max="200" style="width:70px" />
+      </div>
+
+      <div class="btn-row">
+        <button onclick="bcBatchGenerate()">▬ Generate All</button>
+        <button onclick="clearBcBatch()" class="btn-secondary">✕ Clear</button>
+      </div>
+
+      <div class="batch-grid" id="bcbatch-results"></div>
+    </div>
+
+  </div><!--/.tool-area-->
+</div><!--/.app-body-->
+
+<script src="app.js"></script>
+</body>
+</html>

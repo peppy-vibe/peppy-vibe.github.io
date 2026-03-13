@@ -44,6 +44,62 @@ function initTable(r, c) {
   renderTable();
 }
 
+/* ── Undo / Redo ───────────────────────────── */
+const _undoStack = [];
+const _redoStack = [];
+const MAX_HISTORY = 50;
+
+function _cloneState() {
+  return {
+    rows: S.rows, cols: S.cols,
+    data: JSON.parse(JSON.stringify(S.data)),
+    headerRow: S.headerRow, headerCol: S.headerCol,
+    ts: JSON.parse(JSON.stringify(S.ts)),
+  };
+}
+
+function saveUndoState() {
+  _undoStack.push(_cloneState());
+  if (_undoStack.length > MAX_HISTORY) _undoStack.shift();
+  _redoStack.length = 0;
+  _updateHistoryBtns();
+}
+
+function _restoreState(snap) {
+  S.rows = snap.rows; S.cols = snap.cols;
+  S.data = snap.data;
+  S.headerRow = snap.headerRow; S.headerCol = snap.headerCol;
+  S.ts = snap.ts;
+  S.sel.clear(); S.anchor = null;
+  document.getElementById('inp-rows').value = S.rows;
+  document.getElementById('inp-cols').value = S.cols;
+  renderTable();
+  _updateHistoryBtns();
+}
+
+function doUndo() {
+  if (_undoStack.length === 0) return;
+  syncContent();
+  _redoStack.push(_cloneState());
+  _restoreState(_undoStack.pop());
+}
+
+function doRedo() {
+  if (_redoStack.length === 0) return;
+  syncContent();
+  _undoStack.push(_cloneState());
+  _restoreState(_redoStack.pop());
+}
+
+function _updateHistoryBtns() {
+  const u = document.getElementById('btn-undo');
+  const r = document.getElementById('btn-redo');
+  if (u) u.disabled = _undoStack.length === 0;
+  if (r) r.disabled = _redoStack.length === 0;
+}
+
+
+
 /* ── Render ────────────────────────────────── */
 function renderTable() {
   // NOTE: do NOT call syncContent() here. Callers that need to preserve
@@ -222,6 +278,7 @@ function onCellKeydown(e) {
 /* ── Table structure ops ───────────────────── */
 function addRow() {
   syncContent();
+  saveUndoState();
   S.data.push(Array.from({ length: S.cols }, mkCell));
   S.rows++;
   document.getElementById('inp-rows').value = S.rows;
@@ -231,6 +288,7 @@ function addRow() {
 function removeLastRow() {
   if (S.rows <= 1) return;
   syncContent();
+  saveUndoState();
   S.data.pop();
   S.rows--;
   document.getElementById('inp-rows').value = S.rows;
@@ -240,6 +298,7 @@ function removeLastRow() {
 
 function addCol() {
   syncContent();
+  saveUndoState();
   S.data.forEach(row => row.push(mkCell()));
   S.cols++;
   document.getElementById('inp-cols').value = S.cols;
@@ -249,6 +308,7 @@ function addCol() {
 function removeLastCol() {
   if (S.cols <= 1) return;
   syncContent();
+  saveUndoState();
   S.data.forEach(row => row.pop());
   S.cols--;
   document.getElementById('inp-cols').value = S.cols;
@@ -258,6 +318,7 @@ function removeLastCol() {
 
 function resizeTable() {
   syncContent();
+  saveUndoState();
   let nr = Math.max(1, Math.min(50, parseInt(document.getElementById('inp-rows').value) || 1));
   let nc = Math.max(1, Math.min(30, parseInt(document.getElementById('inp-cols').value) || 1));
 
@@ -274,6 +335,7 @@ function resizeTable() {
 function mergeCells() {
   if (S.sel.size < 2) { alert('Select at least 2 cells to merge.'); return; }
   syncContent();
+  saveUndoState();
 
   const coords = [...S.sel].map(k => k.split(',').map(Number));
   const minR = Math.min(...coords.map(([r]) => r));
@@ -314,6 +376,7 @@ function mergeCells() {
 function splitCell() {
   if (S.sel.size !== 1) { alert('Select exactly one merged cell to split.'); return; }
   syncContent();
+  saveUndoState();
 
   const [key] = S.sel;
   const [r, c] = key.split(',').map(Number);
@@ -337,6 +400,7 @@ function splitCell() {
 
 function clearCells() {
   syncContent();
+  saveUndoState();
   S.sel.forEach(k => {
     const [r, c] = k.split(',').map(Number);
     if (!S.data[r][c].isHidden) S.data[r][c].text = '';
@@ -722,6 +786,8 @@ document.addEventListener('mousedown', (e) => {
 });
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeCtxMenu();
+  if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'z') { e.preventDefault(); doUndo(); }
+  if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.shiftKey && e.key === 'z'))) { e.preventDefault(); doRedo(); }
 });
 
 function ctxInsertRowAbove() {

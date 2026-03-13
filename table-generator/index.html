@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Peppy Table Generator</title>
+  <meta name="description" content="Create, style, and export HTML tables with cell merge, spreadsheet paste, undo/redo, and HTML/Markdown/CSV/LaTeX export — all in the browser.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,13 +12,19 @@
 
   <!-- App header -->
   <div class="app-header">
-    <a href="../" class="back-link">&#8592; Portal</a>
+    <a href="../index.html" class="back-link">&#8592; Home</a>
     <h1>Peppy Table Generator</h1>
     <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">☀ Light</button>
   </div>
 
   <!-- Toolbar -->
   <div class="toolbar">
+    <div class="tb-group">
+      <span class="tb-label">History</span>
+      <button id="btn-undo" onclick="doUndo()" title="Undo (Ctrl+Z)" disabled>&#8617; Undo</button>
+      <button id="btn-redo" onclick="doRedo()" title="Redo (Ctrl+Y)" disabled>&#8618; Redo</button>
+    </div>
+    <div class="tb-sep"></div>
     <div class="tb-group">
       <span class="tb-label">Rows/Cols</span>
       <button onclick="addRow()" title="Add row below">+ Row</button>
