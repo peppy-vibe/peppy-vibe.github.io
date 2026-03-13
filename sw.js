@@ -5,9 +5,10 @@
 ═══════════════════════════════════════════ */
 'use strict';
 
-const CACHE = 'peppy-v1';
+const CACHE = 'peppy-v2';
 
 const PRECACHE = [
+  './manifest.json',
   /* Portal */
   './',
   './index.html',
@@ -80,7 +81,13 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
+    ).then(() => {
+      self.clients.claim();
+      // Notify all open tabs that a new version is available
+      return self.clients.matchAll({ type: 'window' }).then(clients =>
+        clients.forEach(c => c.postMessage({ type: 'SW_UPDATED' }))
+      );
+    })
   );
 });
 

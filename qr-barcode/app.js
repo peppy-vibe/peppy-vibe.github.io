@@ -447,11 +447,29 @@ function scanLoop() {
   scanRafId = requestAnimationFrame(scanLoop);
 }
 
+// Safely create a link element only for http/https URLs; fall back to plain text.
+function _safeScanNode(value) {
+  try {
+    const url = new URL(value);
+    if (url.protocol === 'https:' || url.protocol === 'http:') {
+      const a = document.createElement('a');
+      a.href      = url.href;          // set via property, not attr interpolation
+      a.textContent = value;
+      a.target    = '_blank';
+      a.rel       = 'noopener noreferrer';
+      return a;
+    }
+  } catch (_) { /* not a URL */ }
+  const span = document.createElement('span');
+  span.textContent = value;            // safe — no innerHTML
+  return span;
+}
+
 function onScanResult(value) {
   const result = document.getElementById('scan-result');
   if (result) {
-    const isUrl = /^https?:\/\//i.test(value);
-    result.innerHTML = isUrl ? `<a href="${value}" target="_blank" rel="noopener noreferrer">${value}</a>` : value;
+    result.textContent = '';           // clear first
+    result.appendChild(_safeScanNode(value));
   }
   setMsg('scan-status', '✅ QR code detected!', 'ok');
 
@@ -465,13 +483,17 @@ function onScanResult(value) {
 function renderScanHistory() {
   const wrap = document.getElementById('scan-history');
   if (!wrap) return;
-  wrap.innerHTML = scanHistory.slice(0, 20).map((v, i) => {
-    const isUrl = /^https?:\/\//i.test(v);
-    return `<div style="font-size:12px;padding:4px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;word-break:break-all;color:var(--text2)">
-      <span style="color:var(--accent);font-weight:600;margin-right:6px">#${i + 1}</span>
-      ${isUrl ? `<a href="${v}" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">${v}</a>` : v}
-    </div>`;
-  }).join('');
+  wrap.textContent = ''; // clear safely
+  scanHistory.slice(0, 20).forEach((v, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'font-size:12px;padding:4px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;word-break:break-all;color:var(--text2)';
+    const num = document.createElement('span');
+    num.style.cssText = 'color:var(--accent);font-weight:600;margin-right:6px';
+    num.textContent = '#' + (i + 1);
+    row.appendChild(num);
+    row.appendChild(_safeScanNode(v)); // safe — protocol-validated or textContent
+    wrap.appendChild(row);
+  });
 }
 
 function copyScanResult() {
@@ -641,7 +663,18 @@ function bcBatchGenerate() {
     const wrapper = document.createElement('div');
     wrapper.className = 'batch-item';
     const svgId = 'bcbatch-svg-' + idx;
-    wrapper.innerHTML = `<div class="batch-label">${line}</div><svg id="${svgId}"></svg><button onclick="bcBatchDownload('${svgId}','${encodeURIComponent(line)}')">↓ SVG</button>`;
+    // Build elements safely — no innerHTML with user data
+    const label = document.createElement('div');
+    label.className  = 'batch-label';
+    label.textContent = line;          // safe
+    const svg   = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.id      = svgId;
+    const btn   = document.createElement('button');
+    btn.textContent = '↓ SVG';
+    btn.addEventListener('click', () => bcBatchDownload(svgId, encodeURIComponent(line)));
+    wrapper.appendChild(label);
+    wrapper.appendChild(svg);
+    wrapper.appendChild(btn);
     grid.appendChild(wrapper);
 
     const svgEl = document.getElementById(svgId);

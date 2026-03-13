@@ -27,6 +27,15 @@ All components must be:
 
 ## 2. System Architecture
 
+### 2.0 Security Requirements
+
+All components must meet the following security rules:
+
+* **XSS prevention:** Any user-controlled string (name inputs, scanned QR values, imported data) that is inserted into the DOM must use either `element.textContent` assignment or a dedicated `escHtml(s)` helper that escapes `&`, `<`, `>`, `"`, and `'`. Direct `innerHTML` interpolation of user data is forbidden.
+* **URL validation:** When displaying QR scan results as clickable links, only `https://` and `http://` schemes are permitted. The URL must be parsed with `new URL()` and the protocol checked before setting `element.href`. Any other scheme (e.g. `javascript:`, `data:`, `vbscript:`) must render as plain text.
+* **No outbound requests:** All processing must be strictly client-side. No user data may be sent to any external server.
+* **Subresource integrity:** CDN-loaded scripts (pdf-lib, PDF.js) should include `integrity` and `crossorigin` attributes.
+
 ### 2.1 Hosting
 
 * Hosting Platform: GitHub Pages
@@ -39,6 +48,8 @@ All components must be:
 ```
 / (root)
  ├── index.html
+ ├── manifest.json          # PWA manifest (name, icons, shortcuts, display: standalone)
+ ├── .nojekyll              # Prevents GitHub Pages Jekyll processing
  ├── sw.js
  ├── /advanced-notepad
  │     ├── index.html
@@ -76,6 +87,16 @@ All components must be:
        └── katex/
 ```
 
+### 2.3 Service Worker & PWA Requirements
+
+* A Service Worker (`sw.js`) must pre-cache all pages and vendor assets on first install
+* Cache name must include a version string (e.g. `peppy-v2`); bumping this string in `sw.js` forces a full cache refresh on next deploy
+* On `activate`, the SW must delete all caches with names that do not match the current cache name, then call `self.clients.claim()`
+* After old caches are deleted, the SW must broadcast `{ type: 'SW_UPDATED' }` to all open window clients via `client.postMessage()`
+* The portal page listens for `reg.updatefound` / `newWorker.statechange` and for `navigator.serviceWorker` `message` events; it shows `#update-banner` when either fires
+* `manifest.json` must be included in the SW pre-cache list
+* A `.nojekyll` file must exist in the repository root so GitHub Pages serves files beginning with `_` (e.g. KaTeX font files) correctly
+
 ---
 
 ## 3. Portal (index.html)
@@ -85,27 +106,52 @@ All components must be:
 The index page must:
 
 * Display project title and tagline
-* Provide navigation cards linking to all three applications
+* Provide navigation cards linking to all seven applications
 * Be responsive (mobile + desktop)
-* Load fast (minimal external dependencies)
+* Load fast (no external dependencies)
 
 #### Required Sections
 
-* Nav bar: Project name on left, theme-toggle button on right
-* Card grid: one card per app with icon, title, description, feature bullet list, and Launch button
-* Footer: brief attribution
+* **Skip link:** `<a href="#main-content" class="skip-link">` for keyboard accessibility
+* **Update banner:** `#update-banner` — hidden by default; shown when Service Worker installs a new version; clicking it reloads the page
+* **Offline banner:** `#offline-banner` — shown when `navigator.onLine` is false
+* **Nav bar:** `⚡ Peppy Vibe Tools` logo on left; `#install-btn` (hidden until `beforeinstallprompt`) and theme-toggle button on right
+* **Hero section:** eyebrow label, `<h1>`, tagline sub-heading, stats bar (7 tools / 100+ features / 0 bytes uploaded / ✓ Offline), live search input `#tool-search`
+* **Recent tools section:** `#recent-section` — hidden by default; shown when `sessionStorage` has recent-tool entries; displays pill links
+* **Card grid:** one card per app with icon, optional feature-count badge, title, description, tag chips, feature bullet list, and Launch button; each card carries a `data-tags` attribute for search
+* **Privacy banner:** inside `<main>`, above card grid; states no data is sent to any server
+* **Footer:** brand name with version number, pill list of key trust signals
 
 #### App Cards
 
-| Card | Link |
-|------|------|
-| Peppy Advanced Notepad | `/advanced-notepad/` |
-| Peppy Table Generator | `/table-generator/` |
-| Peppy Dev Tools | `/dev-tools/` |
-| Peppy Random Tools | `/random-tools/` |
-| Peppy People & Group Tools | `/people-tools/` |
-| Peppy QR & Barcode Tools | `/qr-barcode/` |
-| Peppy PDF Tools | `/pdf-tools/` |
+| Card | Link | Badge |
+|------|------|-------|
+| Advanced Notepad | `/advanced-notepad/` | |
+| Table Generator | `/table-generator/` | |
+| PDF Tools | `/pdf-tools/` | 20 tools |
+| Random Tools | `/random-tools/` | 10 tools |
+| People & Group Tools | `/people-tools/` | 11 tools |
+| QR & Barcode Tools | `/qr-barcode/` | |
+| Dev Tools | `/dev-tools/` | 34 tools |
+
+#### Search / Filter
+
+* Typing in `#tool-search` filters visible cards in real time
+* Matching is performed against `data-tags` + card text content (case-insensitive substring)
+* Cards that do not match are hidden (`display: none`); `#no-results` message is shown if all cards are hidden
+
+#### Recent Tools Tracking
+
+* Each card `onclick` calls `trackRecent(name, url, icon)` before navigation
+* Recent entries stored in `sessionStorage` under key `peppy-recent-tools` (JSON array, max 5, newest first, deduplicated by URL)
+* On page load, `renderRecentTools()` reads sessionStorage and populates `#recent-pills` using safe DOM methods (`textContent` only — no `innerHTML`)
+* `#recent-section` remains hidden if the list is empty
+
+#### PWA Install Prompt
+
+* Listen for `beforeinstallprompt`; call `e.preventDefault()` and store the event
+* Show `#install-btn` when the event fires; hide it after install or dismissal
+* Listen for `appinstalled` to hide `#install-btn` permanently
 
 ### 3.2 Theme Requirements
 

@@ -1,0 +1,48 @@
+{
+  "name": "Peppy Vibe Tools",
+  "short_name": "Peppy Tools",
+  "description": "Seven free, fully client-side browser utilities — notepad, table generator, dev tools, PDF tools, random tools, people tools, and QR & barcode generator.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0c0a1e",
+  "theme_color": "#5646F5",
+  "categories": ["utilities", "productivity", "developer"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%235646F5'/%3E%3Ctext x='96' y='130' font-size='100' text-anchor='middle' font-family='Segoe UI,sans-serif'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%235646F5'/%3E%3Ctext x='256' y='350' font-size='280' text-anchor='middle' font-family='Segoe UI,sans-serif'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Advanced Notepad",
+      "url": "./advanced-notepad/",
+      "description": "Browser-based text editor with Markdown & LaTeX preview"
+    },
+    {
+      "name": "PDF Tools",
+      "url": "./pdf-tools/",
+      "description": "20 client-side PDF utilities"
+    },
+    {
+      "name": "Dev Tools",
+      "url": "./dev-tools/",
+      "description": "34 developer utilities in one app"
+    },
+    {
+      "name": "QR & Barcode",
+      "url": "./qr-barcode/",
+      "description": "Generate and scan QR codes and barcodes"
+    }
+  ]
+}

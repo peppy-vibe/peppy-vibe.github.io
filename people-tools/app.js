@@ -4,6 +4,20 @@
 'use strict';
 
 // ──────────────────────────────────────────
+// Security — HTML entity escaping
+// Prevents XSS when user-typed names are
+// injected into innerHTML templates.
+// ──────────────────────────────────────────
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
+// ──────────────────────────────────────────
 // Theme
 // ──────────────────────────────────────────
 function toggleTheme() {
@@ -270,7 +284,7 @@ function pickPerson() {
 function renderPersonPool(names) {
   const chips = document.getElementById('person-pool-chips');
   if (!chips) return;
-  chips.innerHTML = names.map(n => `<span class="pool-chip${personPickedSet.has(n) ? ' picked' : ''}">${n}</span>`).join('');
+  chips.innerHTML = names.map(n => `<span class="pool-chip${personPickedSet.has(n) ? ' picked' : ''}">${escHtml(n)}</span>`).join('');
 }
 
 function resetPersonPool() {
@@ -292,7 +306,7 @@ function renderPersonHistory() {
   if (!list) return;
   list.innerHTML = personHistory.slice().reverse().map((n, i) => {
     const num = personHistory.length - i;
-    return `<div class="history-item"><span class="h-num">#${num}</span>${n}</div>`;
+    return `<div class="history-item"><span class="h-num">#${num}</span>${escHtml(n)}</div>`;
   }).join('');
 }
 
@@ -418,7 +432,7 @@ function buildRollCall() {
   if (!wrap) return;
   const rows = names.map(n => `
     <tr id="rc-${CSS.escape(n)}">
-      <td>${n}</td>
+      <td>${escHtml(n)}</td>
       <td><label class="checkbox-label" style="justify-content:center">
         <input type="checkbox" onchange="rcMarkPresent('${n.replace(/'/g,"\\'")}', this.checked)" /> Present
       </label></td>

@@ -1,6 +1,16 @@
-# Peppy Tools Portal V.0.1.0
+# Peppy Tools Portal V.0.2.0
 
 A collection of seven powerful, fully client-side browser tools. No server required — works offline and can be hosted on GitHub Pages for free.
+
+---
+
+## What's New in V.0.2.0
+
+* **Security:** Fixed XSS vulnerabilities in QR scanner (scan results, scan history, batch barcodes) and People Tools (name chips, history, attendance table) using DOM-safe helpers (`escHtml`, `_safeScanNode`)
+* **PWA:** Added `manifest.json` — the portal can now be installed as a Progressive Web App on desktop and mobile
+* **Home page:** Redesigned with hero section, live search/filter, stats bar, per-card tags and feature badges, recent-tools tracker, privacy banner, and SW update notification
+* **Service Worker:** Cache bumped to `peppy-v2`; broadcasts `SW_UPDATED` message to clients after a new version activates
+* **GitHub Pages:** Added `.nojekyll` to prevent Jekyll processing
 
 ---
 
@@ -15,6 +25,8 @@ Host the folder on GitHub Pages or open `index.html` locally in any modern brows
 ```
 /
 ├── index.html                    # Portal landing page
+├── manifest.json                 # PWA manifest
+├── .nojekyll                     # Prevents GitHub Pages Jekyll processing
 ├── README.md
 ├── requirements.md
 ├── sw.js                         # Service Worker (offline cache)
@@ -89,6 +101,17 @@ Host the folder on GitHub Pages or open `index.html` locally in any modern brows
 | PDF rendering | [PDF.js v3.11](https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js) |
 | Fonts / Icons | System fonts, Unicode symbols |
 | Hosting | GitHub Pages (static) |
+
+---
+
+## PWA / Offline Support
+
+The portal ships with a Service Worker (`sw.js`) and a `manifest.json`:
+
+- All pages and vendor assets are pre-cached on first visit.
+- A "New version available" banner appears automatically when a new service worker installs.
+- The portal meets PWA installability criteria — browsers will offer an "Install App" prompt.
+- Cache name: `peppy-v2` (bump this string in `sw.js` to force a cache refresh on deploy).
 
 ---
 

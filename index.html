@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Peppy Tools Portal</title>
-  <meta name="description" content="Peppy Vibe Tools — a suite of six free, fully client-side browser apps: notepad, table generator, dev tools, random tools, people tools, and QR &amp; barcode generator.">
+  <title>Peppy Tools — Free Browser Utilities</title>
+  <meta name="description" content="Seven free, fully client-side browser tools: notepad, table generator, dev tools, PDF tools, random tools, people tools, and QR &amp; barcode. No uploads. Works offline.">
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#5646F5">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -12,39 +14,53 @@
       --bg-grad-1: #0c0a1e;
       --bg-grad-2: #1e1860;
       --bg-grad-3: #18133a;
-      --card-bg: rgba(255,255,255,0.08);
-      --card-border: rgba(255,255,255,0.18);
-      --card-hover-bg: rgba(255,255,255,0.15);
+      --card-bg: rgba(255,255,255,0.07);
+      --card-border: rgba(255,255,255,0.15);
+      --card-hover-bg: rgba(255,255,255,0.13);
       --text: #ffffff;
-      --text-muted: rgba(255,255,255,0.75);
+      --text-muted: rgba(255,255,255,0.72);
+      --stat-text: #c4bfff;
       --btn-bg: #5646F5;
       --btn-hover: #4535e0;
-      --nav-bg: rgba(0,0,0,0.25);
-      --theme-btn-bg: rgba(255,255,255,0.15);
-      --theme-btn-hover: rgba(255,255,255,0.28);
       --accent: #5646F5;
+      --accent-light: #8b83f7;
+      --tag-bg: rgba(86,70,245,0.22);
+      --tag-text: #a89ff9;
+      --search-bg: rgba(255,255,255,0.08);
+      --search-border: rgba(255,255,255,0.18);
+      --search-focus: rgba(86,70,245,0.7);
+      --recent-bg: rgba(255,255,255,0.05);
+      --update-bg: #1e3a5f;
+      --update-text: #93c5fd;
     }
 
     [data-theme="light"] {
       --bg-grad-1: #eceaff;
       --bg-grad-2: #e0ddfb;
       --bg-grad-3: #d0ccf8;
-      --card-bg: rgba(255,255,255,0.80);
-      --card-border: rgba(86,70,245,0.18);
+      --card-bg: rgba(255,255,255,0.82);
+      --card-border: rgba(86,70,245,0.15);
       --card-hover-bg: rgba(255,255,255,0.97);
       --text: #0e0b2e;
-      --text-muted: rgba(14,11,46,0.62);
+      --text-muted: rgba(14,11,46,0.60);
+      --stat-text: #4535e0;
       --btn-bg: #5646F5;
       --btn-hover: #4535e0;
-      --nav-bg: rgba(255,255,255,0.40);
-      --theme-btn-bg: rgba(86,70,245,0.10);
-      --theme-btn-hover: rgba(86,70,245,0.20);
       --accent: #5646F5;
+      --accent-light: #4535e0;
+      --tag-bg: rgba(86,70,245,0.10);
+      --tag-text: #4535e0;
+      --search-bg: rgba(255,255,255,0.85);
+      --search-border: rgba(86,70,245,0.25);
+      --search-focus: rgba(86,70,245,0.5);
+      --recent-bg: rgba(86,70,245,0.06);
+      --update-bg: #dbeafe;
+      --update-text: #1e40af;
     }
 
     body {
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      background: linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2), var(--bg-grad-3));
+      background: linear-gradient(135deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 50%, var(--bg-grad-3) 100%);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -52,154 +68,233 @@
       transition: background 0.3s, color 0.3s;
     }
 
+    /* Skip link */
+    .skip-link {
+      position: absolute; top: -100px; left: 0;
+      background: var(--accent); color: #fff;
+      padding: 0.5rem 1rem; border-radius: 0 0 8px 0;
+      text-decoration: none; font-weight: 700; z-index: 9999;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* Update banner */
+    #update-banner {
+      background: var(--update-bg); color: var(--update-text);
+      text-align: center; padding: 0.5rem 1rem;
+      font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; display: none;
+    }
+    #update-banner:hover { opacity: 0.9; }
+
+    /* Offline banner */
+    #offline-banner {
+      background: #f59e0b; color: #1c1002;
+      text-align: center; padding: 0.45rem 1rem;
+      font-size: 0.85rem; font-weight: 600;
+    }
+
+    /* Nav */
     nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5rem 1rem;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.55rem 1.25rem;
       background: var(--accent);
-      backdrop-filter: blur(6px);
-      border-bottom: 1px solid rgba(0,0,0,0.08);
+      border-bottom: 1px solid rgba(0,0,0,0.10);
+      position: sticky; top: 0; z-index: 100;
     }
-
-    #theme-btn {
-      background: var(--theme-btn-bg);
-      border: 1px solid var(--card-border);
-      color: var(--text);
-      padding: 0.35rem 0.9rem;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 0.88rem;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    .nav-brand { display: flex; align-items: center; gap: 0.5rem; }
+    .nav-logo  { font-size: 1.2rem; line-height: 1; }
+    .nav-title { color: #fff; font-weight: 700; font-size: 1rem; letter-spacing: 0.2px; }
+    .nav-actions { display: flex; align-items: center; gap: 0.6rem; }
+    .nav-btn {
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.28);
+      color: #fff; padding: 0.3rem 0.85rem;
+      border-radius: 20px; cursor: pointer;
+      font-size: 0.85rem; font-family: inherit;
       transition: background 0.2s;
-      backdrop-filter: blur(4px);
     }
-    #theme-btn:hover { background: var(--theme-btn-hover); }
+    .nav-btn:hover { background: rgba(255,255,255,0.30); }
+    #install-btn { display: none; }
 
-    .nav-title {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      color: #ffffff;
-      font-weight: 700;
-      margin: 0;
-      font-size: 1rem;
-      letter-spacing: 0.2px;
+    /* Hero */
+    header { padding: 3rem 2rem 1.5rem; text-align: center; }
+    .hero-eyebrow {
+      display: inline-block; background: var(--tag-bg); color: var(--accent-light);
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 1.2px;
+      text-transform: uppercase; padding: 0.25rem 0.8rem;
+      border-radius: 20px; margin-bottom: 1rem;
     }
-
-    header {
-      padding: 3rem 2rem 1.5rem;
-      text-align: center;
-    }
-
     header h1 {
-      font-size: 2.8rem;
-      font-weight: 700;
-      letter-spacing: -1px;
-      margin-bottom: 0.5rem;
+      font-size: 3rem; font-weight: 800; letter-spacing: -1.5px;
+      margin-bottom: 0.6rem; line-height: 1.1;
+    }
+    header h1 span {
+      background: linear-gradient(90deg, var(--accent-light), #a78bfa);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 1.05rem; color: var(--text-muted);
+      max-width: 520px; margin: 0 auto 1.8rem; line-height: 1.6;
     }
 
-    header p {
-      font-size: 1.05rem;
-      color: var(--text-muted);
+    /* Stats */
+    .stats-bar {
+      display: flex; justify-content: center;
+      flex-wrap: wrap; gap: 0.5rem 2rem; margin-bottom: 1.8rem;
+    }
+    .stat-item { display: flex; flex-direction: column; align-items: center; }
+    .stat-num  { font-size: 1.45rem; font-weight: 800; color: var(--stat-text); line-height: 1.1; }
+    .stat-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
+
+    /* Search */
+    .search-wrap { max-width: 460px; margin: 0 auto; position: relative; }
+    .search-wrap::before {
+      content: '⌕'; position: absolute; left: 0.9rem; top: 50%;
+      transform: translateY(-50%); font-size: 1.1rem; color: var(--text-muted);
+      pointer-events: none;
+    }
+    #tool-search {
+      width: 100%; padding: 0.65rem 1rem 0.65rem 2.4rem;
+      background: var(--search-bg); border: 1px solid var(--search-border);
+      border-radius: 30px; color: var(--text); font-size: 0.95rem;
+      font-family: inherit; outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    #tool-search::placeholder { color: var(--text-muted); }
+    #tool-search:focus {
+      border-color: var(--search-focus);
+      box-shadow: 0 0 0 3px rgba(86,70,245,0.18);
     }
 
-    main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
+    /* Recent tools */
+    #recent-section {
+      max-width: 1100px; margin: 0 auto 0.5rem;
+      padding: 0 2rem; display: none;
     }
+    #recent-section h2 {
+      font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--text-muted); margin-bottom: 0.55rem;
+    }
+    .recent-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .recent-pill {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--recent-bg); border: 1px solid var(--card-border);
+      border-radius: 20px; padding: 0.3rem 0.75rem;
+      font-size: 0.83rem; color: var(--text-muted);
+      text-decoration: none; transition: background 0.15s, color 0.15s;
+    }
+    .recent-pill:hover { background: var(--tag-bg); color: var(--accent-light); }
 
+    /* Cards */
+    main { flex: 1; padding: 1.5rem 2rem 2.5rem; }
+    .cards-wrap { max-width: 1100px; margin: 0 auto; }
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-      gap: 2rem;
-      max-width: 1100px;
-      width: 100%;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.75rem;
     }
-
     .card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 2rem;
-      text-decoration: none;
-      color: var(--text);
-      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-      backdrop-filter: blur(12px);
-      display: flex;
-      flex-direction: column;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 18px; padding: 1.75rem;
+      text-decoration: none; color: var(--text);
+      transition: transform 0.22s ease, background 0.2s, box-shadow 0.22s;
+      backdrop-filter: blur(14px);
+      display: flex; flex-direction: column; position: relative; overflow: hidden;
     }
-
+    .card::before {
+      content: ''; position: absolute; inset: 0; border-radius: 18px;
+      background: linear-gradient(135deg, rgba(86,70,245,0.07) 0%, transparent 60%);
+      pointer-events: none;
+    }
     .card:hover {
-      transform: translateY(-7px);
+      transform: translateY(-6px);
       background: var(--card-hover-bg);
-      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 20px 48px rgba(0,0,0,0.32);
     }
-
-    .card-icon {
-      font-size: 2.8rem;
-      margin-bottom: 1rem;
+    .card-header {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; margin-bottom: 0.9rem;
     }
-
-    .card h2 {
-      font-size: 1.45rem;
-      margin-bottom: 0.6rem;
+    .card-icon { font-size: 2.4rem; line-height: 1; }
+    .card-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; }
+    .badge {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.5px;
+      text-transform: uppercase; padding: 0.18rem 0.55rem; border-radius: 20px;
     }
-
-    .card p {
-      color: var(--text-muted);
-      line-height: 1.65;
-      font-size: 0.92rem;
+    .badge-count {
+      background: rgba(86,70,245,0.2); color: var(--accent-light);
+      border: 1px solid rgba(86,70,245,0.3);
     }
-
+    .card h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.45rem; line-height: 1.2; }
+    .card-desc { color: var(--text-muted); line-height: 1.6; font-size: 0.9rem; margin-bottom: 0.75rem; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.85rem; }
+    .tag {
+      background: var(--tag-bg); color: var(--tag-text);
+      font-size: 0.72rem; font-weight: 600;
+      padding: 0.18rem 0.55rem; border-radius: 12px;
+    }
     .card ul {
-      margin-top: 0.85rem;
-      padding-left: 1.1rem;
-      color: var(--text-muted);
-      font-size: 0.87rem;
-      line-height: 1.8;
-      flex: 1;
+      padding-left: 1.1rem; color: var(--text-muted);
+      font-size: 0.86rem; line-height: 1.85; flex: 1;
     }
-
     .btn-launch {
-      display: inline-block;
-      margin-top: 1.4rem;
-      padding: 0.5rem 1.25rem;
-      background: var(--btn-bg);
-      color: #fff;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      letter-spacing: 0.4px;
-      transition: background 0.2s;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      margin-top: 1.25rem; padding: 0.48rem 1.15rem;
+      background: var(--btn-bg); color: #fff;
+      border-radius: 8px; font-size: 0.88rem; font-weight: 700;
+      letter-spacing: 0.3px; transition: background 0.2s;
       align-self: flex-start;
     }
+    .card:hover .btn-launch, .btn-launch:hover { background: var(--btn-hover); }
 
-    .card:hover .btn-launch,
-    .btn-launch:hover {
-      background: var(--btn-hover);
+    /* No results */
+    .no-results {
+      text-align: center; color: var(--text-muted);
+      font-size: 1rem; padding: 3rem 1rem; display: none;
     }
 
+    /* Privacy banner */
+    .privacy-banner {
+      max-width: 1100px; margin: 0 auto 1.5rem;
+      padding: 0.75rem 1.2rem;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 12px;
+      display: flex; align-items: center; gap: 0.7rem;
+      font-size: 0.84rem; color: var(--text-muted);
+      backdrop-filter: blur(10px);
+    }
+    .privacy-banner .shield { font-size: 1.2rem; flex-shrink: 0; }
+
+    /* Footer */
     footer {
-      text-align: center;
-      padding: 1.5rem;
-      color: var(--text-muted);
-      font-size: 0.82rem;
+      padding: 2rem; border-top: 1px solid var(--card-border);
+      background: rgba(0,0,0,0.12);
     }
-
-    @media (max-width: 600px) {
-      header h1 { font-size: 1.9rem; }
-      .cards { gap: 1.25rem; }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
     }
+    .footer-brand strong { font-size: 0.95rem; display: block; margin-bottom: 0.2rem; }
+    .footer-brand span   { font-size: 0.8rem; color: var(--text-muted); }
+    .footer-pills {
+      display: flex; flex-wrap: wrap; gap: 0.4rem 0.8rem;
+      font-size: 0.8rem; color: var(--text-muted); align-items: center;
+    }
+    .footer-pills span::before { content: '·'; margin-right: 0.8rem; opacity: 0.4; }
+    .footer-pills span:first-child::before { content: ''; margin: 0; }
 
-    #offline-banner {
-      background: #f59e0b;
-      color: #1c1002;
-      text-align: center;
-      padding: 0.45rem 1rem;
-      font-size: 0.85rem;
-      font-weight: 600;
+    /* Responsive */
+    @media (max-width: 640px) {
+      header h1      { font-size: 2.1rem; letter-spacing: -1px; }
+      .stats-bar     { gap: 0.4rem 1.4rem; }
+      .stat-num      { font-size: 1.2rem; }
+      .cards         { gap: 1.1rem; }
+      main           { padding: 1.25rem 1rem 2rem; }
+      header         { padding: 2.2rem 1rem 1.2rem; }
+      .footer-inner  { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
@@ -211,118 +306,252 @@
     })();
   </script>
 
-  <div id="offline-banner" hidden>&#9888; You are offline — all tools still work from cache.</div>
+  <div id="update-banner" onclick="location.reload(true)" title="Click to reload">
+    &#8635; A new version is available &mdash; click to reload.
+  </div>
 
-  <nav>
-    <p class="nav-title">Peppy Vibe: Tools</p>
-    <button id="theme-btn" onclick="togglePortalTheme()">☀ Light</button>
+  <div id="offline-banner" hidden>&#9888; You are offline &mdash; all tools still work from cache.</div>
+
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <nav aria-label="Site navigation">
+    <div class="nav-brand">
+      <span class="nav-logo">&#9889;</span>
+      <p class="nav-title">Peppy Vibe Tools</p>
+    </div>
+    <div class="nav-actions">
+      <button id="install-btn" class="nav-btn" onclick="installPWA()" aria-label="Install app">&#128245; Install App</button>
+      <button id="theme-btn" class="nav-btn" onclick="togglePortalTheme()" aria-label="Toggle colour theme">&#9728; Light</button>
+    </div>
   </nav>
 
-  <main>
-    <div class="cards">
-      <a class="card" href="./advanced-notepad/">
-        <div class="card-icon">&#128221;</div>
-        <h2>Peppy Advanced Notepad</h2>
-        <p>A feature-rich text editor inspired by Windows Notepad, running entirely in your browser.</p>
-        <ul>
-          <li>Open &amp; save local files</li>
-          <li>Find &amp; Replace with case sensitivity</li>
-          <li>Word wrap, font family &amp; size controls</li>
-          <li>Realtime split Markdown + LaTeX preview</li>
-          <li>Export Markdown as HTML</li>
-          <li>Text Case Converter</li>
-        </ul>
-        <span class="btn-launch">Launch &#8594;</span>
-      </a>
+  <header>
+    <span class="hero-eyebrow">Free &amp; Open Source</span>
+    <h1>Peppy <span>Tools</span></h1>
+    <p class="hero-sub">Powerful browser utilities that run entirely on your device. No sign-up, no uploads, no tracking.</p>
+    <div class="stats-bar" aria-label="Site statistics">
+      <div class="stat-item"><span class="stat-num">7</span><span class="stat-label">Tools</span></div>
+      <div class="stat-item"><span class="stat-num">100+</span><span class="stat-label">Features</span></div>
+      <div class="stat-item"><span class="stat-num">0 bytes</span><span class="stat-label">Uploaded</span></div>
+      <div class="stat-item"><span class="stat-num">&#10003;&nbsp;Offline</span><span class="stat-label">Ready</span></div>
+    </div>
+    <div class="search-wrap">
+      <input type="search" id="tool-search" placeholder="Search tools&hellip;"
+             aria-label="Search tools" autocomplete="off"
+             oninput="filterCards(this.value)">
+    </div>
+  </header>
 
-      <a class="card" href="./table-generator/">
-        <div class="card-icon">&#128202;</div>
-        <h2>Peppy Table Generator</h2>
-        <p>Create, style, and export HTML tables &mdash; feature parity with TablesGenerator.com, all client-side.</p>
-        <ul>
-          <li>Cell &amp; table-level styling</li>
-          <li>Export: HTML, Markdown, LaTeX, CSV</li>
-        </ul>
-        <span class="btn-launch">Launch &#8594;</span>
-      </a>
+  <section id="recent-section" aria-label="Recently used tools">
+    <h2>Recently Used</h2>
+    <div class="recent-pills" id="recent-pills"></div>
+  </section>
 
-      <a class="card" href="./pdf-tools/">
-        <div class="card-icon">&#128196;</div>
-        <h2>Peppy PDF Tools</h2>
-        <p>20 powerful PDF utilities &mdash; all client-side, no uploads, nothing leaves your browser.</p>
-        <ul>
-          <li>Merge, Split, Extract, Delete &amp; Rearrange pages</li>
-          <li>Rotate pages, Add Watermark &amp; Page Numbers</li>
-          <li>Convert Images to PDF &amp; PDF Viewer</li>
-          <li>Compress, Crop, Resize &amp; Flatten</li>
-          <li>Password protect, Remove password, Lock &amp; Redact</li>
-          <li>Remove metadata &amp; hidden data</li>
-        </ul>
-        <span class="btn-launch">Launch &#8594;</span>
-      </a>
+  <main id="main-content">
+    <div class="cards-wrap">
+      <div class="privacy-banner" role="note">
+        <span class="shield">&#128274;</span>
+        <span>Everything runs locally in your browser. No data is ever sent to any server. All tools work offline.</span>
+      </div>
 
-      <a class="card" href="./random-tools/">
-        <div class="card-icon">&#127922;</div>
-        <h2>Peppy Random Tools</h2>
-        <p>10 decision &amp; randomization tools for choices, games, and activities &mdash; all in one app.</p>
-        <ul>
-          <li>Wheel Spinner, Yes/No Generator, Option &amp; Winner Picker</li>
-          <li>Number, Dice, Coin, Card, Day &amp; Time Generators</li>
-        </ul>
-        <span class="btn-launch">Launch &#8594;</span>
-      </a>
+      <div class="cards" id="cards-grid">
+        <a class="card" href="./advanced-notepad/"
+           data-tags="notepad editor text markdown latex katex preview word-count find replace"
+           onclick="trackRecent('Advanced Notepad','./advanced-notepad/','&#128221;')">
+          <div class="card-header">
+            <div class="card-icon">&#128221;</div>
+          </div>
+          <h2>Advanced Notepad</h2>
+          <p class="card-desc">A feature-rich text editor running entirely in your browser. Open &amp; save local files, preview Markdown + LaTeX in real time.</p>
+          <div class="card-tags">
+            <span class="tag">Text</span>
+            <span class="tag">Markdown</span>
+            <span class="tag">LaTeX</span>
+            <span class="tag">Offline</span>
+          </div>
+          <ul>
+            <li>Open &amp; save local files</li>
+            <li>Find &amp; Replace with regex &amp; case options</li>
+            <li>Word wrap, font family &amp; size controls</li>
+            <li>Live split Markdown + LaTeX preview</li>
+            <li>Export Markdown as HTML</li>
+            <li>Text Case Converter</li>
+          </ul>
+          <span class="btn-launch">Launch &#8594;</span>
+        </a>
 
-      <a class="card" href="./people-tools/">
-        <div class="card-icon">&#128101;</div>
-        <h2>Peppy People &amp; Group Tools</h2>
-        <p>11 tools for teams, classrooms, and events &mdash; pickers, team builder, pairs, seating, Secret Santa, and more.</p>
-        <ul>
-          <li>Random Person Picker, Host Picker &amp; Speaker Selector</li>
-          <li>Team Generator, Pair Generator &amp; Group Creator</li>
-          <li>Attendance Roll Call, Seating Chart &amp; Name Shuffler</li>
-          <li>Secret Santa with reveal &amp; export</li>
-        </ul>
-        <span class="btn-launch">Launch &#8594;</span>
-      </a>
+        <a class="card" href="./table-generator/"
+           data-tags="table generator html markdown latex csv export grid cell style"
+           onclick="trackRecent('Table Generator','./table-generator/','&#128202;')">
+          <div class="card-header">
+            <div class="card-icon">&#128202;</div>
+          </div>
+          <h2>Table Generator</h2>
+          <p class="card-desc">Create, style, and export HTML tables with total feature parity with TablesGenerator.com &mdash; all client-side.</p>
+          <div class="card-tags">
+            <span class="tag">Tables</span>
+            <span class="tag">HTML</span>
+            <span class="tag">Markdown</span>
+            <span class="tag">CSV</span>
+          </div>
+          <ul>
+            <li>Cell &amp; table-level styling</li>
+            <li>Merge, split, insert &amp; delete cells</li>
+            <li>Export: HTML, Markdown, LaTeX, CSV</li>
+          </ul>
+          <span class="btn-launch">Launch &#8594;</span>
+        </a>
 
-      <a class="card" href="./qr-barcode/">
-        <div class="card-icon">&#9636;</div>
-        <h2>Peppy QR &amp; Barcode Tools</h2>
-        <p>Generate, scan, and export QR codes and barcodes &mdash; fully client-side, no uploads.</p>
-        <ul>
-          <li>QR Generator: URL, Text, WiFi, vCard, Email, SMS, Phone</li>
-          <li>Logo overlay, color pickers &amp; batch QR export</li>
-          <li>QR Scanner via device camera</li>
-          <li>Barcode Generator in 15+ formats with SVG &amp; PNG export</li>
-        </ul>
-        <span class="btn-launch">Launch &#8594;</span>
-      </a>
+        <a class="card" href="./pdf-tools/"
+           data-tags="pdf merge split extract delete rotate watermark password compress crop resize"
+           onclick="trackRecent('PDF Tools','./pdf-tools/','&#128196;')">
+          <div class="card-header">
+            <div class="card-icon">&#128196;</div>
+            <div class="card-badges">
+              <span class="badge badge-count">20 tools</span>
+            </div>
+          </div>
+          <h2>PDF Tools</h2>
+          <p class="card-desc">20 powerful PDF utilities &mdash; all client-side, no uploads, nothing leaves your browser.</p>
+          <div class="card-tags">
+            <span class="tag">PDF</span>
+            <span class="tag">Merge</span>
+            <span class="tag">Compress</span>
+            <span class="tag">Security</span>
+          </div>
+          <ul>
+            <li>Merge, Split, Extract, Delete &amp; Rearrange pages</li>
+            <li>Rotate pages, Add Watermark &amp; Page Numbers</li>
+            <li>Convert Images to PDF &amp; PDF Viewer</li>
+            <li>Compress, Crop, Resize &amp; Flatten</li>
+            <li>Password protect, Remove password &amp; Redact</li>
+          </ul>
+          <span class="btn-launch">Launch &#8594;</span>
+        </a>
 
-      <a class="card" href="./dev-tools/">
-        <div class="card-icon">&#128736;</div>
-        <h2>Peppy Dev Tools</h2>
-        <p>All developer utility suites in one unified app with a grouped, collapsible sidebar &mdash; no switching between tabs.</p>
-        <ul>
-          <li>Encoding &amp; Security (Base64, URL, Hash, Password, UUID, JWT, HTML Entities)</li>
-          <li>Text Tools (Diff, Sort, Dedup, Random, Lorem, Stats)</li>
-          <li>JSON / YAML / XML (8 tools)</li>
-          <li>Color Tools &amp; Timestamps &amp; Regex</li>
-        </ul>
-        <span class="btn-launch">Launch &#8594;</span>
-      </a>
+        <a class="card" href="./random-tools/"
+           data-tags="random wheel spinner dice coin picker winner generator number card day time"
+           onclick="trackRecent('Random Tools','./random-tools/','&#127922;')">
+          <div class="card-header">
+            <div class="card-icon">&#127922;</div>
+            <div class="card-badges">
+              <span class="badge badge-count">10 tools</span>
+            </div>
+          </div>
+          <h2>Random Tools</h2>
+          <p class="card-desc">10 decision &amp; randomisation tools for choices, games, and activities &mdash; all in one app.</p>
+          <div class="card-tags">
+            <span class="tag">Random</span>
+            <span class="tag">Games</span>
+            <span class="tag">Decisions</span>
+          </div>
+          <ul>
+            <li>Wheel Spinner, Yes/No Generator</li>
+            <li>Option Picker &amp; Winner Picker</li>
+            <li>Number, Dice, Coin, Card &amp; Day Generators</li>
+          </ul>
+          <span class="btn-launch">Launch &#8594;</span>
+        </a>
 
+        <a class="card" href="./people-tools/"
+           data-tags="people team group attendance seating secret santa pairs classroom picker random"
+           onclick="trackRecent('People and Group Tools','./people-tools/','&#128101;')">
+          <div class="card-header">
+            <div class="card-icon">&#128101;</div>
+            <div class="card-badges">
+              <span class="badge badge-count">11 tools</span>
+            </div>
+          </div>
+          <h2>People &amp; Group Tools</h2>
+          <p class="card-desc">11 tools for teams, classrooms, and events &mdash; pickers, team builder, pairs, seating, Secret Santa, and more.</p>
+          <div class="card-tags">
+            <span class="tag">Teams</span>
+            <span class="tag">Classroom</span>
+            <span class="tag">Events</span>
+          </div>
+          <ul>
+            <li>Random Person Picker, Host &amp; Speaker Selector</li>
+            <li>Team Generator, Pair Generator &amp; Group Creator</li>
+            <li>Attendance Roll Call &amp; Seating Chart</li>
+            <li>Secret Santa with reveal &amp; export</li>
+          </ul>
+          <span class="btn-launch">Launch &#8594;</span>
+        </a>
+
+        <a class="card" href="./qr-barcode/"
+           data-tags="qr code barcode scanner generator url wifi vcard email sms scan camera"
+           onclick="trackRecent('QR and Barcode Tools','./qr-barcode/','&#9636;')">
+          <div class="card-header">
+            <div class="card-icon">&#9636;</div>
+          </div>
+          <h2>QR &amp; Barcode Tools</h2>
+          <p class="card-desc">Generate, scan, and export QR codes and barcodes &mdash; fully client-side, no uploads.</p>
+          <div class="card-tags">
+            <span class="tag">QR Code</span>
+            <span class="tag">Barcode</span>
+            <span class="tag">Scanner</span>
+          </div>
+          <ul>
+            <li>QR Generator: URL, Text, WiFi, vCard, Email, SMS</li>
+            <li>Logo overlay, colour pickers &amp; batch QR export</li>
+            <li>QR Scanner via device camera</li>
+            <li>Barcode Generator in 15+ formats</li>
+          </ul>
+          <span class="btn-launch">Launch &#8594;</span>
+        </a>
+
+        <a class="card" href="./dev-tools/"
+           data-tags="dev developer base64 url hash password uuid jwt json yaml xml regex diff sort dedup color timestamp"
+           onclick="trackRecent('Dev Tools','./dev-tools/','&#128736;')">
+          <div class="card-header">
+            <div class="card-icon">&#128736;</div>
+            <div class="card-badges">
+              <span class="badge badge-count">34 tools</span>
+            </div>
+          </div>
+          <h2>Dev Tools</h2>
+          <p class="card-desc">All developer utility suites in one unified app with a grouped, collapsible sidebar &mdash; no switching between tabs.</p>
+          <div class="card-tags">
+            <span class="tag">Encoding</span>
+            <span class="tag">JSON/YAML</span>
+            <span class="tag">Regex</span>
+            <span class="tag">Color</span>
+          </div>
+          <ul>
+            <li>Encoding &amp; Security (Base64, URL, Hash, JWT, UUID)</li>
+            <li>Text Tools (Diff, Sort, Dedup, Random, Lorem)</li>
+            <li>JSON / YAML / XML (8 tools)</li>
+            <li>Color Tools, Timestamps &amp; Regex Builder</li>
+          </ul>
+          <span class="btn-launch">Launch &#8594;</span>
+        </a>
+      </div>
+
+      <p class="no-results" id="no-results"></p>
     </div>
   </main>
 
   <footer>
-    <p>Peppy Vibe Tools V.0.1.0 &mdash; Powerful Browser-Based Utilities</p>
-    <p>open source &middot; fully client-side &middot; no data leaves your browser</p>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <strong>&#9889; Peppy Vibe Tools V.0.2.0</strong>
+        <span>Powerful Browser-Based Utilities</span>
+      </div>
+      <div class="footer-pills">
+        <span>Open source</span>
+        <span>Fully client-side</span>
+        <span>No ads inside tools</span>
+        <span>No data collection</span>
+        <span>Works offline</span>
+      </div>
+    </div>
   </footer>
 
   <script>
+    /* Theme */
     function updatePortalThemeBtn() {
       var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      document.getElementById('theme-btn').textContent = isDark ? '☀ Light' : '☾ Dark';
+      document.getElementById('theme-btn').textContent = isDark ? '\u2600 Light' : '\u263e Dark';
     }
     function togglePortalTheme() {
       var cur = document.documentElement.getAttribute('data-theme');
@@ -333,9 +562,98 @@
     }
     updatePortalThemeBtn();
 
+    /* Card search / filter */
+    function filterCards(query) {
+      var q = (query || '').toLowerCase().trim();
+      var cards = document.querySelectorAll('#cards-grid .card');
+      var shown = 0;
+      cards.forEach(function(card) {
+        var text = (card.dataset.tags || '') + ' ' + card.textContent;
+        var match = !q || text.toLowerCase().indexOf(q) !== -1;
+        card.style.display = match ? '' : 'none';
+        if (match) shown++;
+      });
+      var noResults = document.getElementById('no-results');
+      if (noResults) {
+        noResults.style.display = shown === 0 ? 'block' : 'none';
+        noResults.textContent = shown === 0 ? 'No tools match "' + query + '".' : '';
+      }
+    }
+
+    /* Recent tools (sessionStorage) */
+    var RECENT_KEY = 'peppy-recent-tools';
+    function trackRecent(name, url, icon) {
+      try {
+        var list = JSON.parse(sessionStorage.getItem(RECENT_KEY) || '[]');
+        list = list.filter(function(t) { return t.url !== url; });
+        list.unshift({ name: name, url: url, icon: icon });
+        if (list.length > 5) list = list.slice(0, 5);
+        sessionStorage.setItem(RECENT_KEY, JSON.stringify(list));
+      } catch(e) {}
+    }
+    function renderRecentTools() {
+      try {
+        var list = JSON.parse(sessionStorage.getItem(RECENT_KEY) || '[]');
+        if (!list.length) return;
+        var section = document.getElementById('recent-section');
+        var pills   = document.getElementById('recent-pills');
+        if (!section || !pills) return;
+        pills.innerHTML = '';
+        list.forEach(function(t) {
+          var a = document.createElement('a');
+          a.href = t.url;
+          a.className = 'recent-pill';
+          var iconSpan = document.createElement('span');
+          iconSpan.textContent = t.icon;
+          var nameSpan = document.createElement('span');
+          nameSpan.textContent = t.name;
+          a.appendChild(iconSpan);
+          a.appendChild(nameSpan);
+          pills.appendChild(a);
+        });
+        section.style.display = 'block';
+      } catch(e) {}
+    }
+    renderRecentTools();
+
+    /* PWA install prompt */
+    var deferredInstallPrompt = null;
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      document.getElementById('install-btn').style.display = 'inline-flex';
+    });
+    function installPWA() {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      deferredInstallPrompt.userChoice.then(function() {
+        deferredInstallPrompt = null;
+        document.getElementById('install-btn').style.display = 'none';
+      });
+    }
+    window.addEventListener('appinstalled', function() {
+      document.getElementById('install-btn').style.display = 'none';
+      deferredInstallPrompt = null;
+    });
+
     /* Service Worker registration */
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(function() {});
+      navigator.serviceWorker.register('./sw.js').then(function(reg) {
+        reg.addEventListener('updatefound', function() {
+          var newWorker = reg.installing;
+          if (!newWorker) return;
+          newWorker.addEventListener('statechange', function() {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              document.getElementById('update-banner').style.display = 'block';
+            }
+          });
+        });
+      }).catch(function() {});
+      navigator.serviceWorker.addEventListener('message', function(event) {
+        if (event.data && event.data.type === 'SW_UPDATED') {
+          document.getElementById('update-banner').style.display = 'block';
+        }
+      });
     }
 
     /* Offline indicator */
