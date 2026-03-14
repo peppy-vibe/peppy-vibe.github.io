@@ -12,10 +12,13 @@
   <script>(function(){var t=localStorage.getItem('stp-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
 
   <div class="app-header">
+    <button class="menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu">&#9776;</button>
     <a href="../index.html" class="back-link">&#8592; Home</a>
     <h1>Peppy Random Tools</h1>
     <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()">&#9728; Light</button>
   </div>
+
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileMenu()"></div>
 
   <div class="app-body">
 
@@ -79,6 +82,7 @@ Option F</textarea>
               <canvas id="wheel-canvas" width="300" height="300"></canvas>
             </div>
             <div class="wheel-result-text" id="wheel-result">&nbsp;</div>
+            <div id="wheel-history-list" class="wheel-history"></div>
           </div>
         </div>
       </div>

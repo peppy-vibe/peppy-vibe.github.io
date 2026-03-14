@@ -6,10 +6,10 @@
   <title>Peppy PDF Tools</title>
   <meta name="description" content="20 free client-side PDF tools: merge, split, rotate, watermark, compress, encrypt, redact and more — nothing leaves your browser.">
   <link rel="stylesheet" href="style.css">
-  <!-- pdf-lib: create & modify PDFs client-side -->
-  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <!-- PDF.js: render PDF pages to canvas for preview -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- pdf-lib v1.17.1 — PDF creation & modification (cached by SW for offline) -->
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <!-- PDF.js v3.11.174 — PDF rendering to canvas (cached by SW for offline) -->
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 </head>
 <body>
 
@@ -17,10 +17,13 @@
 
   <!-- ═══ APP HEADER ═══════════════════════════════════════════ -->
   <div class="app-header">
+    <button class="menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu">&#9776;</button>
     <a href="../index.html" class="back-link">&#8592; Home</a>
-    <h1>&#128196; Peppy PDF Tools</h1>
+    <h1>Peppy PDF Tools</h1>
     <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()">&#9728; Light</button>
   </div>
+
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileMenu()"></div>
 
   <div class="app-body">
 

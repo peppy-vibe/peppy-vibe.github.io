@@ -14,8 +14,11 @@
   <div class="app-header">
     <a href="../index.html" class="back-link">&#8592; Home</a>
     <h1>Peppy Table Generator</h1>
+    <button class="settings-toggle" onclick="toggleSettingsPanel()" aria-label="Toggle settings panel">&#9881;</button>
     <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">☀ Light</button>
   </div>
+
+  <div class="settings-overlay" id="settings-overlay" onclick="closeSettingsPanel()"></div>
 
   <!-- Toolbar -->
   <div class="toolbar">
@@ -37,6 +40,7 @@
       <span class="tb-label">Size</span>
       <label>R:<input type="number" id="inp-rows" min="1" max="50"  value="3" onchange="resizeTable()"></label>
       <label>C:<input type="number" id="inp-cols" min="1" max="30"  value="3" onchange="resizeTable()"></label>
+      <button onclick="resetTable()" title="Reset table to defaults">Reset</button>
     </div>
     <div class="tb-sep"></div>
     <div class="tb-group">

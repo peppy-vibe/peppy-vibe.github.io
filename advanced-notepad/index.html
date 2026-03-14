@@ -6,7 +6,8 @@
   <title>Peppy Advanced Notepad</title>
   <meta name="description" content="A browser-based text editor with Markdown and LaTeX live preview, split pane, find &amp; replace, font controls, auto-save, and local file support.">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="../vendor/katex/katex.min.css">
+  <!-- KaTeX v0.16 — LaTeX math rendering (cached by SW for offline) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.css">
 </head>
 <body>
 
@@ -163,6 +164,7 @@
       <button class="sb-btn" onclick="zoomReset()" title="Reset Zoom">&#8857;</button>
     </span>
     <span id="sb-file" class="sb-file">Untitled</span>
+    <span id="sb-save" class="sb-save" title="Auto-save status"></span>
   </div>
 
   <!-- Hidden file input -->
@@ -253,8 +255,10 @@
     </div>
   </div>
 
-  <script src="../vendor/marked.min.js"></script>
-  <script src="../vendor/katex/katex.min.js"></script>
+  <!-- marked v9 — Markdown parser (cached by SW for offline) -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+  <!-- KaTeX v0.16 — LaTeX math rendering (cached by SW for offline) -->
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -488,9 +488,58 @@ body {
 }
 
 /* ── Responsive ────────────────────────────── */
-@media (max-width: 680px) {
-  .settings-panel { display: none; }
-  .header-hint    { display: none; }
+
+/* ── Settings toggle button (hidden on desktop) ── */
+.settings-toggle {
+  display: none;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.4);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+.settings-toggle:hover { background: rgba(255,255,255,0.35); }
+
+.settings-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 99;
+}
+.settings-overlay.active { display: block; }
+
+@media (max-width: 768px) {
+  .settings-toggle { display: inline-flex; }
+  .settings-panel {
+    position: fixed;
+    top: 0;
+    right: -280px;
+    width: 260px;
+    height: 100vh;
+    z-index: 100;
+    transition: right 0.3s ease;
+    box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+    border-left: none;
+  }
+  .settings-panel.open { right: 0; }
+  .header-hint { display: none; }
+  .toolbar { flex-wrap: wrap; gap: 4px; }
+  .toolbar button { padding: 4px 8px; font-size: 11px; }
+}
+
+@media (max-width: 480px) {
+  .app-header h1 { font-size: 0.9rem; }
+  .app-header { padding: 6px 10px; }
+  .table-canvas { padding: 8px; }
+  .toolbar { padding: 4px 6px; }
+  .toolbar button { padding: 3px 6px; font-size: 10px; }
+  td[contenteditable] { min-width: 60px; padding: 4px 6px; font-size: 12px; }
 }
 
 /* ── Theme toggle button ───────────────────── */

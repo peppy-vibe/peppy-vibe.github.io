@@ -1,15 +1,31 @@
-# Peppy Tools Portal V.0.2.0
+# Peppy Tools Portal V.0.3.0
 
 A collection of seven powerful, fully client-side browser tools. No server required — works offline and can be hosted on GitHub Pages for free.
 
 ---
 
-## What's New in V.0.2.0
+## What's New in V.0.3.0
+
+* **CDN Migration:** All vendor JS/CSS dependencies now load via [jsDelivr](https://www.jsdelivr.com/) CDN instead of bundled `vendor/` files. Removes ~1 MB from the repository.
+* **Offline Resilience:** Service Worker (`peppy-v3`) caches CDN resources at install time with graceful fallback — local assets always cached, CDN deps are best-effort.
+* **Mobile-Responsive UI:** Every tool now has a hamburger menu drawer on mobile (< 768 px), responsive breakpoints at 768 px and 480 px, and touch-friendly controls.
+* **Auto-Save Indicator (Notepad):** Status bar flashes "Saved" when draft is auto-saved to localStorage.
+* **Copy Results (People Tools):** All generator outputs (Winners, Teams, Pairs, Groups, Seating, Shuffler) now have a 📋 Copy button alongside Print.
+* **QR Size Presets:** Small / Medium / Large preset buttons below the size slider.
+* **QR Generation History:** Tracks last 20 generated QR codes with type, content preview, and timestamp.
+* **Wheel Spin History (Random Tools):** Tracks last 20 spin results.
+* **Table Reset:** Reset button with confirmation dialog clears table back to 3 × 3 defaults.
+* **Settings Panel (Table Generator):** Mobile slide-out panel for table settings on small screens.
+* **Security Fixes:** XSS vulnerability in wheel history (BUG-001) patched with HTML escaping. CSP meta tag added to print preview windows (BUG-002). SW install resilience improved (BUG-003). Message timeout overlap fixed in dev-tools (BUG-004). WiFi SSID input length capped (BUG-007).
+
+---
+
+## What Was New in V.0.2.0
 
 * **Security:** Fixed XSS vulnerabilities in QR scanner (scan results, scan history, batch barcodes) and People Tools (name chips, history, attendance table) using DOM-safe helpers (`escHtml`, `_safeScanNode`)
 * **PWA:** Added `manifest.json` — the portal can now be installed as a Progressive Web App on desktop and mobile
 * **Home page:** Redesigned with hero section, live search/filter, stats bar, per-card tags and feature badges, recent-tools tracker, privacy banner, and SW update notification
-* **Service Worker:** Cache bumped to `peppy-v2`; broadcasts `SW_UPDATED` message to clients after a new version activates
+* **Service Worker:** Cache bumped to `peppy-v2`
 * **GitHub Pages:** Added `.nojekyll` to prevent Jekyll processing
 
 ---
@@ -28,8 +44,9 @@ Host the folder on GitHub Pages or open `index.html` locally in any modern brows
 ├── manifest.json                 # PWA manifest
 ├── .nojekyll                     # Prevents GitHub Pages Jekyll processing
 ├── README.md
-├── requirements.md
-├── sw.js                         # Service Worker (offline cache)
+├── bug_report.md                 # Bug audit report
+├── implementation.md             # Feature implementation plan
+├── sw.js                         # Service Worker (offline cache, peppy-v3)
 ├── advanced-notepad/
 │   ├── index.html
 │   ├── style.css
@@ -54,16 +71,10 @@ Host the folder on GitHub Pages or open `index.html` locally in any modern brows
 │   ├── index.html
 │   ├── style.css
 │   └── app.js
-├── pdf-tools/
-│   ├── index.html
-│   ├── style.css
-│   └── app.js
-└── vendor/
-    ├── qrcode.min.js
-    ├── JsBarcode.all.min.js
-    ├── js-yaml.min.js
-    ├── marked.min.js
-    └── katex/
+└── pdf-tools/
+    ├── index.html
+    ├── style.css
+    └── app.js
 ```
 
 ---
@@ -73,6 +84,7 @@ Host the folder on GitHub Pages or open `index.html` locally in any modern brows
 1. Clone or download this repository.
 2. Open `index.html` in any modern browser (Chrome, Edge, Firefox, Safari).
 3. No build step, no dependencies to install — everything is plain HTML/CSS/JS.
+4. All tools are fully responsive — desktop-first with mobile hamburger menus at < 768 px.
 
 > **Note:** The File > Open / Save features use the [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API) fallback (`<input type="file">` + Blob download). All file access is local and nothing is sent to a server.
 
@@ -92,13 +104,14 @@ Host the folder on GitHub Pages or open `index.html` locally in any modern brows
 | Component | Technology |
 |-----------|-----------|
 | All pages | Vanilla HTML5 / CSS3 / ES2020 JS |
-| Markdown rendering | [marked.js v9](https://cdn.jsdelivr.net/npm/marked@9/) |
-| LaTeX rendering | [KaTeX v0.16](https://cdn.jsdelivr.net/npm/katex@0.16/) |
-| QR code generation | [qrcodejs](https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js) |
-| Barcode generation | [JsBarcode](https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js) |
-| YAML parsing | [js-yaml v4](https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js) |
-| PDF manipulation | [pdf-lib v1.17](https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js) |
-| PDF rendering | [PDF.js v3.11](https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js) |
+| CDN | [jsDelivr](https://www.jsdelivr.com/) — all external libraries loaded via CDN |
+| Markdown rendering | [marked.js v9](https://cdn.jsdelivr.net/npm/marked@9/marked.min.js) |
+| LaTeX rendering | [KaTeX v0.16](https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.js) |
+| QR code generation | [qrcodejs v1.0.0](https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js) |
+| Barcode generation | [JsBarcode v3](https://cdn.jsdelivr.net/npm/jsbarcode@3/dist/JsBarcode.all.min.js) |
+| YAML parsing | [js-yaml v4](https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js) |
+| PDF manipulation | [pdf-lib v1.17.1](https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js) |
+| PDF rendering | [PDF.js v3.11.174](https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js) |
 | Fonts / Icons | System fonts, Unicode symbols |
 | Hosting | GitHub Pages (static) |
 
@@ -108,10 +121,11 @@ Host the folder on GitHub Pages or open `index.html` locally in any modern brows
 
 The portal ships with a Service Worker (`sw.js`) and a `manifest.json`:
 
-- All pages and vendor assets are pre-cached on first visit.
+- Local app assets are always pre-cached on first visit.
+- CDN dependencies are cached best-effort — if jsDelivr is unreachable, local assets still work offline.
 - A "New version available" banner appears automatically when a new service worker installs.
 - The portal meets PWA installability criteria — browsers will offer an "Install App" prompt.
-- Cache name: `peppy-v2` (bump this string in `sw.js` to force a cache refresh on deploy).
+- Cache name: `peppy-v3` (bump this string in `sw.js` to force a cache refresh on deploy).
 
 ---
 
@@ -144,6 +158,7 @@ All pages share a unified dark / light theme:
 | LaTeX rendering | Inline `$…$` and display `$$…$$` via KaTeX |
 | Word Count | Live word count in status bar |
 | Auto-save Draft | Content auto-saved to localStorage, restored on reload |
+| **Auto-save indicator** | Status bar flashes "Saved" on each auto-save |
 | Insert Date/Time | Ctrl+Shift+D inserts current date/time at cursor |
 | Tab as Spaces | Tab key inserts 2 spaces |
 | Scroll Sync | Preview scroll follows editor in split mode |
@@ -188,6 +203,7 @@ All pages share a unified dark / light theme:
 | Spreadsheet paste | TSV paste from Excel / Google Sheets fills cells automatically |
 | **Right-click menu** | Insert/delete row/col, **Copy Cell**, **Paste Cell** |
 | **Undo / Redo** | Ctrl+Z / Ctrl+Y restores up to 50 table state snapshots |
+| **Reset Table** | Reset button with confirmation, clears to 3 × 3 defaults |
 | **Zoom** | A− / A+ / ⊙ controls in toolbar; scales table font only |
 | **Status bar** | Shows table dimensions (rows × columns) and current zoom |
 | **Keyboard nav** | Tab / Shift+Tab moves between cells; Enter / Shift+Enter moves down/up |
@@ -233,6 +249,7 @@ All pages share a unified dark / light theme:
 | Feature | Details |
 |---------|---------|
 | Wheel Spinner | Customizable spin wheel with sound, confetti and winner reveal |
+| **Wheel History** | Tracks last 20 spin results |
 | Yes/No Generator | Animated coin-flip style binary decision |
 | Option Picker | Pick randomly from a user-defined list |
 | Number Generator | Min/max range, exclude list, multiple picks |
@@ -266,6 +283,7 @@ All pages share a unified dark / light theme:
 | Secret Santa | Derangement algorithm with exclusions; blur/reveal per person; export |
 | **Saved Lists** | Sidebar to save, rename, load and delete named name lists via localStorage |
 | **Bulk Add / Import** | Add names via comma prompt or import a `.txt`/`.csv` file |
+| **Copy Results** | 📋 Copy button on all generator outputs (Winners, Teams, Pairs, Groups, Seating, Shuffler) |
 | Dark / Light Theme | Toggle in header, persisted to localStorage |
 
 ---
@@ -278,6 +296,8 @@ All pages share a unified dark / light theme:
 |---------|---------|
 | QR Generator | 7 input types: URL, plain text, WiFi, vCard, Email, SMS, Phone |
 | QR options | Size slider, error correction level (L/M/Q/H), dark/light color pickers |
+| **QR size presets** | Small (128 px) / Medium (256 px) / Large (512 px) one-click buttons |
+| **QR generation history** | Tracks last 20 generated codes with type, content preview, and timestamp |
 | Logo overlay | Upload a logo PNG/SVG to embed centered in the QR code |
 | QR export | Download as PNG or copy to clipboard |
 | Batch QR | Generate and zip-download multiple QR codes from a line-separated list |

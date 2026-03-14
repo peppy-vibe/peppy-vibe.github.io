@@ -14,10 +14,13 @@
 
   <!-- App header -->
   <div class="app-header">
+    <button class="menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu">&#9776;</button>
     <a href="../index.html" class="back-link">&#8592; Home</a>
     <h1>Peppy Dev Tools</h1>
     <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">&#9728; Light</button>
   </div>
+
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileMenu()"></div>
 
   <div class="app-body">
 
@@ -1163,10 +1166,8 @@
     <span id="sb-matches"></span>
   </div>
 
-  <!-- Local vendor dependencies (offline support) -->
-  <script src="../vendor/qrcode.min.js"></script>
-  <script src="../vendor/JsBarcode.all.min.js"></script>
-  <script src="../vendor/js-yaml.min.js"></script>
+  <!-- js-yaml v4 — YAML parsing (cached by SW for offline) -->
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
 
   <script src="app.js"></script>
 </body>

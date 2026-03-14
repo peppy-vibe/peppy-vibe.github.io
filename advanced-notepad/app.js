@@ -634,7 +634,16 @@ function initSplitter() {
 const DRAFT_KEY = 'stp-notepad-draft';
 
 function saveDraft() {
-  try { localStorage.setItem(DRAFT_KEY, editor.value); } catch {}
+  try {
+    localStorage.setItem(DRAFT_KEY, editor.value);
+    const ind = document.getElementById('sb-save');
+    if (ind) {
+      ind.textContent = 'Saved';
+      ind.classList.add('flash');
+      clearTimeout(ind._timer);
+      ind._timer = setTimeout(() => { ind.textContent = ''; ind.classList.remove('flash'); }, 1500);
+    }
+  } catch {}
 }
 
 function loadDraft() {

@@ -20,6 +20,21 @@ function toggleTheme() {
   if (btn) btn.textContent = t === 'dark' ? '☀ Light' : '☾ Dark';
 })();
 
+/** Toggle mobile sidebar drawer */
+function toggleMobileMenu() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (sidebar) sidebar.classList.toggle('open');
+  if (overlay) overlay.classList.toggle('active');
+}
+/** Close mobile sidebar drawer */
+function closeMobileMenu() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (sidebar) sidebar.classList.remove('open');
+  if (overlay) overlay.classList.remove('active');
+}
+
 // ──────────────────────────────────────────
 // Navigation
 // ──────────────────────────────────────────
@@ -30,6 +45,7 @@ function showTool(id) {
   document.querySelectorAll('.tab-btn').forEach(b => {
     b.classList.toggle('active', b.getAttribute('onclick') === `showTool('${id}')`);
   });
+  closeMobileMenu();
 }
 
 function toggleGroup(grpId) {
@@ -73,6 +89,7 @@ function setMsg(id, text, type) {
 let qrInstance  = null;
 let qrCurrentType = 'url';
 let qrLogoDataUrl = null;
+const qrGenHistory = [];
 
 const QR_FORMAT_HINTS = {
   L: 'L — 7% correction. Smallest code.',
@@ -193,6 +210,13 @@ function qrGenerate() {
 
   if (hint) hint.textContent = '';
 
+  // Track generation history
+  if (!qrGenHistory.length || qrGenHistory[qrGenHistory.length - 1].text !== content) {
+    qrGenHistory.push({ type: qrCurrentType, text: content, time: new Date().toLocaleTimeString() });
+    if (qrGenHistory.length > 20) qrGenHistory.shift();
+    renderQrGenHistory();
+  }
+
   // If we have a logo, apply overlay after QR renders
   if (qrLogoDataUrl) {
     // The qrcodejs lib renders asynchronously via a timeout; give it a tick
@@ -243,6 +267,8 @@ function applyLogoOverlay(containerEl, size) {
 
 // ── Size update ──────────────────────────────────────────
 function qrUpdateSize(val) {
+  const slider = document.getElementById('qr-size');
+  if (slider) slider.value = val;
   const lbl = document.getElementById('qr-size-lbl');
   if (lbl) lbl.textContent = val + ' px';
   qrGenerate();
@@ -277,6 +303,20 @@ function qrClear() {
   document.getElementById('qr-output').innerHTML = '';
   const hint = document.getElementById('qr-hint');
   if (hint) hint.textContent = 'Enter content above to generate a QR code.';
+}
+
+// ── Generation history ───────────────────────────────────
+function renderQrGenHistory() {
+  const el = document.getElementById('qr-gen-history');
+  if (!el) return;
+  el.innerHTML = qrGenHistory.slice().reverse().map((h, i) => {
+    const num = qrGenHistory.length - i;
+    const preview = h.text.length > 60 ? h.text.slice(0, 57) + '...' : h.text;
+    return `<div class="history-item"><span class="h-num">#${num}</span><span class="h-type">${h.type}</span> ${escapeHtml(preview)} <span class="h-time">${h.time}</span></div>`;
+  }).join('');
+}
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 // ══════════════════════════════════════════════════════════

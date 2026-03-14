@@ -337,6 +337,13 @@ body {
   border-left: 1px solid rgba(255,255,255,0.25);
   font-weight: 600;
 }
+.sb-save {
+  color: var(--accent);
+  font-size: 11px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.sb-save.flash { opacity: 1; }
 
 /* ── Dialog overlays ───────────────────────── */
 .dlg-overlay {
@@ -751,5 +758,29 @@ body {
   background: var(--np-accent);
   border-color: var(--np-accent);
   color: #fff;
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .menubar { font-size: 12px; flex-wrap: wrap; }
+  .menu-item { padding: 4px 8px; }
+  .toolbar { flex-wrap: wrap; gap: 4px; padding: 4px 8px; }
+  .toolbar button, .toolbar select { padding: 3px 6px; font-size: 11px; }
+  .split-preview { min-width: 200px; }
+  .dialog-box { width: 90vw; max-width: 400px; }
+}
+
+@media (max-width: 480px) {
+  .app-header h1 { font-size: 0.9rem; }
+  .app-header { padding: 4px 8px; }
+  .menubar { font-size: 11px; }
+  .menu-item { padding: 3px 6px; }
+  .toolbar { padding: 3px 6px; }
+  .toolbar button, .toolbar select { padding: 2px 4px; font-size: 10px; }
+  #editor { font-size: 13px; padding: 6px 8px; }
+  .line-numbers { display: none; }
+  .dialog-box { width: 95vw; padding: 12px; }
 }
 

@@ -9,7 +9,7 @@
 ──────────────────────────────────────────────────────────── */
 if (window.pdfjsLib) {
   pdfjsLib.GlobalWorkerOptions.workerSrc =
-    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -29,6 +29,21 @@ function updateThemeBtn() {
 }
 updateThemeBtn();
 
+/** Toggle mobile sidebar drawer */
+function toggleMobileMenu() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (sidebar) sidebar.classList.toggle('open');
+  if (overlay) overlay.classList.toggle('active');
+}
+/** Close mobile sidebar drawer */
+function closeMobileMenu() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (sidebar) sidebar.classList.remove('open');
+  if (overlay) overlay.classList.remove('active');
+}
+
 /* ────────────────────────────────────────────────────────────
    SIDEBAR NAVIGATION
 ──────────────────────────────────────────────────────────── */
@@ -45,6 +60,7 @@ function showTool(id) {
     const navBtn = document.querySelector('.grp-nav-btn[data-grp="' + grp + '"]');
     if (navBtn) navBtn.classList.add('active');
   }
+  closeMobileMenu();
 }
 
 function toggleGroup(grp) {

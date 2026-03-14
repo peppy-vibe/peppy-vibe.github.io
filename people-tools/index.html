@@ -17,10 +17,13 @@
 
 <!-- ═══ APP HEADER ═══════════════════════════════════════════ -->
 <header class="app-header">
+  <button class="menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu">&#9776;</button>
   <a href="../index.html" class="back-link">&#8592; Home</a>
-  <h1>👥 People &amp; Group Tools</h1>
+  <h1>People &amp; Group Tools</h1>
   <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">&#9728; Light</button>
 </header>
+
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileMenu()"></div>
 
 <!-- ═══ APP BODY ═══════════════════════════════════════════ -->
 <div class="app-body">
@@ -313,6 +316,7 @@ Frank</textarea>
 
       <div class="form-row">
         <button onclick="pickWinners()" style="flex:1">🏆 Pick Winners!</button>
+        <button onclick="copyResultText('win-results')" class="btn-secondary">📋 Copy</button>
         <button onclick="printResults('win-results')" class="btn-secondary">🖨 Print</button>
       </div>
 
@@ -363,6 +367,7 @@ Hank</textarea>
       <div class="form-row">
         <button onclick="generateTeams()" style="flex:1">🔀 Generate Teams</button>
         <button onclick="exportTeamsText()" class="btn-secondary">↓ Export</button>
+        <button onclick="copyResultText('tg-results')" class="btn-secondary">📋 Copy</button>
         <button onclick="printResults('tg-results')" class="btn-secondary">🖨 Print</button>
       </div>
 
@@ -399,6 +404,7 @@ Frank</textarea>
       <div class="btn-row">
         <button onclick="generatePairs()">🔀 Generate Pairs</button>
         <button onclick="exportPairs()" class="btn-secondary">↓ Export</button>
+        <button onclick="copyResultText('pg-results')" class="btn-secondary">📋 Copy</button>
         <button onclick="printResults('pg-results')" class="btn-secondary">🖨 Print</button>
       </div>
 
@@ -446,6 +452,7 @@ Hank</textarea>
 
       <div class="form-row">
         <button onclick="createGroups()" style="flex:1">📦 Create Groups</button>
+        <button onclick="copyResultText('gc-results')" class="btn-secondary">📋 Copy</button>
         <button onclick="printResults('gc-results')" class="btn-secondary">🖨 Print</button>
       </div>
 
@@ -489,6 +496,7 @@ Grace</textarea>
 
       <div class="btn-row">
         <button onclick="generateSeating()">💺 Generate Seating</button>
+        <button onclick="copyResultText('seating-grid-display')" class="btn-secondary">📋 Copy</button>
         <button onclick="printResults('seating-grid-display')" class="btn-secondary">🖨 Print</button>
       </div>
 
@@ -527,6 +535,7 @@ Frank</textarea>
       <div class="btn-row">
         <button onclick="shuffleNames()">🔀 Shuffle</button>
         <button onclick="exportText('ns-result','shuffled_order')" class="btn-secondary">↓ Export</button>
+        <button onclick="copyResultText('ns-result-display')" class="btn-secondary">📋 Copy</button>
         <button onclick="printResults('ns-result-display')" class="btn-secondary">🖨 Print</button>
       </div>
 

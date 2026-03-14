@@ -22,6 +22,21 @@ function updateThemeBtn() {
   if (btn) btn.textContent = isDark ? '\u2600 Light' : '\u263E Dark';
 }
 
+/** Toggle mobile sidebar drawer */
+function toggleMobileMenu() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (sidebar) sidebar.classList.toggle('open');
+  if (overlay) overlay.classList.toggle('active');
+}
+/** Close mobile sidebar drawer */
+function closeMobileMenu() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (sidebar) sidebar.classList.remove('open');
+  if (overlay) overlay.classList.remove('active');
+}
+
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    SIDEBAR NAVIGATION
 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -39,6 +54,7 @@ function showTool(id) {
     const navBtn = document.querySelector('.grp-nav-btn[data-grp="' + grp + '"]');
     if (navBtn) navBtn.classList.add('active');
   }
+  closeMobileMenu();
 }
 
 function toggleGroup(grp) {
@@ -102,6 +118,7 @@ function setMsg(id, text, type) {
 let wheelOptions = ['Apple', 'Banana', 'Cherry', 'Option D', 'Option E', 'Option F'];
 let wheelAngle = 0;
 let wheelSpinning = false;
+const wheelHistory = [];
 let wheelAF = null;
 
 const WHEEL_COLORS_DARK  = ['#5646F5','#e85d6a','#f5a623','#22c55e','#06b6d4','#a855f7','#f97316','#14b8a6','#ec4899','#84cc16'];
@@ -217,10 +234,27 @@ function spinWheel() {
       const winnerIdx = Math.floor(relAngle / arc) % wheelOptions.length;
       const winner = wheelOptions[winnerIdx];
       document.getElementById('wheel-result').textContent = '\uD83C\uDF89 ' + winner + '!';
+
+      wheelHistory.push(winner);
+      if (wheelHistory.length > 20) wheelHistory.shift();
+      renderWheelHistory();
     }
   }
 
   wheelAF = requestAnimationFrame(frame);
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderWheelHistory() {
+  var el = document.getElementById('wheel-history-list');
+  if (!el) return;
+  el.innerHTML = wheelHistory.slice().reverse().map(function(w, i) {
+    var num = wheelHistory.length - i;
+    return '<div class="wh-item"><span class="wh-num">#' + num + '</span>' + escHtml(w) + '</div>';
+  }).join('');
 }
 
 function resetWheel() {

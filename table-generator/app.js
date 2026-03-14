@@ -331,6 +331,13 @@ function resizeTable() {
   renderTable();
 }
 
+function resetTable() {
+  if (!confirm('Reset table? All content will be lost.')) return;
+  document.getElementById('inp-rows').value = 3;
+  document.getElementById('inp-cols').value = 3;
+  initTable(3, 3);
+}
+
 /* ── Merge / Split ─────────────────────────── */
 function mergeCells() {
   if (S.sel.size < 2) { alert('Select at least 2 cells to merge.'); return; }
@@ -956,6 +963,21 @@ function updateThemeBtn() {
 }
 
 updateThemeBtn();
+
+/** Toggle settings panel drawer on mobile */
+function toggleSettingsPanel() {
+  const panel = document.getElementById('settings-panel');
+  const overlay = document.getElementById('settings-overlay');
+  if (panel) panel.classList.toggle('open');
+  if (overlay) overlay.classList.toggle('active');
+}
+/** Close settings panel drawer */
+function closeSettingsPanel() {
+  const panel = document.getElementById('settings-panel');
+  const overlay = document.getElementById('settings-overlay');
+  if (panel) panel.classList.remove('open');
+  if (overlay) overlay.classList.remove('active');
+}
 
 /* ── Zoom ──────────────────────────────────── */
 let tableZoomLevel = 100;

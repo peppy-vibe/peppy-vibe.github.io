@@ -69,6 +69,7 @@ function showTool(id) {
   if (sb) sb.textContent = ALL_TOOL_LABELS[id] || id;
   const grpId = TOOL_GROUP_MAP[id];
   if (grpId) setActiveGroup(grpId);
+  closeMobileMenu();
 }
 
 function setActiveGroup(grpId) {
@@ -107,14 +108,30 @@ function updateThemeBtn() {
   btn.textContent = isDark ? '\u2600 Light' : '\u263e Dark';
 }
 
+/** Toggle mobile sidebar drawer */
+function toggleMobileMenu() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (sidebar) sidebar.classList.toggle('open');
+  if (overlay) overlay.classList.toggle('active');
+}
+/** Close mobile sidebar drawer */
+function closeMobileMenu() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (sidebar) sidebar.classList.remove('open');
+  if (overlay) overlay.classList.remove('active');
+}
+
 /* â”€â”€ Shared helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function setMsg(id, text, type) {
   const el = document.getElementById(id);
   if (!el) return;
+  clearTimeout(el._msgTimer);
   el.textContent = text;
   el.className   = 'tool-msg' + (type ? ' ' + type : '');
   if (text && (type === 'ok' || type === 'err')) {
-    setTimeout(() => { if (el.textContent === text) { el.textContent = ''; el.className = 'tool-msg'; } }, 2500);
+    el._msgTimer = setTimeout(() => { el.textContent = ''; el.className = 'tool-msg'; }, 2500);
   }
 }
 

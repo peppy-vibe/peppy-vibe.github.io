@@ -1,38 +1,38 @@
 /* ═══════════════════════════════════════════
    Peppy Vibe Tools — Service Worker
-   Caches all app assets on first load so the
-   tools work fully offline on repeat visits.
+   Caches all app assets + CDN dependencies
+   on first load so tools work fully offline.
 ═══════════════════════════════════════════ */
 'use strict';
 
-const CACHE = 'peppy-v2';
+const CACHE = 'peppy-v3';
 
-const PRECACHE = [
+/* ── CDN dependencies (jsDelivr) ── */
+const CDN_DEPS = [
+  /* marked v9 — Markdown parser */
+  'https://cdn.jsdelivr.net/npm/marked@9/marked.min.js',
+  /* KaTeX v0.16 — LaTeX math rendering */
+  'https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.css',
+  'https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.js',
+  /* qrcodejs — QR code generation */
+  'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js',
+  /* JsBarcode v3 — Barcode generation */
+  'https://cdn.jsdelivr.net/npm/jsbarcode@3/dist/JsBarcode.all.min.js',
+  /* js-yaml v4 — YAML parsing */
+  'https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js',
+  /* pdf-lib v1.17.1 — PDF creation & modification */
+  'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js',
+  /* PDF.js v3.11.174 — PDF rendering */
+  'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js',
+  'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js',
+];
+
+/* ── Local app assets ── */
+const APP_ASSETS = [
   './manifest.json',
   /* Portal */
   './',
   './index.html',
-  /* Vendor */
-  './vendor/qrcode.min.js',
-  './vendor/JsBarcode.all.min.js',
-  './vendor/js-yaml.min.js',
-  './vendor/marked.min.js',
-  './vendor/katex/katex.min.css',
-  './vendor/katex/katex.min.js',
-  './vendor/katex/fonts/KaTeX_Main-Regular.woff2',
-  './vendor/katex/fonts/KaTeX_Main-Bold.woff2',
-  './vendor/katex/fonts/KaTeX_Main-Italic.woff2',
-  './vendor/katex/fonts/KaTeX_Math-Italic.woff2',
-  './vendor/katex/fonts/KaTeX_AMS-Regular.woff2',
-  './vendor/katex/fonts/KaTeX_Size1-Regular.woff2',
-  './vendor/katex/fonts/KaTeX_Size2-Regular.woff2',
-  './vendor/katex/fonts/KaTeX_Size3-Regular.woff2',
-  './vendor/katex/fonts/KaTeX_Size4-Regular.woff2',
-  './vendor/katex/fonts/KaTeX_SansSerif-Regular.woff2',
-  './vendor/katex/fonts/KaTeX_Typewriter-Regular.woff2',
-  './vendor/katex/fonts/KaTeX_Caligraphic-Regular.woff2',
-  './vendor/katex/fonts/KaTeX_Fraktur-Regular.woff2',
-  './vendor/katex/fonts/KaTeX_Script-Regular.woff2',
   /* Advanced Notepad */
   './advanced-notepad/',
   './advanced-notepad/index.html',
@@ -70,10 +70,22 @@ const PRECACHE = [
   './pdf-tools/app.js',
 ];
 
+const PRECACHE = APP_ASSETS.concat(CDN_DEPS);
+
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE).then(cache => cache.addAll(PRECACHE))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE).then(async cache => {
+      // Local assets must all succeed
+      await cache.addAll(APP_ASSETS);
+      // CDN deps are best-effort — don't block install if one fails
+      await Promise.allSettled(
+        CDN_DEPS.map(url =>
+          fetch(url, { mode: 'cors' })
+            .then(r => r.ok ? cache.put(url, r) : undefined)
+            .catch(() => {})
+        )
+      );
+    }).then(() => self.skipWaiting())
   );
 });
 
@@ -83,7 +95,6 @@ self.addEventListener('activate', event => {
       Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
     ).then(() => {
       self.clients.claim();
-      // Notify all open tabs that a new version is available
       return self.clients.matchAll({ type: 'window' }).then(clients =>
         clients.forEach(c => c.postMessage({ type: 'SW_UPDATED' }))
       );
@@ -91,14 +102,15 @@ self.addEventListener('activate', event => {
   );
 });
 
-/* Cache-first strategy: serve from cache, fall back to network */
+/* Cache-first strategy: serve from cache, fall back to network.
+   CDN resources (cross-origin) are also cached on first successful fetch. */
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached;
-      return fetch(event.request).then(response => {
-        if (!response || response.status !== 200 || response.type === 'opaque') return response;
+      return fetch(event.request, { mode: 'cors' }).then(response => {
+        if (!response || response.status !== 200) return response;
         const clone = response.clone();
         caches.open(CACHE).then(cache => cache.put(event.request, clone));
         return response;

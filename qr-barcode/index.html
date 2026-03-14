@@ -6,10 +6,10 @@
 <title>QR &amp; Barcode Tools</title>
 <meta name="description" content="Generate and scan QR codes (URL, WiFi, vCard, email, SMS) and barcodes (CODE128, EAN-13, UPC-A and more). Fully client-side — no data leaves your browser.">
 <link rel="stylesheet" href="style.css" />
-<!-- QR Code library (local vendor - offline support) -->
-<script src="../vendor/qrcode.min.js"></script>
-<!-- JsBarcode library (local vendor - offline support) -->
-<script src="../vendor/JsBarcode.all.min.js"></script>
+<!-- qrcodejs v1.0.0 — QR code generation (cached by SW for offline) -->
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<!-- JsBarcode v3 — Barcode generation (cached by SW for offline) -->
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3/dist/JsBarcode.all.min.js"></script>
 <script>
   (function(){
     var t = localStorage.getItem('stp-theme');
@@ -21,10 +21,13 @@
 
 <!-- ═══ APP HEADER ═══════════════════════════════════════════ -->
 <header class="app-header">
+  <button class="menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu">&#9776;</button>
   <a href="../index.html" class="back-link">&#8592; Home</a>
-  <h1>〣 QR &amp; Barcode Tools</h1>
+  <h1>QR &amp; Barcode Tools</h1>
   <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">&#9728; Light</button>
 </header>
+
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileMenu()"></div>
 
 <!-- ═══ APP BODY ═══════════════════════════════════════════ -->
 <div class="app-body">
@@ -96,7 +99,7 @@
 
       <div class="qr-input-block" id="qri-wifi">
         <span class="io-label">WiFi Network Name (SSID)</span>
-        <input type="text" id="qr-wifi-ssid" placeholder="MyNetwork" oninput="qrGenerate()" style="width:100%;margin-bottom:6px" />
+        <input type="text" id="qr-wifi-ssid" placeholder="MyNetwork" maxlength="32" oninput="qrGenerate()" style="width:100%;margin-bottom:6px" />
         <span class="io-label">Password</span>
         <div style="display:flex;gap:8px;align-items:center">
           <input type="password" id="qr-wifi-pass" placeholder="password" oninput="qrGenerate()" style="flex:1" />
@@ -162,6 +165,11 @@
                      oninput="qrUpdateSize(this.value)" />
               <span class="slider-val" id="qr-size-lbl">256 px</span>
             </div>
+            <div class="size-presets">
+              <button class="btn-sm" onclick="qrUpdateSize(128)">Small</button>
+              <button class="btn-sm" onclick="qrUpdateSize(256)">Medium</button>
+              <button class="btn-sm" onclick="qrUpdateSize(512)">Large</button>
+            </div>
           </div>
           <!-- Error Correction -->
           <div class="form-row">
@@ -203,6 +211,11 @@
           <div id="qr-output"></div>
           <p class="qr-hint" id="qr-hint">Enter content above to generate a QR code.</p>
         </div>
+      </div>
+
+      <div class="form-group" style="margin-top:12px">
+        <span class="io-label">Generation History</span>
+        <div class="history-list" id="qr-gen-history"></div>
       </div>
     </div><!--/#panel-qr-->
 

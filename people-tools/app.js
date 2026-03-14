@@ -17,6 +17,22 @@ function escHtml(s) {
     .replace(/'/g, '&#x27;');
 }
 
+/** Copy text content of a container to clipboard */
+function copyResultText(containerId) {
+  const el = document.getElementById(containerId);
+  if (!el || !el.textContent.trim()) { alert('Nothing to copy.'); return; }
+  navigator.clipboard.writeText(el.textContent.trim()).then(
+    () => showToast('Copied to clipboard!'),
+    () => alert('Copy failed — try selecting manually.')
+  );
+}
+function showToast(msg) {
+  let t = document.getElementById('copy-toast');
+  if (!t) { t = document.createElement('div'); t.id = 'copy-toast'; t.className = 'copy-toast'; document.body.appendChild(t); }
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._tid); t._tid = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
 // ──────────────────────────────────────────
 // Theme
 // ──────────────────────────────────────────
@@ -34,6 +50,21 @@ function toggleTheme() {
   if (btn) btn.textContent = t === 'dark' ? '☀ Light' : '☾ Dark';
 })();
 
+/** Toggle mobile sidebar drawer */
+function toggleMobileMenu() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (sidebar) sidebar.classList.toggle('open');
+  if (overlay) overlay.classList.toggle('active');
+}
+/** Close mobile sidebar drawer */
+function closeMobileMenu() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (sidebar) sidebar.classList.remove('open');
+  if (overlay) overlay.classList.remove('active');
+}
+
 // ──────────────────────────────────────────
 // Navigation
 // ──────────────────────────────────────────
@@ -44,6 +75,7 @@ function showTool(id) {
   document.querySelectorAll('.tab-btn').forEach(b => {
     b.classList.toggle('active', b.getAttribute('onclick') === `showTool('${id}')`);
   });
+  closeMobileMenu();
 }
 
 function toggleGroup(grpId) {
@@ -145,7 +177,7 @@ function printResults(elementId) {
   const el = document.getElementById(elementId);
   if (!el) return;
   const w = window.open('', '_blank');
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Print</title>
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline';"><title>Print</title>
     <style>
       body{font-family:Segoe UI,sans-serif;padding:20px;color:#111}
       .team-card{border:1px solid #ccc;padding:10px 16px;margin:8px;display:inline-block;min-width:140px;vertical-align:top;border-radius:4px}
