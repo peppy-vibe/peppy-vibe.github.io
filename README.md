@@ -1,6 +1,25 @@
-# Peppy Tools Portal V.0.4.0
+# Peppy Tools Portal V.0.4.1
 
 A collection of nine powerful, fully client-side browser tools. No server required — works offline and can be hosted on GitHub Pages for free.
+
+---
+
+## What's New in V.0.4.1 (Bug-Fix Release)
+
+### All Tools — Sidebar clean-up
+* Removed the `sidebar-top-nav` icon-button strip from all tools that had it (Clock Tools, Random Tools, Dev Tools, PDF Tools, QR & Barcode). The strip was redundant and hard to use — all groups remain navigable directly via the sidebar group headers.
+
+### PDF Mini Editor BETA — Bug Fixes
+* **Password dialog z-index** — the unlock prompt for encrypted PDFs now correctly appears on top of the Open/Merge dialog instead of behind it.
+* **Export with password now works** — switched to `@cantoo/pdf-lib` (a drop-in fork of pdf-lib that adds `userPassword` / `ownerPassword` / `permissions` encryption in `save()`). Exported PDFs are now properly password-protected.
+* **Grid view race condition fixed** — added a render-sequence guard to `renderWorkspace()`. Only the most recent render completes; stale renders abort mid-flight. The grid is now cleared eagerly (before the async PDF.js load) so users see an immediate refresh rather than stale thumbnails.
+
+### Peppy Table Generator — Bug Fix
+* Removed the ⚙ Settings button from the top bar — it did nothing on desktop where the settings panel is always visible. On mobile the settings panel now stacks below the table in the normal document flow (always accessible, no slide-in needed).
+
+### Peppy Clock Tools — Bug Fixes
+* **Alarm sound extended** — `playBeep()` now plays a three-pulse ascending sequence (~1.5 s) instead of a single 300 ms blip.
+* **Pomodoro settings now apply immediately** — changing Work / Short Break / Long Break / Rounds updates the timer display right away when the timer is not running.
 
 ---
 
@@ -168,7 +187,7 @@ Host the folder on GitHub Pages or open `index.html` locally in any modern brows
 | QR code generation | [qrcodejs v1.0.0](https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js) |
 | Barcode generation | [JsBarcode v3](https://cdn.jsdelivr.net/npm/jsbarcode@3/dist/JsBarcode.all.min.js) |
 | YAML parsing | [js-yaml v4](https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js) |
-| PDF manipulation | [pdf-lib v1.17.1](https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js) |
+| PDF manipulation | [@cantoo/pdf-lib v1.0.1](https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@1.0.1/dist/pdf-lib.min.js) |
 | PDF rendering | [PDF.js v3.11.174](https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js) |
 | Fonts / Icons | System fonts, Unicode symbols |
 | Hosting | GitHub Pages (static) |

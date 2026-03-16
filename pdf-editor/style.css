@@ -393,6 +393,9 @@ body {
 }
 
 /* ═══ DIALOGS ═══ */
+/* Password unlock dialog must sit above any other open dialog */
+#dlg-pdf-password { z-index: 210; }
+
 .dialog-overlay {
   position: fixed;
   inset: 0;

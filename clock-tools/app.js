@@ -430,6 +430,22 @@ function pomoReset() {
   document.getElementById('pomo-skip-btn').disabled = true;
 }
 
+/**
+ * Re-applies pomo settings to the current phase when the timer is idle or paused.
+ * Called by onchange on each pomo settings input.
+ */
+function applyPomoSettings() {
+  if (pomoRunning) return; // don't interrupt a running timer
+  const s = getPomoSettings();
+  // Update the current phase's total and remaining time
+  if (pomoPhase === 'work')        { pomoTotal = s.work;       pomoRemaining = s.work; }
+  else if (pomoPhase === 'short-break') { pomoTotal = s.shortBreak; pomoRemaining = s.shortBreak; }
+  else                             { pomoTotal = s.longBreak;  pomoRemaining = s.longBreak; }
+  document.getElementById('pomo-display').textContent = fmtMmSs(pomoRemaining);
+  document.getElementById('pomo-progress').style.width = '100%';
+  updatePomoUI();
+}
+
 function updatePomoUI() {
   const s = getPomoSettings();
   const statusEl = document.getElementById('pomo-status');
@@ -538,20 +554,35 @@ function renderAlarmHistory() {
 }
 
 /* ──────────────────────────────────────────
-   AUDIO — Simple beep using Web Audio API
+   AUDIO — Web Audio API beep sequences
 ────────────────────────────────────────── */
+/**
+ * Play a three-pulse ascending notification beep (~1.5 s total).
+ * Used by both Countdown Timer and Pomodoro when a phase ends.
+ */
 function playBeep() {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.frequency.value = 880;
-    gain.gain.value = 0.3;
-    osc.start();
-    setTimeout(() => { osc.stop(); ctx.close(); }, 300);
-  } catch (e) { /* Audio not available */ }
+    // Three tones: 660 Hz → 880 Hz → 1100 Hz, each 300 ms on / 150 ms gap
+    const tones = [660, 880, 1100];
+    tones.forEach((freq, i) => {
+      const start = i * 0.45; // 300 ms on + 150 ms off = 450 ms per tone
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.frequency.value = freq;
+      osc.type = 'sine';
+      gain.gain.setValueAtTime(0, ctx.currentTime + start);
+      gain.gain.linearRampToValueAtTime(0.4, ctx.currentTime + start + 0.02);
+      gain.gain.setValueAtTime(0.4, ctx.currentTime + start + 0.28);
+      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + start + 0.30);
+      osc.start(ctx.currentTime + start);
+      osc.stop(ctx.currentTime + start + 0.31);
+    });
+    // Close context after all tones finish
+    setTimeout(() => { try { ctx.close(); } catch (_) {} }, 1600);
+  } catch (_) { /* Web Audio not available */ }
 }
 
 function playAlarmSound() {

@@ -520,18 +520,22 @@ body {
 .settings-overlay.active { display: block; }
 
 @media (max-width: 768px) {
+  /* Stack table and settings vertically; settings always visible */
+  .main-area { flex-direction: column; }
   .settings-panel {
-    position: fixed;
-    top: 0;
-    right: -280px;
-    width: 260px;
-    height: 100vh;
-    z-index: 100;
-    transition: right 0.3s ease;
-    box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+    position: static;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    box-shadow: none;
     border-left: none;
+    border-top: 1px solid var(--border);
+    /* Remove slide-in transition so it never hides */
+    right: unset;
+    transition: none;
   }
-  .settings-panel.open { right: 0; }
+  /* Overlay no longer needed on mobile */
+  .settings-overlay { display: none !important; }
   .toolbar { flex-wrap: wrap; gap: 4px; }
   .toolbar button { padding: 4px 8px; font-size: 11px; }
 }

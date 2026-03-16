@@ -27,6 +27,9 @@ let redactRects = [];        // array of {page, x, y, w, h} for redactions
 let redactDrawing = false;   // currently dragging a redact rect
 let redactStart = null;      // {x, y} start of current redact drag
 
+/* ── Render sequence — prevents stale renders overwriting newer ones ── */
+let _renderSeq = 0;
+
 /* ── Undo / Redo ── */
 const undoStack = [];        // array of Uint8Array snapshots
 const redoStack = [];
@@ -61,9 +64,9 @@ function updateUndoRedoUI() {
   if (u) u.disabled = !undoStack.length;
   if (r) r.disabled = !redoStack.length;
 }
-function refreshCurrentView() {
-  if (currentView === 'grid') renderWorkspace();
-  else renderReaderPage();
+async function refreshCurrentView() {
+  if (currentView === 'grid') await renderWorkspace();
+  else await renderReaderPage();
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -307,7 +310,7 @@ async function handleImages(files) {
     pdfBytes = await doc.save();
     pdfFileName = 'images.pdf';
     selectedPages.clear();
-    refreshCurrentView();
+    await refreshCurrentView();
     toast('Converted ' + files.length + ' image(s) to PDF', 'success');
   } catch (err) {
     toast('Error: ' + err.message, 'error');
@@ -347,7 +350,7 @@ async function handleAddPages(files) {
     }
     pdfBytes = await doc.save();
     selectedPages.clear();
-    refreshCurrentView();
+    await refreshCurrentView();
     toast('Added ' + files.length + ' file(s)', 'success');
   } catch (err) {
     toast('Error: ' + err.message, 'error');
@@ -360,6 +363,10 @@ async function handleAddPages(files) {
 ──────────────────────────────────────────────────────────── */
 async function renderWorkspace() {
   if (!pdfBytes) return;
+
+  // Sequence guard: abort this render if a newer one starts before we finish
+  const mySeq = ++_renderSeq;
+
   const emptyEl = document.getElementById('workspace-empty');
   const toolbar = document.getElementById('workspace-toolbar');
   const grid = document.getElementById('page-grid');
@@ -373,14 +380,27 @@ async function renderWorkspace() {
   // File name in top bar
   nameDisp.textContent = pdfFileName + ' (' + fmtBytes(pdfBytes.length) + ')';
 
+  // Clear grid immediately so the user sees the workspace refresh (not stale pages)
+  grid.innerHTML = '';
+
   // Render thumbnails with PDF.js
   const loadingTask = pdfjsLib.getDocument({ data: pdfBytes.slice() });
-  const pdfDoc = await loadingTask.promise;
+  let pdfDoc;
+  try {
+    pdfDoc = await loadingTask.promise;
+  } catch (err) {
+    if (mySeq !== _renderSeq) return; // superseded; silently drop
+    toast('Render error: ' + err.message, 'error');
+    return;
+  }
+
+  // Abort if a newer render started while PDF.js was loading
+  if (mySeq !== _renderSeq) return;
+
   const numPages = pdfDoc.numPages;
 
   document.getElementById('page-count-info').textContent = numPages + ' page(s)';
 
-  grid.innerHTML = '';
   const baseSize = 180 * thumbScale;
 
   for (let i = 1; i <= numPages; i++) {
@@ -406,7 +426,13 @@ async function renderWorkspace() {
     canvas.className = 'page-thumb-canvas';
     canvas.width = viewport.width;
     canvas.height = viewport.height;
-    await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+    try {
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+    } catch (_) { /* page render cancelled — will be replaced by next renderWorkspace */ }
+
+    // Abort if superseded while rendering this page
+    if (mySeq !== _renderSeq) return;
+
     wrapper.appendChild(canvas);
 
     // Label
@@ -1696,9 +1722,21 @@ async function applyMerge() {
     const merged = await PDFDocument.create();
     for (const item of mergeFiles) {
       const buf = await readFileAsArrayBuffer(item.file);
-      const src = await loadPDFHandlingPassword(buf, item.name || item.file.name);
-      const pages = await merged.copyPages(src, src.getPageIndices());
-      pages.forEach(p => merged.addPage(p));
+      if (item.isImage) {
+        const bytes = new Uint8Array(buf);
+        let img;
+        if (item.name.toLowerCase().endsWith('.png')) {
+          img = await merged.embedPng(bytes);
+        } else {
+          img = await merged.embedJpg(bytes);
+        }
+        const page = merged.addPage([img.width, img.height]);
+        page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
+      } else {
+        const src = await loadPDFHandlingPassword(buf, item.name || item.file.name);
+        const pages = await merged.copyPages(src, src.getPageIndices());
+        pages.forEach(p => merged.addPage(p));
+      }
     }
     pdfBytes = await merged.save();
     pdfFileName = mergeFiles.length > 1 ? 'merged.pdf' : mergeFiles[0].name;

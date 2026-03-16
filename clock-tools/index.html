@@ -27,9 +27,6 @@
 <div class="app-body">
   <!-- Sidebar -->
   <div class="sidebar">
-    <div class="sidebar-top-nav" id="sidebar-top-nav">
-      <button class="grp-nav-btn active" data-grp="clocks" title="Clocks" onclick="jumpGroup('clocks')">&#128336;</button>
-    </div>
     <div class="sidebar-groups" id="sidebar-groups">
       <div class="sidebar-group" id="grp-clocks">
         <button class="grp-hdr" onclick="toggleGroup('clocks')">
@@ -132,10 +129,10 @@
         </div>
         <div class="pomo-settings">
           <div class="form-row">
-            <div class="form-group"><label class="io-label">Work (min)</label><input type="number" id="pomo-work" value="25" min="1" max="90" style="width:60px"></div>
-            <div class="form-group"><label class="io-label">Short Break</label><input type="number" id="pomo-short" value="5" min="1" max="30" style="width:60px"></div>
-            <div class="form-group"><label class="io-label">Long Break</label><input type="number" id="pomo-long" value="15" min="1" max="60" style="width:60px"></div>
-            <div class="form-group"><label class="io-label">Rounds</label><input type="number" id="pomo-rounds" value="4" min="1" max="12" style="width:60px"></div>
+            <div class="form-group"><label class="io-label">Work (min)</label><input type="number" id="pomo-work" value="25" min="1" max="90" style="width:60px" onchange="applyPomoSettings()"></div>
+            <div class="form-group"><label class="io-label">Short Break</label><input type="number" id="pomo-short" value="5" min="1" max="30" style="width:60px" onchange="applyPomoSettings()"></div>
+            <div class="form-group"><label class="io-label">Long Break</label><input type="number" id="pomo-long" value="15" min="1" max="60" style="width:60px" onchange="applyPomoSettings()"></div>
+            <div class="form-group"><label class="io-label">Rounds</label><input type="number" id="pomo-rounds" value="4" min="1" max="12" style="width:60px" onchange="applyPomoSettings()"></div>
           </div>
         </div>
       </div>
