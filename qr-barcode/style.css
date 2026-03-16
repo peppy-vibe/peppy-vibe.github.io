@@ -44,21 +44,15 @@ body {
   background: var(--page-bg); font-size: 14px; color: var(--text);
 }
 
-/* ── App Header ── */
-.app-header {
-  display: flex; align-items: center; gap: 12px; padding: 8px 16px;
-  background: #5646F5; color: #fff; flex-shrink: 0; z-index: 10;
-}
-.back-link { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; white-space: nowrap; }
-.back-link:hover { color: #fff; }
-.app-header h1 { font-size: 1.05rem; font-weight: 600; white-space: nowrap; }
-.theme-toggle {
-  margin-left: auto;
-  background: rgba(255,255,255,0.2) !important; border: 1px solid rgba(255,255,255,0.4) !important;
-  color: #fff !important; padding: 4px 12px; border-radius: 14px; cursor: pointer;
-  font-size: 12px; font-family: inherit; transition: background 0.2s;
-}
-.theme-toggle:hover { background: rgba(255,255,255,0.35) !important; }
+/* ── Top Bar ── */
+.top-bar { display: flex; align-items: center; gap: 12px; padding: 0 16px; height: 44px; background: #5646F5; color: #fff; flex-shrink: 0; z-index: 20; }
+.top-bar-left { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.top-bar-back { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 1.1rem; line-height: 1; }
+.top-bar-back:hover { color: #fff; }
+.top-bar-title { font-size: 0.95rem; font-weight: 600; white-space: nowrap; }
+.top-bar-right { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.top-btn { background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.25); color: #fff; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+.top-btn:hover { background: rgba(255,255,255,0.3); }
 
 /* ── App Body ── */
 .app-body { flex: 1; display: flex; overflow: hidden; }
@@ -230,22 +224,8 @@ input[type="color"] { width: 36px; height: 28px; padding: 2px; border: 1px solid
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ── Hamburger menu button (hidden on desktop) ── */
-.menu-toggle {
-  display: none;
-  background: rgba(255,255,255,0.2);
-  border: 1px solid rgba(255,255,255,0.4);
-  color: #fff;
-  padding: 4px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1.2rem;
-  line-height: 1;
-  font-family: inherit;
-  transition: background 0.2s;
-  margin-right: 8px;
-}
-.menu-toggle:hover { background: rgba(255,255,255,0.35); }
+/* ── Hamburger menu button (hidden on desktop, shown on mobile) ── */
+.menu-toggle { display: none; }
 
 .sidebar-overlay {
   display: none;
@@ -278,8 +258,8 @@ input[type="color"] { width: 36px; height: 28px; padding: 2px; border: 1px solid
 }
 
 @media (max-width: 480px) {
-  .app-header h1 { font-size: 0.9rem; }
-  .app-header { padding: 6px 10px; }
+  .top-bar-title { font-size: 0.85rem; }
+  .top-bar { padding: 0 10px; height: 40px; }
   .tool-panel { padding: 12px 10px; }
   .panel-title { font-size: 1rem; }
   .qr-preview-box { max-width: 100%; }

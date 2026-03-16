@@ -1,7 +1,7 @@
 {
   "name": "Peppy Vibe Tools",
   "short_name": "Peppy Tools",
-  "description": "Seven free, fully client-side browser utilities — notepad, table generator, dev tools, PDF tools, random tools, people tools, and QR & barcode generator.",
+  "description": "Nine free, fully client-side browser utilities — notepad, table generator, dev tools, PDF tools, PDF editor, random tools, people tools, QR & barcode generator, and clock tools.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -43,6 +43,16 @@
       "name": "QR & Barcode",
       "url": "./qr-barcode/",
       "description": "Generate and scan QR codes and barcodes"
+    },
+    {
+      "name": "PDF Mini Editor BETA",
+      "url": "./pdf-editor/",
+      "description": "Interactive visual PDF editor workspace"
+    },
+    {
+      "name": "Clock Tools",
+      "url": "./clock-tools/",
+      "description": "Stopwatch, timer, world clocks, pomodoro, alarm"
     }
   ]
 }

@@ -1,22 +1,72 @@
-# Peppy Tools Portal V.0.3.0
+# Peppy Tools Portal V.0.4.0
 
-A collection of seven powerful, fully client-side browser tools. No server required — works offline and can be hosted on GitHub Pages for free.
+A collection of nine powerful, fully client-side browser tools. No server required — works offline and can be hosted on GitHub Pages for free.
 
 ---
 
-## What's New in V.0.3.0
+## What's New in V.0.4.0
 
-* **CDN Migration:** All vendor JS/CSS dependencies now load via [jsDelivr](https://www.jsdelivr.com/) CDN instead of bundled `vendor/` files. Removes ~1 MB from the repository.
-* **Offline Resilience:** Service Worker (`peppy-v3`) caches CDN resources at install time with graceful fallback — local assets always cached, CDN deps are best-effort.
-* **Mobile-Responsive UI:** Every tool now has a hamburger menu drawer on mobile (< 768 px), responsive breakpoints at 768 px and 480 px, and touch-friendly controls.
-* **Auto-Save Indicator (Notepad):** Status bar flashes "Saved" when draft is auto-saved to localStorage.
-* **Copy Results (People Tools):** All generator outputs (Winners, Teams, Pairs, Groups, Seating, Shuffler) now have a 📋 Copy button alongside Print.
-* **QR Size Presets:** Small / Medium / Large preset buttons below the size slider.
-* **QR Generation History:** Tracks last 20 generated QR codes with type, content preview, and timestamp.
-* **Wheel Spin History (Random Tools):** Tracks last 20 spin results.
-* **Table Reset:** Reset button with confirmation dialog clears table back to 3 × 3 defaults.
-* **Settings Panel (Table Generator):** Mobile slide-out panel for table settings on small screens.
-* **Security Fixes:** XSS vulnerability in wheel history (BUG-001) patched with HTML escaping. CSP meta tag added to print preview windows (BUG-002). SW install resilience improved (BUG-003). Message timeout overlap fixed in dev-tools (BUG-004). WiFi SSID input length capped (BUG-007).
+### Unified Top-Bar Across All Apps
+* Every app now shares the same compact top-bar with icon-only Fullscreen (⛶) and Theme (☀/☾) buttons — consistent look and feel portal-wide.
+* Fullscreen toggle added to **QR & Barcode Tools** and **Easy PDF Tools** (previously missing).
+
+### Clock Tools (NEW)
+* 5 time utilities — Stopwatch (with lap tracking), Countdown Timer (with larger input font and presets), World Clocks (30+ zones), Pomodoro Timer (work/break/long-break cycles with round tracking), and Alarm Clock (with audio notification via Web Audio API).
+
+### PDF Mini Editor BETA — Major Overhaul
+
+#### Navigation & Layout
+* **Undo / Redo** moved to the main workspace toolbar — always visible and accessible from any view.
+* **Unified Zoom** — one set of zoom buttons in the toolbar controls both Grid and Reader views.
+* **Grid Nav bar** — Select All, Deselect, and page count info moved below the toolbar, visible only in Grid view.
+* **Manual Go-To-Page** — type a page number directly in the Reader nav to jump instantly.
+
+#### Grid & Reader Views
+* **Dual View** — Switch between multi-page thumbnail Grid and single-page Reader view via a segmented toggle in the toolbar.
+* **Reader View** — Single-page rendering with page navigation and adjustable zoom (25%–400%).
+* **Delete, Rotate CW, Rotate CCW** in Reader nav — apply directly to the currently displayed page.
+
+#### Import — Encrypted PDF Handling
+* **Password-Protected PDFs** — when opening any PDF that is encrypted, the app automatically detects the password protection and shows an unlock dialog. Enter the password to decrypt and load the file; the decrypted content is then added to the editor as a normal (unencrypted) document.
+
+#### Import
+* **Merge PDFs** now opens a dedicated pop-up with a drag-and-drop drop zone and an ordered file list. Use ▲/▼ arrows to reorder files before merging. Add files from multiple selections. Encrypted files in the merge list are unlocked the same way.
+* **Add Pages** button renamed to **Add PDFs**.
+
+#### Document Info
+* **Remove Metadata** and **Remove Hidden Data** consolidated into the Document Info pop-up as quick-action buttons.
+
+#### Export — Unified Single Panel
+* **Export** (replaces "Export / Split / Extract") — a single collapsible panel replaces the previous four-tab dialog. The new panel provides one consistent workflow for all output scenarios:
+  * **File Name** — set the output filename; used as a prefix when splitting into multiple files.
+  * **All** — export the entire document as a single PDF.
+  * **Pages** — export a specific page range (e.g. `1, 3-5, 8`) as a single PDF.
+  * **Split PDF** — split the document into multiple files; sub-options:
+    * Split every page into separate files.
+    * Custom ranges (e.g. `1-3, 4, 5-7`).
+  * **Options** — Compress (smaller file), Flatten form fields, Optimized (object streams) — apply to every export mode.
+  * **Protect PDF** — optional password protection applied to the output file(s); when Split PDF is active, every output file is encrypted. Includes user password, owner password, and per-permission checkboxes (restrict print / copy / edit / annotations; lock read-only).
+* **Remove Password** standalone button removed — decryption is now handled automatically on import (see above).
+
+#### Redact Mode
+* Draw black rectangles over sensitive content in Reader view; redactions are permanently burned into the PDF.
+
+#### Text / Page Tools
+* Text Annotation, Watermark, Page Numbers, Crop, Resize — all preserved from previous version.
+
+### Dev Tools — World Clock Removed
+* World Clocks utility removed from Dev Tools (still available in Clock Tools). Tool count now 33.
+
+### Random Tools — Bug Fixes
+* Wheel Spinner reset now clears spin history; Option Picker clear button properly rebuilds internal DOM; added Shuffle and Sort buttons for wheel options.
+
+### QR & Barcode — Auto-Generate Toggle
+* Checkbox to enable/disable auto-generation on input. When disabled, a manual Generate button appears. Removed QR Generation History section.
+
+### Portal & Infrastructure
+* 9 tool cards, updated stats, version bump to V.0.4.0.
+* Service Worker cache bumped to `peppy-v4` with clock-tools and pdf-editor assets.
+* Manifest updated with shortcuts for PDF Mini Editor BETA and Clock Tools.
 
 ---
 
@@ -46,7 +96,7 @@ Host the folder on GitHub Pages or open `index.html` locally in any modern brows
 ├── README.md
 ├── bug_report.md                 # Bug audit report
 ├── implementation.md             # Feature implementation plan
-├── sw.js                         # Service Worker (offline cache, peppy-v3)
+├── sw.js                         # Service Worker (offline cache, peppy-v4)
 ├── advanced-notepad/
 │   ├── index.html
 │   ├── style.css
@@ -71,7 +121,15 @@ Host the folder on GitHub Pages or open `index.html` locally in any modern brows
 │   ├── index.html
 │   ├── style.css
 │   └── app.js
-└── pdf-tools/
+├── pdf-tools/
+│   ├── index.html
+│   ├── style.css
+│   └── app.js
+├── pdf-editor/
+│   ├── index.html
+│   ├── style.css
+│   └── app.js
+└── clock-tools/
     ├── index.html
     ├── style.css
     └── app.js
@@ -125,7 +183,7 @@ The portal ships with a Service Worker (`sw.js`) and a `manifest.json`:
 - CDN dependencies are cached best-effort — if jsDelivr is unreachable, local assets still work offline.
 - A "New version available" banner appears automatically when a new service worker installs.
 - The portal meets PWA installability criteria — browsers will offer an "Install App" prompt.
-- Cache name: `peppy-v3` (bump this string in `sw.js` to force a cache refresh on deploy).
+- Cache name: `peppy-v4` (bump this string in `sw.js` to force a cache refresh on deploy).
 
 ---
 
@@ -234,9 +292,9 @@ All pages share a unified dark / light theme:
 | Text Tools | Diff, Sorter, Dedup Lines, Random String, Lorem Ipsum, Text Statistics |
 | JSON / Data | JSON Formatter, JSON Viewer, JSON Validator, JSON→CSV, JSON→YAML, YAML→JSON, XML Formatter, XML→JSON |
 | Colors | Color Converter, Color Picker, Contrast Checker, Palette Generator |
-| Timestamps | Unix Converter, Date Calculator, Date Formatter, World Clocks |
+| Timestamps | Unix Converter, Date Calculator, Date Formatter |
 | Regex | Pattern Tester, Find & Replace, Reference Cheatsheet |
-| **Grouped sidebar** | 6 collapsible groups, 32 tools total, single-page navigation |
+| **Grouped sidebar** | 6 collapsible groups, 33 tools total, single-page navigation |
 | **Top group nav** | Icon bar jumps to any group and highlights the active one |
 | Dark / Light Theme | Toggle in header, persisted to localStorage |
 
@@ -310,7 +368,7 @@ All pages share a unified dark / light theme:
 
 ---
 
-## Peppy PDF Tools
+## Peppy Easy PDF Tools
 
 ### Features
 
@@ -345,6 +403,69 @@ All pages share a unified dark / light theme:
 |---------|---------|
 | [pdf-lib v1.17](https://pdf-lib.js.org/) | Create, modify, merge, split, encrypt, watermark, rotate pages, add text |
 | [PDF.js v3.11](https://mozilla.github.io/pdf.js/) | Render PDF pages to `<canvas>` for thumbnail thumbnails, viewer, and redaction |
+
+---
+
+## Peppy PDF Mini Editor BETA
+
+### Features
+
+| Feature | Details |
+|---------|----------|
+| **Open / Merge PDF(s) & Images** | Unified import dialog — add PDFs and/or JPEG/PNG images in any order; drag-drop to reorder before merging; supports single-file open or multi-file merge in one step |
+| **Password-Protected PDF on Open** | When importing an encrypted PDF, the app automatically detects the password and prompts for it — enter the password to decrypt and load the file as a normal (unencrypted) document, ready to edit and export |
+| **Add More Pages** | Append PDFs or images to an already-open document via the toolbar button |
+| **Drag-to-Rearrange** | Drag page thumbnails to reorder pages visually in the grid |
+| **Delete Pages** | Context-aware Delete button in toolbar: removes selected pages (Grid view) or the current page (Reader view) |
+| **Rotate Pages** | Context-aware CW / CCW rotate buttons in toolbar: rotate selected pages (Grid) or the current page (Reader) |
+| **Add Watermark** | Configurable text, font size, opacity, color, angle, and position (5 spots). Apply to all pages, selected pages, or a custom page range (e.g. 1-3, 5, 7-9) |
+| **Add Page Numbers** | 4 number formats × 6 positions, configurable font size, color, and start number |
+| **Crop Pages** | Set top/bottom/left/right margins in points. Apply to all pages, selected pages, or a page range |
+| **Resize Pages** | Resize to A4, Letter, Legal, A3, A5, or custom dimensions. Apply to all pages, selected pages, or a page range |
+| **Text Annotation** | Add text — configurable size, color, and position (7 placements). Apply to all pages, selected pages, or a page range |
+| **Redact** | Draw black rectangles in Reader view; Ctrl+Z removes the last drawn rect; dedicated **Apply Redact** button burns them permanently into the PDF. Pending redactions are auto-applied before any export |
+| **Document Info** | View/edit PDF metadata (title, author, subject, keywords, creator) plus stats; includes Remove Metadata and Remove Hidden Data actions |
+| **Export** | Unified single-panel export with three modes — **All** (entire document), **Pages** (specific range, e.g. `1, 3-5, 8`), **Split PDF** (every page into separate files, or custom ranges). Options: Compress, Flatten, Optimized. Built-in **Protect PDF** section: user password, owner password, and per-permission checkboxes (restrict print / copy / edit / annotations; read-only lock). Protection applies to every output file when splitting. |
+| **Remove Metadata** | Strip title, author, subject, keywords, creator, producer, and XMP |
+| **Remove Hidden Data** | Strip metadata, XMP, embedded JS, embedded files, and annotations |
+| **Compress PDF** | Re-serialize with object streams; shows before/after file size |
+| **Undo / Redo** | Stack-based history (up to 20 snapshots) for all destructive operations; Ctrl+Z while drawing redact rects removes the last drawn rect |
+| **Dual View** | Grid (thumbnail overview) and Reader (single-page with zoom) — toggle in toolbar |
+| **Reader View** | Single-page rendering with page navigation, zoom (25%–400%), redact drawing mode |
+| **Select All / Deselect** | Grid-nav bar buttons for bulk page selection |
+| **Thumbnail Zoom** | Scale thumbnails from 50% to 250% |
+| **Global Drag & Drop** | Drop PDFs or images anywhere on the page to import |
+| **Modern Workspace UI** | Sidebar action panel + central page grid / reader; every edit instantly reflects in whichever view is active |
+| Dark / Light Theme | Toggle in header, persisted to localStorage |
+
+### Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| Ctrl+Z | Undo (or remove last drawn redact rect if pending) |
+| Ctrl+Y / Ctrl+Shift+Z | Redo |
+
+### Libraries Used
+
+| Library | Purpose |
+|---------|---------|
+| [pdf-lib v1.17](https://pdf-lib.js.org/) | PDF creation, modification, encryption, watermark, page operations |
+| [PDF.js v3.11](https://mozilla.github.io/pdf.js/) | Render PDF pages to `<canvas>` for interactive thumbnails |
+
+---
+
+## Peppy Clock Tools
+
+### Features
+
+| Feature | Details |
+|---------|----------|
+| **Stopwatch** | Start/stop/reset with lap tracking, displays hours:minutes:seconds.centiseconds |
+| **Countdown Timer** | Set hours/minutes/seconds manually or use presets (1/5/10/15/30/60 min). Progress bar, audio beep on finish, browser notification |
+| **World Clocks** | 30+ time zones displayed in a grid, live auto-updating every second, add/remove cities |
+| **Pomodoro Timer** | Configurable work/short-break/long-break durations and round count. Auto-advances phases, beep + notification on phase change |
+| **Alarm Clock** | Set alarm time, pulsing audio alert with Web Audio API, snooze/dismiss controls |
+| Dark / Light Theme | Toggle in header, persisted to localStorage |
 
 ---
 

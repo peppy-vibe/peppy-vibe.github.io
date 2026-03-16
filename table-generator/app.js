@@ -959,10 +959,18 @@ function updateThemeBtn() {
   const btn = document.getElementById('theme-btn');
   if (!btn) return;
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  btn.textContent = isDark ? '\u2600 Light' : '\u263e Dark';
+  btn.textContent = isDark ? '\u2600' : '\u263e';
 }
 
 updateThemeBtn();
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+}
 
 /** Toggle settings panel drawer on mobile */
 function toggleSettingsPanel() {

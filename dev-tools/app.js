@@ -39,7 +39,6 @@ const ALL_TOOL_LABELS = {
   unix:      'Unix Timestamp Converter',
   calc:      'Date Calculator',
   format:    'Date Formatter',
-  timezones: 'World Clocks',
   /* Regex */
   tester:    'Pattern Tester',
   replace:   'Find & Replace',
@@ -53,7 +52,7 @@ const TOOL_GROUP_MAP = {
   diff: 'text', sort: 'text', dedup: 'text', rand: 'text', lorem: 'text', stats: 'text',
   jf: 'json', jv: 'json', jval: 'json', jcsv: 'json', jy: 'json', yj: 'json', xf: 'json', xj: 'json',
   convert: 'colors', picker: 'colors', contrast: 'colors', palette: 'colors',
-  unix: 'time', calc: 'time', format: 'time', timezones: 'time',
+  unix: 'time', calc: 'time', format: 'time',
   tester: 'regex', replace: 'regex', ref: 'regex',
 };
 
@@ -105,7 +104,15 @@ function updateThemeBtn() {
   const btn    = document.getElementById('theme-btn');
   if (!btn) return;
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  btn.textContent = isDark ? '\u2600 Light' : '\u263e Dark';
+  btn.textContent = isDark ? '\u2600' : '\u263e';
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
 }
 
 /** Toggle mobile sidebar drawer */
@@ -1730,67 +1737,6 @@ function formatDate() {
   out.style.display = 'block';
 }
 
-const WORLD_ZONES = [
-  { city: 'Los Angeles',  tz: 'America/Los_Angeles' },
-  { city: 'Denver',       tz: 'America/Denver' },
-  { city: 'Chicago',      tz: 'America/Chicago' },
-  { city: 'New York',     tz: 'America/New_York' },
-  { city: 'SÃ£o Paulo',    tz: 'America/Sao_Paulo' },
-  { city: 'London',       tz: 'Europe/London' },
-  { city: 'Paris',        tz: 'Europe/Paris' },
-  { city: 'Istanbul',     tz: 'Europe/Istanbul' },
-  { city: 'Moscow',       tz: 'Europe/Moscow' },
-  { city: 'Dubai',        tz: 'Asia/Dubai' },
-  { city: 'Karachi',      tz: 'Asia/Karachi' },
-  { city: 'Dhaka',        tz: 'Asia/Dhaka' },
-  { city: 'Bangkok',      tz: 'Asia/Bangkok' },
-  { city: 'Singapore',    tz: 'Asia/Singapore' },
-  { city: 'Tokyo',        tz: 'Asia/Tokyo' },
-  { city: 'Sydney',       tz: 'Australia/Sydney' },
-  { city: 'Auckland',     tz: 'Pacific/Auckland' },
-  { city: 'Honolulu',     tz: 'Pacific/Honolulu' },
-];
-
-function buildClocks() {
-  const grid = document.getElementById('world-clocks');
-  if (!grid) return;
-  grid.innerHTML = '';
-  WORLD_ZONES.forEach(z => {
-    const key  = z.tz.replace(/\//g,'-').replace(/_/g,'_');
-    const card = document.createElement('div');
-    card.className = 'clock-card';
-    card.innerHTML = `
-      <div class="tz-city">${z.city}</div>
-      <div class="tz-time" id="ct-${key}">--:--:--</div>
-      <div class="tz-date" id="cd-${key}"></div>
-      <div class="tz-offset" id="co-${key}"></div>
-    `;
-    grid.appendChild(card);
-  });
-}
-
-function tickClocks() {
-  const now = new Date();
-  WORLD_ZONES.forEach(z => {
-    const key    = z.tz.replace(/\//g,'-').replace(/_/g,'_');
-    const timeEl = document.getElementById('ct-' + key);
-    const dateEl = document.getElementById('cd-' + key);
-    const offEl  = document.getElementById('co-' + key);
-    if (!timeEl) return;
-    try {
-      timeEl.textContent = now.toLocaleTimeString('en-US', { timeZone: z.tz, hour:'2-digit', minute:'2-digit', second:'2-digit', hour12: false });
-      dateEl.textContent = now.toLocaleDateString('en-US', { timeZone: z.tz, weekday:'short', year:'numeric', month:'short', day:'numeric' });
-      const fmt   = new Intl.DateTimeFormat('en-US', { timeZone: z.tz, timeZoneName: 'short' });
-      const parts = fmt.formatToParts(now);
-      offEl.textContent  = parts.find(p => p.type === 'timeZoneName')?.value || z.tz;
-    } catch { timeEl.textContent = 'N/A'; }
-  });
-}
-
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   REGEX TESTER
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-
 function getFlags(prefix) {
   const p = prefix || 'fl';
   let f = '';
@@ -1942,10 +1888,6 @@ document.addEventListener('DOMContentLoaded', () => {
   generatePalette();
 
   /* Timestamp init */
-  buildClocks();
-  tickClocks();
-  setInterval(tickClocks, 1000);
-
   const now = new Date();
   const pad = n => String(n).padStart(2,'0');
   const localStr  = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;

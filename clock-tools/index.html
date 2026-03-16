@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peppy Clock Tools</title>
+<meta name="description" content="Clock utilities: Stopwatch, Countdown Timer, World Clocks, Pomodoro Timer, and Alarm — all client-side.">
+<link rel="stylesheet" href="style.css">
+<script>(function(){var t=localStorage.getItem('stp-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-left">
+    <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu">&#9776;</button>
+    <a href="../index.html" class="top-bar-back" title="Home">&#8592;</a>
+    <span class="top-bar-title">&#128336; Peppy Clock Tools</span>
+  </div>
+  <div class="top-bar-right">
+    <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen">&#9974;</button>
+    <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">&#9728;</button>
+  </div>
+</div>
+
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileMenu()"></div>
+
+<div class="app-body">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-top-nav" id="sidebar-top-nav">
+      <button class="grp-nav-btn active" data-grp="clocks" title="Clocks" onclick="jumpGroup('clocks')">&#128336;</button>
+    </div>
+    <div class="sidebar-groups" id="sidebar-groups">
+      <div class="sidebar-group" id="grp-clocks">
+        <button class="grp-hdr" onclick="toggleGroup('clocks')">
+          <span>&#128336; Clock Tools</span>
+          <span class="grp-chevron">&#9660;</span>
+        </button>
+        <div class="grp-tools">
+          <button class="tab-btn active" data-tool="stopwatch" data-grp="clocks" onclick="showTool('stopwatch')">Stopwatch</button>
+          <button class="tab-btn" data-tool="timer" data-grp="clocks" onclick="showTool('timer')">Countdown Timer</button>
+          <button class="tab-btn" data-tool="world-clocks" data-grp="clocks" onclick="showTool('world-clocks')">World Clocks</button>
+          <button class="tab-btn" data-tool="pomodoro" data-grp="clocks" onclick="showTool('pomodoro')">Pomodoro Timer</button>
+          <button class="tab-btn" data-tool="alarm" data-grp="clocks" onclick="showTool('alarm')">Alarm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tool Area -->
+  <div class="tool-area" id="tool-area">
+
+    <!-- 1. Stopwatch -->
+    <div class="tool-panel active" id="tool-stopwatch">
+      <div class="panel-title">&#9201; Stopwatch</div>
+      <div class="clock-display-center">
+        <div class="clock-big-display" id="sw-display">00:00:00<span class="ms">.000</span></div>
+        <div class="btn-row" style="justify-content:center;">
+          <button onclick="swStart()" id="sw-start-btn">&#9654; Start</button>
+          <button onclick="swStop()" id="sw-stop-btn" disabled class="btn-secondary">&#9724; Stop</button>
+          <button onclick="swLap()" id="sw-lap-btn" disabled class="btn-secondary">&#128203; Lap</button>
+          <button onclick="swReset()" class="btn-secondary">&#8634; Reset</button>
+        </div>
+      </div>
+      <div id="sw-laps" class="laps-list"></div>
+    </div>
+
+    <!-- 2. Countdown Timer -->
+    <div class="tool-panel" id="tool-timer">
+      <div class="panel-title">&#9203; Countdown Timer</div>
+      <div class="clock-display-center">
+        <div class="timer-inputs" id="timer-setup">
+          <div class="timer-input-group">
+            <input type="number" id="timer-h" value="0" min="0" max="99" class="timer-num-input">
+            <span class="timer-input-label">Hours</span>
+          </div>
+          <span class="timer-colon">:</span>
+          <div class="timer-input-group">
+            <input type="number" id="timer-m" value="5" min="0" max="59" class="timer-num-input">
+            <span class="timer-input-label">Minutes</span>
+          </div>
+          <span class="timer-colon">:</span>
+          <div class="timer-input-group">
+            <input type="number" id="timer-s" value="0" min="0" max="59" class="timer-num-input">
+            <span class="timer-input-label">Seconds</span>
+          </div>
+        </div>
+        <div class="clock-big-display" id="timer-display" style="display:none;">00:05:00</div>
+        <div class="timer-progress-bar"><div class="timer-progress-fill" id="timer-progress"></div></div>
+        <div class="btn-row" style="justify-content:center;">
+          <button onclick="timerStart()" id="timer-start-btn">&#9654; Start</button>
+          <button onclick="timerPause()" id="timer-pause-btn" disabled class="btn-secondary">&#10074;&#10074; Pause</button>
+          <button onclick="timerReset()" class="btn-secondary">&#8634; Reset</button>
+        </div>
+        <div class="timer-presets">
+          <span class="io-label">Quick Presets:</span>
+          <button class="btn-sm" onclick="timerPreset(1,0)">1 min</button>
+          <button class="btn-sm" onclick="timerPreset(3,0)">3 min</button>
+          <button class="btn-sm" onclick="timerPreset(5,0)">5 min</button>
+          <button class="btn-sm" onclick="timerPreset(10,0)">10 min</button>
+          <button class="btn-sm" onclick="timerPreset(15,0)">15 min</button>
+          <button class="btn-sm" onclick="timerPreset(25,0)">25 min</button>
+          <button class="btn-sm" onclick="timerPreset(0,30)">30 sec</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. World Clocks -->
+    <div class="tool-panel" id="tool-world-clocks">
+      <div class="panel-title">&#127760; World Clocks</div>
+      <p class="tool-desc">Current time in major world time zones (updates every second).</p>
+      <div id="world-clocks" class="world-clocks-grid"></div>
+    </div>
+
+    <!-- 4. Pomodoro Timer -->
+    <div class="tool-panel" id="tool-pomodoro">
+      <div class="panel-title">&#127813; Pomodoro Timer</div>
+      <p class="tool-desc">Focus with the Pomodoro technique: 25 min work, 5 min short break, 15 min long break after 4 rounds.</p>
+      <div class="clock-display-center">
+        <div class="pomo-status" id="pomo-status">Work Session</div>
+        <div class="clock-big-display pomo-display" id="pomo-display">25:00</div>
+        <div class="timer-progress-bar"><div class="timer-progress-fill pomo-fill" id="pomo-progress"></div></div>
+        <div class="pomo-rounds">
+          <span id="pomo-round-label">Round 1 / 4</span>
+          <span id="pomo-total-label">Total: 0 min focused</span>
+        </div>
+        <div class="btn-row" style="justify-content:center;">
+          <button onclick="pomoStart()" id="pomo-start-btn">&#9654; Start</button>
+          <button onclick="pomoPause()" id="pomo-pause-btn" disabled class="btn-secondary">&#10074;&#10074; Pause</button>
+          <button onclick="pomoSkip()" id="pomo-skip-btn" disabled class="btn-secondary">&#9197; Skip</button>
+          <button onclick="pomoReset()" class="btn-secondary">&#8634; Reset</button>
+        </div>
+        <div class="pomo-settings">
+          <div class="form-row">
+            <div class="form-group"><label class="io-label">Work (min)</label><input type="number" id="pomo-work" value="25" min="1" max="90" style="width:60px"></div>
+            <div class="form-group"><label class="io-label">Short Break</label><input type="number" id="pomo-short" value="5" min="1" max="30" style="width:60px"></div>
+            <div class="form-group"><label class="io-label">Long Break</label><input type="number" id="pomo-long" value="15" min="1" max="60" style="width:60px"></div>
+            <div class="form-group"><label class="io-label">Rounds</label><input type="number" id="pomo-rounds" value="4" min="1" max="12" style="width:60px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Alarm -->
+    <div class="tool-panel" id="tool-alarm">
+      <div class="panel-title">&#9200; Alarm</div>
+      <p class="tool-desc">Set an alarm for a specific time. The alarm will ring even when you switch tabs (notification sound).</p>
+      <div class="clock-display-center">
+        <div class="current-time-display" id="alarm-current-time">--:--:--</div>
+        <div class="form-row" style="justify-content:center;">
+          <div class="form-group">
+            <label class="io-label">Alarm Time</label>
+            <input type="time" id="alarm-time" value="08:00" step="1" class="alarm-time-input">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Label (optional)</label>
+            <input type="text" id="alarm-label" placeholder="Wake up!" style="width:160px">
+          </div>
+        </div>
+        <div class="btn-row" style="justify-content:center;">
+          <button onclick="setAlarm()" id="alarm-set-btn">&#9200; Set Alarm</button>
+          <button onclick="cancelAlarm()" id="alarm-cancel-btn" disabled class="btn-secondary">&#10006; Cancel</button>
+        </div>
+        <div id="alarm-status" class="tool-msg" style="text-align:center;font-size:14px;"></div>
+        <div id="alarm-ringing" class="alarm-ring-display" style="display:none;">
+          <div class="alarm-ring-icon">&#128276;</div>
+          <div id="alarm-ring-label">Alarm!</div>
+          <button onclick="dismissAlarm()" style="font-size:1.1rem;padding:10px 32px;">Dismiss</button>
+        </div>
+      </div>
+      <div>
+        <span class="io-label">Alarm History</span>
+        <div id="alarm-history" class="laps-list"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

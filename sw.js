@@ -5,7 +5,7 @@
 ═══════════════════════════════════════════ */
 'use strict';
 
-const CACHE = 'peppy-v3';
+const CACHE = 'peppy-v4';
 
 /* ── CDN dependencies (jsDelivr) ── */
 const CDN_DEPS = [
@@ -68,6 +68,16 @@ const APP_ASSETS = [
   './pdf-tools/index.html',
   './pdf-tools/style.css',
   './pdf-tools/app.js',
+  /* PDF Mini Editor */
+  './pdf-editor/',
+  './pdf-editor/index.html',
+  './pdf-editor/style.css',
+  './pdf-editor/app.js',
+  /* Clock Tools */
+  './clock-tools/',
+  './clock-tools/index.html',
+  './clock-tools/style.css',
+  './clock-tools/app.js',
 ];
 
 const PRECACHE = APP_ASSETS.concat(CDN_DEPS);

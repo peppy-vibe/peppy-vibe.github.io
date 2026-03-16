@@ -25,9 +25,18 @@ function toggleTheme() {
 function updateThemeBtn() {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
   const btn = document.getElementById('theme-btn');
-  if (btn) btn.textContent = isDark ? '\u2600 Light' : '\u263E Dark';
+  if (btn) btn.textContent = isDark ? '\u2600' : '\u263E';
 }
 updateThemeBtn();
+
+/** Toggle fullscreen mode */
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+}
 
 /** Toggle mobile sidebar drawer */
 function toggleMobileMenu() {

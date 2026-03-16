@@ -11,11 +11,16 @@
 
   <script>(function(){var t=localStorage.getItem('stp-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
 
-  <div class="app-header">
-    <button class="menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu">&#9776;</button>
-    <a href="../index.html" class="back-link">&#8592; Home</a>
-    <h1>Peppy Random Tools</h1>
-    <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()">&#9728; Light</button>
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu">&#9776;</button>
+      <a href="../index.html" class="top-bar-back" title="Home">&#8592;</a>
+      <span class="top-bar-title">&#127922; Peppy Random Tools</span>
+    </div>
+    <div class="top-bar-right">
+      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen">&#9974;</button>
+      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">&#9728;</button>
+    </div>
   </div>
 
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileMenu()"></div>
@@ -74,6 +79,8 @@ Option F</textarea>
               <button onclick="buildWheel()">Update Wheel</button>
               <button id="spin-btn" onclick="spinWheel()">&#127922; Spin!</button>
               <button class="btn-secondary" onclick="resetWheel()">Reset</button>
+              <button class="btn-secondary" onclick="shuffleWheelOptions()">&#128256; Shuffle</button>
+              <button class="btn-secondary" onclick="sortWheelOptions()">&#8593;&#8595; Sort</button>
             </div>
           </div>
           <div class="wheel-right">
@@ -110,7 +117,7 @@ Option F</textarea>
         </div>
         <div class="btn-row">
           <button onclick="pickOption()">&#127922; Pick One!</button>
-          <button class="btn-secondary" onclick="clearEl('option-result')">Clear</button>
+          <button class="btn-secondary" onclick="clearOptionPicker()">Clear</button>
         </div>
         <div class="big-result" id="option-result" style="display:none;">
           <div class="result-label">Selected</div>

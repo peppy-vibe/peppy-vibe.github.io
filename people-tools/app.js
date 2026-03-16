@@ -41,13 +41,22 @@ function toggleTheme() {
   const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   html.setAttribute('data-theme', next);
   localStorage.setItem('stp-theme', next);
-  document.getElementById('theme-btn').textContent = next === 'dark' ? '☀ Light' : '☾ Dark';
+  document.getElementById('theme-btn').textContent = next === 'dark' ? '\u2600' : '\u263E';
+}
+
+/** Toggle fullscreen mode for casting on large screens */
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
 }
 (function initTheme() {
   const t = localStorage.getItem('stp-theme') || 'dark';
   document.documentElement.setAttribute('data-theme', t);
   const btn = document.getElementById('theme-btn');
-  if (btn) btn.textContent = t === 'dark' ? '☀ Light' : '☾ Dark';
+  if (btn) btn.textContent = t === 'dark' ? '\u2600' : '\u263E';
 })();
 
 /** Toggle mobile sidebar drawer */

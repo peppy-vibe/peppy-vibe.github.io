@@ -20,11 +20,16 @@
 <body>
 
 <!-- ═══ APP HEADER ═══════════════════════════════════════════ -->
-<header class="app-header">
-  <button class="menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu">&#9776;</button>
-  <a href="../index.html" class="back-link">&#8592; Home</a>
-  <h1>QR &amp; Barcode Tools</h1>
-  <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">&#9728; Light</button>
+<header class="top-bar">
+  <div class="top-bar-left">
+    <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu">&#9776;</button>
+    <a href="../index.html" class="top-bar-back" title="Home">&#8592;</a>
+    <span class="top-bar-title">&#128274; QR &amp; Barcode Tools</span>
+  </div>
+  <div class="top-bar-right">
+    <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen">&#9974;</button>
+    <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">&#9728;</button>
+  </div>
 </header>
 
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileMenu()"></div>
@@ -201,9 +206,13 @@
           </div>
           <!-- Action buttons -->
           <div class="btn-row">
+            <button onclick="qrGenerate()" id="qr-gen-btn" style="display:none">⬛ Generate</button>
             <button onclick="qrDownload()">↓ Download PNG</button>
             <button onclick="qrCopyClipboard()" class="btn-secondary">📋 Copy</button>
             <button onclick="qrClear()" class="btn-secondary">✕ Clear</button>
+          </div>
+          <div class="form-row" style="margin-top:6px">
+            <label class="checkbox-label"><input type="checkbox" id="qr-auto-gen" checked onchange="toggleQrAutoGen()"/> Auto-generate on input</label>
           </div>
         </div>
         <!-- Preview -->
@@ -211,11 +220,6 @@
           <div id="qr-output"></div>
           <p class="qr-hint" id="qr-hint">Enter content above to generate a QR code.</p>
         </div>
-      </div>
-
-      <div class="form-group" style="margin-top:12px">
-        <span class="io-label">Generation History</span>
-        <div class="history-list" id="qr-gen-history"></div>
       </div>
     </div><!--/#panel-qr-->
 
@@ -379,9 +383,13 @@
           </div>
           <!-- Action buttons -->
           <div class="btn-row">
+            <button onclick="bcGenerate()" id="bc-gen-btn" style="display:none">▬ Generate</button>
             <button onclick="bcDownloadSVG()">↓ SVG</button>
             <button onclick="bcDownloadPNG()" class="btn-secondary">↓ PNG</button>
             <button onclick="bcClear()" class="btn-secondary">✕ Clear</button>
+          </div>
+          <div class="form-row" style="margin-top:4px">
+            <label class="checkbox-label"><input type="checkbox" id="bc-auto-gen" checked onchange="toggleBcAutoGen()"/> Auto-generate on input</label>
           </div>
           <div id="bc-msg" class="tool-msg"></div>
         </div>

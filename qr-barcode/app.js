@@ -11,14 +11,23 @@ function toggleTheme() {
   const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   html.setAttribute('data-theme', next);
   localStorage.setItem('stp-theme', next);
-  document.getElementById('theme-btn').textContent = next === 'dark' ? '☀ Light' : '☾ Dark';
+  document.getElementById('theme-btn').textContent = next === 'dark' ? '\u2600' : '\u263E';
 }
 (function initTheme() {
   const t = localStorage.getItem('stp-theme') || 'dark';
   document.documentElement.setAttribute('data-theme', t);
   const btn = document.getElementById('theme-btn');
-  if (btn) btn.textContent = t === 'dark' ? '☀ Light' : '☾ Dark';
+  if (btn) btn.textContent = t === 'dark' ? '\u2600' : '\u263E';
 })();
+
+/** Toggle fullscreen mode */
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+}
 
 /** Toggle mobile sidebar drawer */
 function toggleMobileMenu() {
@@ -209,13 +218,6 @@ function qrGenerate() {
   }
 
   if (hint) hint.textContent = '';
-
-  // Track generation history
-  if (!qrGenHistory.length || qrGenHistory[qrGenHistory.length - 1].text !== content) {
-    qrGenHistory.push({ type: qrCurrentType, text: content, time: new Date().toLocaleTimeString() });
-    if (qrGenHistory.length > 20) qrGenHistory.shift();
-    renderQrGenHistory();
-  }
 
   // If we have a logo, apply overlay after QR renders
   if (qrLogoDataUrl) {
@@ -739,6 +741,45 @@ function clearBcBatch() {
   if (grid) grid.innerHTML = '';
   const inp  = document.getElementById('bcbatch-input');
   if (inp)   inp.value = '';
+}
+
+// ──────────────────────────────────────────
+// Auto-generate toggles
+// ──────────────────────────────────────────
+let qrAutoGen = true;
+let bcAutoGen = true;
+
+function toggleQrAutoGen() {
+  qrAutoGen = document.getElementById('qr-auto-gen')?.checked ?? true;
+  const genBtn = document.getElementById('qr-gen-btn');
+  if (genBtn) genBtn.style.display = qrAutoGen ? 'none' : '';
+  // Update oninput handlers on all QR inputs
+  document.querySelectorAll('.qr-input-block input, .qr-input-block textarea, #qr-ecl, #qr-dark, #qr-light, #qr-wifi-sec, #qr-wifi-hidden').forEach(el => {
+    if (qrAutoGen) {
+      el.setAttribute('oninput', 'qrGenerate()');
+      el.setAttribute('onchange', 'qrGenerate()');
+    } else {
+      el.removeAttribute('oninput');
+      el.removeAttribute('onchange');
+    }
+  });
+}
+
+function toggleBcAutoGen() {
+  bcAutoGen = document.getElementById('bc-auto-gen')?.checked ?? true;
+  const genBtn = document.getElementById('bc-gen-btn');
+  if (genBtn) genBtn.style.display = bcAutoGen ? 'none' : '';
+  const ids = ['bc-input', 'bc-color', 'bc-bg', 'bc-font-size'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (bcAutoGen) el.setAttribute('oninput', 'bcGenerate()');
+    else el.removeAttribute('oninput');
+  });
+  document.querySelectorAll('#panel-barcode input[type=checkbox]').forEach(el => {
+    if (bcAutoGen) el.setAttribute('onchange', 'bcGenerate()');
+    else el.removeAttribute('onchange');
+  });
 }
 
 // ──────────────────────────────────────────

@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Peppy Dev Tools</title>
-  <meta name="description" content="34 developer utilities in one app: Base64, URL, hashing, password, UUID, JWT, JSON, YAML, XML, colours, timestamps, regex and more — all client-side.">
+  <meta name="description" content="33 developer utilities in one app: Base64, URL, hashing, password, UUID, JWT, JSON, YAML, XML, colours, timestamps, regex and more — all client-side.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,11 +13,16 @@
   <script>(function(){var t=localStorage.getItem('stp-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
 
   <!-- App header -->
-  <div class="app-header">
-    <button class="menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu">&#9776;</button>
-    <a href="../index.html" class="back-link">&#8592; Home</a>
-    <h1>Peppy Dev Tools</h1>
-    <button id="theme-btn" class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">&#9728; Light</button>
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu">&#9776;</button>
+      <a href="../index.html" class="top-bar-back" title="Home">&#8592;</a>
+      <span class="top-bar-title">&#128736; Peppy Dev Tools</span>
+    </div>
+    <div class="top-bar-right">
+      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen">&#9974;</button>
+      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">&#9728;</button>
+    </div>
   </div>
 
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileMenu()"></div>
@@ -110,7 +115,6 @@
             <button class="tab-btn" data-tool="unix"      data-grp="time" onclick="showTool('unix')">Unix Converter</button>
             <button class="tab-btn" data-tool="calc"      data-grp="time" onclick="showTool('calc')">Date Calculator</button>
             <button class="tab-btn" data-tool="format"    data-grp="time" onclick="showTool('format')">Date Formatter</button>
-            <button class="tab-btn" data-tool="timezones" data-grp="time" onclick="showTool('timezones')">World Clocks</button>
           </div>
         </div>
 
@@ -977,12 +981,6 @@
         <span class="tool-msg" id="fmt-msg"></span>
       </div><!-- /panel-format -->
 
-      <!-- World Clocks -->
-      <div class="tool-panel" id="panel-timezones">
-        <div class="panel-title">World Clocks</div>
-        <p class="tool-desc">Current time in major world time zones (updates every second).</p>
-        <div id="world-clocks" class="world-clocks-grid"></div>
-      </div><!-- /panel-timezones -->
 
       <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
            REGEX

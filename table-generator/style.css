@@ -15,37 +15,57 @@ body {
   color: #1e1e1e;
 }
 
-/* ── App header ────────────────────────────── */
-.app-header {
+/* ── Top Bar ────────────────────────────── */
+.top-bar {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 8px 16px;
+  gap: 12px;
+  padding: 0 16px;
+  height: 44px;
   background: #5646F5;
   color: #fff;
   flex-shrink: 0;
+  z-index: 20;
 }
-
-.back-link {
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.top-bar-back {
   color: rgba(255,255,255,0.85);
   text-decoration: none;
-  font-size: 13px;
-  white-space: nowrap;
+  font-size: 1.1rem;
+  line-height: 1;
 }
-.back-link:hover { color: #fff; }
-
-.app-header h1 {
-  font-size: 1.05rem;
+.top-bar-back:hover { color: #fff; }
+.top-bar-title {
+  font-size: 0.95rem;
   font-weight: 600;
   white-space: nowrap;
 }
-
-.header-hint {
-  font-size: 11px;
-  opacity: 0.65;
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   margin-left: auto;
-  white-space: nowrap;
 }
+.top-btn {
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.top-btn:hover { background: rgba(255,255,255,0.3); }
 
 /* ── Toolbar ───────────────────────────────── */
 .toolbar {
@@ -489,22 +509,7 @@ body {
 
 /* ── Responsive ────────────────────────────── */
 
-/* ── Settings toggle button (hidden on desktop) ── */
-.settings-toggle {
-  display: none;
-  background: rgba(255,255,255,0.2);
-  border: 1px solid rgba(255,255,255,0.4);
-  color: #fff;
-  padding: 4px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  line-height: 1;
-  font-family: inherit;
-  transition: background 0.2s;
-}
-.settings-toggle:hover { background: rgba(255,255,255,0.35); }
-
+/* ── Settings panel (hidden on desktop, slide in on mobile) ── */
 .settings-overlay {
   display: none;
   position: fixed;
@@ -515,7 +520,6 @@ body {
 .settings-overlay.active { display: block; }
 
 @media (max-width: 768px) {
-  .settings-toggle { display: inline-flex; }
   .settings-panel {
     position: fixed;
     top: 0;
@@ -528,34 +532,18 @@ body {
     border-left: none;
   }
   .settings-panel.open { right: 0; }
-  .header-hint { display: none; }
   .toolbar { flex-wrap: wrap; gap: 4px; }
   .toolbar button { padding: 4px 8px; font-size: 11px; }
 }
 
 @media (max-width: 480px) {
-  .app-header h1 { font-size: 0.9rem; }
-  .app-header { padding: 6px 10px; }
+  .top-bar-title { font-size: 0.85rem; }
+  .top-bar { padding: 0 8px; height: 38px; }
   .table-canvas { padding: 8px; }
   .toolbar { padding: 4px 6px; }
   .toolbar button { padding: 3px 6px; font-size: 10px; }
   td[contenteditable] { min-width: 60px; padding: 4px 6px; font-size: 12px; }
 }
-
-/* ── Theme toggle button ───────────────────── */
-.theme-toggle {
-  margin-left: auto;
-  background: rgba(255,255,255,0.2);
-  border: 1px solid rgba(255,255,255,0.4);
-  color: #fff;
-  padding: 4px 12px;
-  border-radius: 14px;
-  cursor: pointer;
-  font-size: 12px;
-  font-family: inherit;
-  transition: background 0.2s;
-}
-.theme-toggle:hover { background: rgba(255,255,255,0.35); }
 
 /* ── Zoom display ──────────────────────────── */
 .zoom-display {

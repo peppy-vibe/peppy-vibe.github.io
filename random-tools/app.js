@@ -19,7 +19,16 @@ function toggleTheme() {
 function updateThemeBtn() {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
   const btn = document.getElementById('theme-btn');
-  if (btn) btn.textContent = isDark ? '\u2600 Light' : '\u263E Dark';
+  if (btn) btn.textContent = isDark ? '\u2600' : '\u263E';
+}
+
+/** Toggle fullscreen mode for casting on large screens */
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
 }
 
 /** Toggle mobile sidebar drawer */
@@ -263,7 +272,30 @@ function resetWheel() {
   wheelAngle = 0;
   document.getElementById('spin-btn').disabled = false;
   document.getElementById('wheel-result').textContent = '\u00A0';
+  wheelHistory.length = 0;
+  renderWheelHistory();
   drawWheel(0);
+}
+
+function shuffleWheelOptions() {
+  const ta = document.getElementById('wheel-options');
+  const lines = ta.value.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+  if (lines.length < 2) return;
+  for (let i = lines.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [lines[i], lines[j]] = [lines[j], lines[i]];
+  }
+  ta.value = lines.join('\n');
+  buildWheel();
+}
+
+function sortWheelOptions() {
+  const ta = document.getElementById('wheel-options');
+  const lines = ta.value.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+  if (lines.length < 2) return;
+  lines.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+  ta.value = lines.join('\n');
+  buildWheel();
 }
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -315,6 +347,13 @@ function pickOption() {
     '">' + escHtml(o) + '</div>'
   ).join('');
   listResult.style.display = 'block';
+}
+
+function clearOptionPicker() {
+  const resultBox = document.getElementById('option-result');
+  const listResult = document.getElementById('option-list-result');
+  if (resultBox) { resultBox.innerHTML = '<div class="result-label">Selected</div><div class="result-value" id="option-result-val"></div>'; resultBox.style.display = 'none'; }
+  if (listResult) { listResult.style.display = 'none'; document.getElementById('option-list-display').innerHTML = ''; }
 }
 
 function escHtml(s) {
