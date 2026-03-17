@@ -1,6 +1,62 @@
-# Peppy Tools Portal V.0.4.1
+# Peppy Tools Portal V.0.4.2
 
 A collection of nine powerful, fully client-side browser tools. No server required — works offline and can be hosted on GitHub Pages for free.
+
+---
+
+## What's New in V.0.4.2
+
+### Peppy PDF Tools — Revamped Security & Privacy Toolset
+
+#### Encryption now works — switched to `@cantoo/pdf-lib`
+* Replaced `pdf-lib@1.17.1` with `@cantoo/pdf-lib@2.6.2` (the same AES-256-capable fork already used by the PDF Editor). This is the root-cause fix for: Add Password producing unencrypted output, Lock PDF failing, and Remove Password not working at all.
+
+#### Add Password (replaces Add Password + Lock PDF — redundancy removed)
+* **Merged "Lock PDF (Read-Only)" into "Add Password"** — one combined tool instead of two.
+* Added optional **Permission checkboxes** — disallow printing, copying, editing, and/or annotations — identical to the old Lock PDF tool.
+* You can now set an owner-only password (no user password) to restrict permissions without requiring a password to open.
+* Output is now genuinely AES-256 encrypted.
+
+#### Remove Password — fixed
+* `@cantoo/pdf-lib` correctly loads encrypted PDFs when the password is supplied, then saves an unencrypted copy.
+
+#### Sanitize PDF (replaces Remove PDF Metadata + Remove Hidden Data — redundancy removed)
+* **Merged "Remove PDF Metadata" and "Remove Hidden Data" into "Sanitize PDF"** — one tool covers both.
+* **Review before cleaning** — when a PDF is loaded the tool now automatically scans and displays:
+  * All embedded metadata fields (Title, Author, Subject, Keywords, Creator, Producer).
+  * Detected hidden items: XMP metadata stream, embedded JavaScript, embedded files/attachments.
+* All existing removal options preserved: metadata, XMP stream, JavaScript, annotation data, embedded files.
+
+#### Add Watermark — Position selector added
+* New **Position** dropdown: Center (diagonal, default), Top Left, Top Right, Bottom Left, Bottom Right.
+* Angle control still works independently of position.
+
+#### Bug fixes
+* All tools that load PDFs now use the @cantoo/pdf-lib loader which handles edge cases and newer PDF features more robustly.
+
+---
+
+### Peppy PDF Mini Editor BETA — Encrypted PDF Support Throughout
+
+#### Landing page / Open dialog
+* Dropped files on the landing page (when no document is open) are now routed through the **Open / Merge PDF(s) & Images** dialog, which already handles encrypted PDFs natively — eliminating redundant load paths.
+
+#### Add PDFs button
+* **Encrypted PDFs are now supported** when clicking "Add PDFs" to append pages to an existing document. The same password-unlock dialog that appears when opening files now also appears for each encrypted file in the add-pages flow.
+
+#### Export — Password protection fixed
+* Added `encryptionType: 'aes256'` to the `permissions` object passed to `doc.save()`. Export with "Enable Password Protection" now produces a properly AES-256 encrypted PDF.
+
+#### Bug fixes
+* `handleMergePDFs()` (used by legacy callers) now uses `loadPDFHandlingPassword()` — encrypted PDFs dropped before any document is open are handled correctly.
+* `handleAddPages()` no longer crashes silently on encrypted PDF files; it shows the password unlock dialog instead.
+
+---
+
+### Portal
+* Version bumped to V.0.4.2.
+* PDF Tools card updated: tool count 18, updated feature list.
+* PDF Editor card updated: highlights encrypted PDF support and AES-256 export.
 
 ---
 

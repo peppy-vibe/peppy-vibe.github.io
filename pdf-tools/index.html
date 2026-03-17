@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Peppy PDF Tools</title>
-  <meta name="description" content="20 free client-side PDF tools: merge, split, rotate, watermark, compress, encrypt, redact and more — nothing leaves your browser.">
+  <meta name="description" content="18 free client-side PDF tools: merge, split, rotate, watermark (with position), compress, AES-256 encrypt, redact, sanitize and more — nothing leaves your browser.">
   <link rel="stylesheet" href="style.css">
-  <!-- pdf-lib v1.17.1 — PDF creation & modification (cached by SW for offline) -->
-  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <!-- @cantoo/pdf-lib v2.6.2 — drop-in pdf-lib fork with AES-256 encryption support (cached by SW for offline) -->
+  <script src="https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.6.2/dist/pdf-lib.min.js"></script>
   <!-- PDF.js v3.11.174 — PDF rendering to canvas (cached by SW for offline) -->
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 </head>
@@ -86,12 +86,10 @@
             <span class="grp-chevron">&#9660;</span>
           </button>
           <div class="grp-tools">
-            <button class="tab-btn" data-tool="metadata"       data-grp="security" onclick="showTool('metadata')">Remove PDF Metadata</button>
             <button class="tab-btn" data-tool="addpassword"    data-grp="security" onclick="showTool('addpassword')">Add Password</button>
             <button class="tab-btn" data-tool="removepassword" data-grp="security" onclick="showTool('removepassword')">Remove Password</button>
-            <button class="tab-btn" data-tool="lock"           data-grp="security" onclick="showTool('lock')">Lock PDF (Read-Only)</button>
             <button class="tab-btn" data-tool="redact"         data-grp="security" onclick="showTool('redact')">Redact PDF</button>
-            <button class="tab-btn" data-tool="hiddendata"     data-grp="security" onclick="showTool('hiddendata')">Remove Hidden Data</button>
+            <button class="tab-btn" data-tool="hiddendata"     data-grp="security" onclick="showTool('hiddendata')">Sanitize PDF</button>
           </div>
         </div>
 
@@ -338,6 +336,16 @@
           <div class="form-group">
             <label class="io-label">Angle (degrees)</label>
             <input type="number" id="wm-angle" value="45" min="-180" max="180" style="width:80px">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Position</label>
+            <select id="wm-position">
+              <option value="center">Center (diagonal)</option>
+              <option value="top-left">Top Left</option>
+              <option value="top-right">Top Right</option>
+              <option value="bottom-left">Bottom Left</option>
+              <option value="bottom-right">Bottom Right</option>
+            </select>
           </div>
         </div>
         <div class="btn-row">
@@ -603,38 +611,14 @@
         <div class="tool-msg" id="flatten-msg"></div>
       </div>
 
-      <!-- ──────────────────────────────────────────────────────
-           15. REMOVE PDF METADATA
-      ────────────────────────────────────────────────────── -->
-      <div class="tool-panel" id="tool-metadata">
-        <div class="panel-title">&#128274; Remove PDF Metadata</div>
-        <div class="info-box">Strip author, title, subject, keywords, creator, producer, creation date, and modification date from the PDF document info dictionary.</div>
 
-        <div class="drop-zone" id="meta-drop" onclick="document.getElementById('meta-input').click()"
-             ondragover="dzOver(event,'meta-drop')" ondragleave="dzLeave('meta-drop')" ondrop="dzDrop(event,'meta-drop',metaDrop)">
-          <input type="file" id="meta-input" accept=".pdf,application/pdf" onchange="metaLoad(this.files[0])">
-          <div class="drop-zone-icon">&#128274;</div>
-          <strong>Click or drop a PDF here</strong>
-        </div>
-        <div class="file-list" id="meta-file-info"></div>
-        <div id="meta-current" style="display:none">
-          <div class="io-label" style="margin-bottom:4px;">Current metadata detected:</div>
-          <pre id="meta-current-pre" style="font-size:12px;background:var(--bg2);padding:10px;border-radius:4px;border:1px solid var(--border);overflow:auto;max-height:150px;"></pre>
-        </div>
-
-        <div class="btn-row">
-          <button onclick="removeMetadata()">&#128274; Strip Metadata &amp; Download</button>
-          <button class="btn-secondary" onclick="metaClear()">Clear</button>
-        </div>
-        <div class="tool-msg" id="meta-msg"></div>
-      </div>
 
       <!-- ──────────────────────────────────────────────────────
-           16. ADD PASSWORD
+           16. ADD PASSWORD (& Lock Permissions)
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-addpassword">
         <div class="panel-title">&#128272; Add Password to PDF</div>
-        <div class="info-box">Encrypt the PDF with a user password (required to open) and an optional owner password (required to change permissions). Uses AES-256 encryption via pdf-lib.</div>
+        <div class="info-box">Encrypt the PDF with AES-256. The <strong>user password</strong> is required to open the file. The <strong>owner password</strong> controls permissions (optional — defaults to user password). You can also restrict specific operations using the permission checkboxes below. Leave the user password blank and set only an owner password to restrict operations without requiring a password to open.</div>
 
         <div class="drop-zone" id="addpw-drop" onclick="document.getElementById('addpw-input').click()"
              ondragover="dzOver(event,'addpw-drop')" ondragleave="dzLeave('addpw-drop')" ondrop="dzDrop(event,'addpw-drop',addpwDrop)">
@@ -647,7 +631,7 @@
         <div class="form-row">
           <div class="form-group">
             <label class="io-label">User password (to open)</label>
-            <input type="password" id="addpw-user" placeholder="Required" autocomplete="new-password" style="width:220px">
+            <input type="password" id="addpw-user" placeholder="Required to open" autocomplete="new-password" style="width:220px">
           </div>
           <div class="form-group">
             <label class="io-label">Owner password (optional)</label>
@@ -656,6 +640,15 @@
         </div>
         <div class="pw-strength-bar"><div class="pw-strength-fill" id="addpw-strength-fill" style="width:0%;background:var(--danger)"></div></div>
         <div class="tool-msg" id="addpw-strength-label" style="font-size:11px;"></div>
+
+        <div class="form-group" style="margin-top:10px">
+          <div class="io-label">Permissions — restrict actions (optional)</div>
+          <label class="checkbox-label"><input type="checkbox" id="addpw-no-print"> Disallow printing</label>
+          <label class="checkbox-label"><input type="checkbox" id="addpw-no-copy">  Disallow copying text &amp; images</label>
+          <label class="checkbox-label"><input type="checkbox" id="addpw-no-edit">  Disallow editing &amp; form filling</label>
+          <label class="checkbox-label"><input type="checkbox" id="addpw-no-annot"> Disallow adding annotations</label>
+        </div>
+
         <div class="btn-row">
           <button onclick="addPassword()">&#128272; Encrypt &amp; Download</button>
           <button class="btn-secondary" onclick="addpwClear()">Clear</button>
@@ -689,38 +682,7 @@
         <div class="tool-msg" id="rmpw-msg"></div>
       </div>
 
-      <!-- ──────────────────────────────────────────────────────
-           18. LOCK PDF (READ-ONLY)
-      ────────────────────────────────────────────────────── -->
-      <div class="tool-panel" id="tool-lock">
-        <div class="panel-title">&#128274; Lock PDF (Read-Only)</div>
-        <div class="info-box">Set PDF permissions to disallow printing, copying, and editing. The document can still be opened and read without a password.</div>
 
-        <div class="drop-zone" id="lock-drop" onclick="document.getElementById('lock-input').click()"
-             ondragover="dzOver(event,'lock-drop')" ondragleave="dzLeave('lock-drop')" ondrop="dzDrop(event,'lock-drop',lockDrop)">
-          <input type="file" id="lock-input" accept=".pdf,application/pdf" onchange="lockLoad(this.files[0])">
-          <div class="drop-zone-icon">&#128274;</div>
-          <strong>Click or drop a PDF here</strong>
-        </div>
-        <div class="file-list" id="lock-file-info"></div>
-
-        <div class="form-group">
-          <label class="io-label">Owner password (protects permission settings)</label>
-          <input type="password" id="lock-owner-pw" placeholder="Set an owner password" autocomplete="new-password" style="width:260px">
-        </div>
-        <div class="form-group">
-          <div class="io-label">Restrictions to apply</div>
-          <label class="checkbox-label"><input type="checkbox" id="lock-no-print" checked> Disallow printing</label>
-          <label class="checkbox-label"><input type="checkbox" id="lock-no-copy"  checked> Disallow copying text/images</label>
-          <label class="checkbox-label"><input type="checkbox" id="lock-no-edit"  checked> Disallow editing</label>
-          <label class="checkbox-label"><input type="checkbox" id="lock-no-annot" checked> Disallow adding annotations</label>
-        </div>
-        <div class="btn-row">
-          <button onclick="lockPDF()">&#128274; Lock &amp; Download</button>
-          <button class="btn-secondary" onclick="lockClear()">Clear</button>
-        </div>
-        <div class="tool-msg" id="lock-msg"></div>
-      </div>
 
       <!-- ──────────────────────────────────────────────────────
            19. REDACT PDF
@@ -762,11 +724,11 @@
       </div>
 
       <!-- ──────────────────────────────────────────────────────
-           20. REMOVE HIDDEN DATA
+           15/20. SANITIZE PDF (Metadata + Hidden Data combined)
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-hiddendata">
-        <div class="panel-title">&#128083; Remove Hidden Data from PDF</div>
-        <div class="info-box">Strips document metadata, XMP streams, embedded JavaScript, named destinations, embedded files, and annotation data that may contain hidden information.</div>
+        <div class="panel-title">&#128083; Sanitize PDF</div>
+        <div class="info-box">Load a PDF to review its embedded metadata and hidden data before cleaning. Select the items you want to strip, then download the sanitized copy.</div>
 
         <div class="drop-zone" id="hidden-drop" onclick="document.getElementById('hidden-input').click()"
              ondragover="dzOver(event,'hidden-drop')" ondragleave="dzLeave('hidden-drop')" ondrop="dzDrop(event,'hidden-drop',hiddenDrop)">
@@ -776,7 +738,13 @@
         </div>
         <div class="file-list" id="hidden-file-info"></div>
 
-        <div class="form-group">
+        <div id="hidden-review" style="display:none">
+          <div class="io-label" style="margin-bottom:4px;">Detected metadata:</div>
+          <pre id="hidden-meta-pre" style="font-size:12px;background:var(--bg2);padding:10px;border-radius:4px;border:1px solid var(--border);overflow:auto;max-height:120px;margin-bottom:6px;"></pre>
+          <div class="tool-msg" id="hidden-detected"></div>
+        </div>
+
+        <div class="form-group" style="margin-top:10px">
           <div class="io-label">Items to remove</div>
           <label class="checkbox-label"><input type="checkbox" id="hidden-meta"    checked> Document metadata (title, author, etc.)</label>
           <label class="checkbox-label"><input type="checkbox" id="hidden-xmp"     checked> XMP metadata stream</label>
@@ -785,7 +753,7 @@
           <label class="checkbox-label"><input type="checkbox" id="hidden-embeds"  checked> Embedded files / attachments</label>
         </div>
         <div class="btn-row">
-          <button onclick="removeHiddenData()">&#128083; Clean &amp; Download</button>
+          <button onclick="removeHiddenData()">&#128083; Sanitize &amp; Download</button>
           <button class="btn-secondary" onclick="hiddenClear()">Clear</button>
         </div>
         <div class="tool-msg" id="hidden-msg"></div>

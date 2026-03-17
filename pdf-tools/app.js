@@ -779,13 +779,22 @@ async function addWatermark() {
     const doc   = await PDFDocument.load(buf);
     const font  = await doc.embedFont(StandardFonts.HelveticaBold);
     const pages = doc.getPages();
+    const position = (document.getElementById('wm-position') || {}).value || 'center';
+    const margin = 24;
 
     pages.forEach(page => {
       const { width, height } = page.getSize();
       const textWidth = font.widthOfTextAtSize(text, size);
+      let x, y;
+      switch (position) {
+        case 'top-left':     x = margin;                     y = height - size - margin; break;
+        case 'top-right':    x = width - textWidth - margin; y = height - size - margin; break;
+        case 'bottom-left':  x = margin;                     y = margin;                 break;
+        case 'bottom-right': x = width - textWidth - margin; y = margin;                 break;
+        default:             x = (width - textWidth) / 2;    y = (height - size) / 2;   break;
+      }
       page.drawText(text, {
-        x: (width  - textWidth) / 2,
-        y: (height - size)      / 2,
+        x, y,
         size,
         font,
         color: rgb(r, g, b),
@@ -1339,80 +1348,14 @@ function flattenClear() {
 }
 
 /* ====================================================================
-   15. REMOVE PDF METADATA
-==================================================================== */
-let metaFile = null;
-
-function metaDrop(files) { metaLoad(files[0]); }
-
-async function metaLoad(file) {
-  if (!file) return;
-  metaFile = file;
-  try {
-    const buf  = await readFileAsArrayBuffer(file);
-    const { PDFDocument } = PDFLib;
-    const doc  = await PDFDocument.load(buf);
-    const info = document.getElementById('meta-file-info');
-    info.innerHTML = '';
-    info.appendChild(makeFileItem(file.name, file.size, metaClear));
-
-    const fields = {
-      Title:        doc.getTitle()       || '—',
-      Author:       doc.getAuthor()      || '—',
-      Subject:      doc.getSubject()     || '—',
-      Keywords:     doc.getKeywords()    || '—',
-      Creator:      doc.getCreator()     || '—',
-      Producer:     doc.getProducer()    || '—',
-    };
-    const wrap = document.getElementById('meta-current');
-    document.getElementById('meta-current-pre').textContent =
-      Object.entries(fields).map(([k, v]) => k + ': ' + v).join('\n');
-    wrap.style.display = '';
-    setMsg('meta-msg', '', '');
-    document.getElementById('meta-input').value = '';
-  } catch (err) {
-    setMsg('meta-msg', 'Error loading PDF: ' + err.message, 'err');
-    metaFile = null;
-  }
-}
-
-async function removeMetadata() {
-  if (!metaFile) { setMsg('meta-msg', 'Please upload a PDF first.', 'err'); return; }
-  try {
-    const { PDFDocument } = PDFLib;
-    const buf = await readFileAsArrayBuffer(metaFile);
-    const doc = await PDFDocument.load(buf);
-    doc.setTitle('');
-    doc.setAuthor('');
-    doc.setSubject('');
-    doc.setKeywords([]);
-    doc.setCreator('');
-    doc.setProducer('');
-    // Remove XMP metadata stream if present
-    try {
-      const catalog = doc.catalog;
-      if (catalog.has(PDFLib.PDFName.of('Metadata'))) {
-        catalog.delete(PDFLib.PDFName.of('Metadata'));
-      }
-    } catch (_) { /* no-op if not available */ }
-    const bytes = await doc.save();
-    downloadBytes(bytes, stemName(metaFile) + '_cleaned.pdf');
-    setMsg('meta-msg', 'Metadata stripped. ' + fmtBytes(bytes.length) + ' saved.', 'ok');
-  } catch (err) {
-    setMsg('meta-msg', 'Error: ' + err.message, 'err');
-  }
-}
-
-function metaClear() {
-  metaFile = null;
-  document.getElementById('meta-file-info').innerHTML = '';
-  document.getElementById('meta-current').style.display = 'none';
-  document.getElementById('meta-input').value = '';
-  setMsg('meta-msg', '', '');
-}
+   15. REMOVE PDF METADATA → merged into tool 20 (Sanitize PDF)
+   See section 20 below.
+====================================================================
+(removed — functionality consolidated into Sanitize PDF)
+*/ /* placeholder kept to preserve section numbering */
 
 /* ====================================================================
-   16. ADD PASSWORD
+   16. ADD PASSWORD (+ Lock Permissions)
 ==================================================================== */
 let addpwFile = null;
 
@@ -1455,27 +1398,32 @@ async function addPassword() {
   if (!addpwFile) { setMsg('addpw-msg', 'Please upload a PDF first.', 'err'); return; }
   const userPw  = document.getElementById('addpw-user').value;
   const ownerPw = document.getElementById('addpw-owner').value || userPw;
-  if (!userPw) { setMsg('addpw-msg', 'Enter a user password.', 'err'); return; }
+  if (!userPw && !ownerPw) { setMsg('addpw-msg', 'Enter at least a user password or an owner password.', 'err'); return; }
+  const noPrint = document.getElementById('addpw-no-print').checked;
+  const noCopy  = document.getElementById('addpw-no-copy').checked;
+  const noEdit  = document.getElementById('addpw-no-edit').checked;
+  const noAnnot = document.getElementById('addpw-no-annot').checked;
   try {
     const { PDFDocument } = PDFLib;
     const buf = await readFileAsArrayBuffer(addpwFile);
     const doc = await PDFDocument.load(buf);
-    const bytes = await doc.save({
-      userPassword:  userPw,
-      ownerPassword: ownerPw,
+    const saveOpts = {
       permissions: {
-        printing:          'highResolution',
-        modifying:         true,
-        copying:           true,
-        annotating:        true,
-        fillingForms:      true,
+        printing:             noPrint ? 'none' : 'highResolution',
+        modifying:            !noEdit,
+        copying:              !noCopy,
+        annotating:           !noAnnot,
+        fillingForms:         !noEdit,
         contentAccessibility: true,
-        documentAssembly:  true,
-        encryptionType:    'aes256',
+        documentAssembly:     !noEdit,
+        encryptionType:       'aes256',
       },
-    });
+    };
+    if (userPw)  saveOpts.userPassword  = userPw;
+    if (ownerPw) saveOpts.ownerPassword = ownerPw;
+    const bytes = await doc.save(saveOpts);
     downloadBytes(bytes, stemName(addpwFile) + '_protected.pdf');
-    setMsg('addpw-msg', 'PDF encrypted and downloaded.', 'ok');
+    setMsg('addpw-msg', 'PDF encrypted and downloaded. ' + fmtBytes(bytes.length), 'ok');
   } catch (err) {
     setMsg('addpw-msg', 'Error: ' + err.message, 'err');
   }
@@ -1489,6 +1437,10 @@ function addpwClear() {
   document.getElementById('addpw-owner').value = '';
   document.getElementById('addpw-strength-fill').style.width = '0%';
   document.getElementById('addpw-strength-label').textContent = '';
+  document.getElementById('addpw-no-print').checked = false;
+  document.getElementById('addpw-no-copy').checked  = false;
+  document.getElementById('addpw-no-edit').checked  = false;
+  document.getElementById('addpw-no-annot').checked = false;
   setMsg('addpw-msg', '', '');
 }
 
@@ -1513,16 +1465,20 @@ async function removePassword() {
   if (!rmpwFile) { setMsg('rmpw-msg', 'Please upload a PDF first.', 'err'); return; }
   const pw = document.getElementById('rmpw-pw').value;
   if (!pw) { setMsg('rmpw-msg', 'Enter the PDF password.', 'err'); return; }
+  setMsg('rmpw-msg', 'Decrypting\u2026', '');
   try {
     const { PDFDocument } = PDFLib;
     const buf = await readFileAsArrayBuffer(rmpwFile);
-    const doc = await PDFDocument.load(buf, { password: pw });
-    const bytes = await doc.save();
+    // @cantoo/pdf-lib supports loading encrypted PDFs with { password }
+    const doc = await PDFDocument.load(buf, { password: pw, ignoreEncryption: false });
+    // Save without any encryption options to produce an unencrypted PDF
+    const bytes = await doc.save({ useObjectStreams: false });
     downloadBytes(bytes, stemName(rmpwFile) + '_unlocked.pdf');
     setMsg('rmpw-msg', 'Password removed. ' + fmtBytes(bytes.length) + ' saved.', 'ok');
   } catch (err) {
-    if (err.message && (err.message.includes('password') || err.message.includes('decrypt') || err.message.includes('encrypt'))) {
-      setMsg('rmpw-msg', 'Incorrect password or unsupported encryption.', 'err');
+    const msg = (err.message || '').toLowerCase();
+    if (msg.includes('password') || msg.includes('decrypt') || msg.includes('encrypt') || msg.includes('incorrect')) {
+      setMsg('rmpw-msg', 'Incorrect password or unsupported encryption format.', 'err');
     } else {
       setMsg('rmpw-msg', 'Error: ' + err.message, 'err');
     }
@@ -1538,62 +1494,11 @@ function rmpwClear() {
 }
 
 /* ====================================================================
-   18. LOCK PDF (READ-ONLY)
-==================================================================== */
-let lockFile = null;
-
-function lockDrop(files) { lockLoad(files[0]); }
-
-async function lockLoad(file) {
-  if (!file) return;
-  lockFile = file;
-  const info = document.getElementById('lock-file-info');
-  info.innerHTML = '';
-  info.appendChild(makeFileItem(file.name, file.size, lockClear));
-  setMsg('lock-msg', '', '');
-  document.getElementById('lock-input').value = '';
-}
-
-async function lockPDF() {
-  if (!lockFile) { setMsg('lock-msg', 'Please upload a PDF first.', 'err'); return; }
-  const ownerPw = document.getElementById('lock-owner-pw').value;
-  if (!ownerPw) { setMsg('lock-msg', 'Set an owner password to protect permissions.', 'err'); return; }
-  try {
-    const { PDFDocument } = PDFLib;
-    const buf  = await readFileAsArrayBuffer(lockFile);
-    const doc  = await PDFDocument.load(buf);
-    const noPrint  = document.getElementById('lock-no-print').checked;
-    const noCopy   = document.getElementById('lock-no-copy').checked;
-    const noEdit   = document.getElementById('lock-no-edit').checked;
-    const noAnnot  = document.getElementById('lock-no-annot').checked;
-    const bytes = await doc.save({
-      ownerPassword: ownerPw,
-      userPassword:  '',
-      permissions: {
-        printing:          noPrint ? 'none'  : 'highResolution',
-        modifying:         !noEdit,
-        copying:           !noCopy,
-        annotating:        !noAnnot,
-        fillingForms:      !noEdit,
-        contentAccessibility: true,
-        documentAssembly:  !noEdit,
-        encryptionType:    'aes256',
-      },
-    });
-    downloadBytes(bytes, stemName(lockFile) + '_locked.pdf');
-    setMsg('lock-msg', 'PDF locked with permissions. ' + fmtBytes(bytes.length) + ' saved.', 'ok');
-  } catch (err) {
-    setMsg('lock-msg', 'Error: ' + err.message, 'err');
-  }
-}
-
-function lockClear() {
-  lockFile = null;
-  document.getElementById('lock-file-info').innerHTML = '';
-  document.getElementById('lock-input').value = '';
-  document.getElementById('lock-owner-pw').value = '';
-  setMsg('lock-msg', '', '');
-}
+   18. LOCK PDF (READ-ONLY) → merged into tool 16 (Add Password)
+   Permission checkboxes are now part of the Add Password tool.
+====================================================================
+(removed — functionality consolidated into Add Password)
+*/
 
 /* ====================================================================
    19. REDACT PDF
@@ -1777,7 +1682,7 @@ function redactClear() {
 }
 
 /* ====================================================================
-   20. REMOVE HIDDEN DATA
+   20. SANITIZE PDF (Remove Metadata + Remove Hidden Data combined)
 ==================================================================== */
 let hiddenFile = null;
 
@@ -1789,8 +1694,62 @@ async function hiddenLoad(file) {
   const info = document.getElementById('hidden-file-info');
   info.innerHTML = '';
   info.appendChild(makeFileItem(file.name, file.size, hiddenClear));
-  setMsg('hidden-msg', 'Ready to clean.', '');
   document.getElementById('hidden-input').value = '';
+  const review = document.getElementById('hidden-review');
+  if (review) review.style.display = 'none';
+  setMsg('hidden-msg', 'Scanning PDF…', '');
+
+  try {
+    const buf = await readFileAsArrayBuffer(file);
+    const { PDFDocument } = PDFLib;
+    const doc = await PDFDocument.load(buf, { ignoreEncryption: false });
+
+    // Show metadata preview
+    const metaFields = {
+      Title:    doc.getTitle()    || '',
+      Author:   doc.getAuthor()   || '',
+      Subject:  doc.getSubject()  || '',
+      Keywords: doc.getKeywords() || '',
+      Creator:  doc.getCreator()  || '',
+      Producer: doc.getProducer() || '',
+    };
+    const metaPre = document.getElementById('hidden-meta-pre');
+    if (metaPre) {
+      metaPre.textContent = Object.entries(metaFields)
+        .map(([k, v]) => k + ': ' + (v || '—')).join('\n');
+    }
+
+    // Detect other hidden items
+    const detected = [];
+    try {
+      const catalog = doc.catalog;
+      if (catalog.has(PDFLib.PDFName.of('Metadata'))) detected.push('XMP metadata stream');
+      const namesKey = PDFLib.PDFName.of('Names');
+      if (catalog.has(namesKey)) {
+        const namesDict = catalog.lookup(namesKey);
+        if (namesDict && namesDict.has) {
+          if (namesDict.has(PDFLib.PDFName.of('JavaScript')))     detected.push('Embedded JavaScript');
+          if (namesDict.has(PDFLib.PDFName.of('EmbeddedFiles'))) detected.push('Embedded files/attachments');
+        }
+      }
+    } catch (_) { /* catalog access not always available */ }
+
+    const detectedEl = document.getElementById('hidden-detected');
+    if (detectedEl) {
+      if (detected.length > 0) {
+        detectedEl.textContent = '\u26a0 Detected: ' + detected.join(', ');
+        detectedEl.className = 'tool-msg warn';
+      } else {
+        detectedEl.textContent = '\u2713 No embedded JavaScript or files detected.';
+        detectedEl.className = 'tool-msg ok';
+      }
+    }
+
+    if (review) review.style.display = '';
+    setMsg('hidden-msg', 'PDF scanned. Select items to remove, then click Sanitize.', 'ok');
+  } catch (err) {
+    setMsg('hidden-msg', 'File loaded. Ready to sanitize.', '');
+  }
 }
 
 async function removeHiddenData() {
@@ -1860,5 +1819,7 @@ function hiddenClear() {
   hiddenFile = null;
   document.getElementById('hidden-file-info').innerHTML = '';
   document.getElementById('hidden-input').value = '';
+  const review = document.getElementById('hidden-review');
+  if (review) review.style.display = 'none';
   setMsg('hidden-msg', '', '');
 }

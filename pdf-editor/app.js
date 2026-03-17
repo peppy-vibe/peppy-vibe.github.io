@@ -268,7 +268,7 @@ async function handleMergePDFs(files) {
     const merged = await PDFDocument.create();
     for (let i = 0; i < files.length; i++) {
       const buf = await readFileAsArrayBuffer(files[i]);
-      const src = await PDFDocument.load(buf, { ignoreEncryption: false });
+      const src = await loadPDFHandlingPassword(buf, files[i].name);
       const pages = await merged.copyPages(src, src.getPageIndices());
       pages.forEach(p => merged.addPage(p));
     }
@@ -278,7 +278,7 @@ async function handleMergePDFs(files) {
     await renderWorkspace();
     toast('Merged ' + files.length + ' file(s) — ' + fmtBytes(pdfBytes.length), 'success');
   } catch (err) {
-    toast('Error merging: ' + err.message, 'error');
+    if (err.message !== 'cancelled') toast('Error merging: ' + err.message, 'error');
   }
   document.getElementById('file-input-merge').value = '';
 }
@@ -333,7 +333,8 @@ async function handleAddPages(files) {
       const buf = await readFileAsArrayBuffer(files[i]);
       const name = files[i].name.toLowerCase();
       if (name.endsWith('.pdf')) {
-        const src = await PDFDocument.load(buf);
+        // Use password-aware loader so encrypted PDFs prompt for a password
+        const src = await loadPDFHandlingPassword(buf, files[i].name);
         const pages = await doc.copyPages(src, src.getPageIndices());
         pages.forEach(p => doc.addPage(p));
       } else {
@@ -353,7 +354,7 @@ async function handleAddPages(files) {
     await refreshCurrentView();
     toast('Added ' + files.length + ' file(s)', 'success');
   } catch (err) {
-    toast('Error: ' + err.message, 'error');
+    if (err.message !== 'cancelled') toast('Error: ' + err.message, 'error');
   }
   document.getElementById('file-input-add').value = '';
 }
@@ -609,27 +610,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const files = e.dataTransfer.files;
     if (!files.length) return;
 
-    const pdfs = [];
-    const images = [];
-    for (const f of files) {
-      if (f.name.toLowerCase().endsWith('.pdf') || f.type === 'application/pdf') {
-        pdfs.push(f);
-      } else if (f.type.startsWith('image/')) {
-        images.push(f);
-      }
-    }
-
-    if (pdfs.length && !pdfBytes) {
-      if (pdfs.length === 1) {
-        await handleSinglePDF(pdfs);
-      } else {
-        await handleMergePDFs(pdfs);
-      }
-    } else if (pdfs.length && pdfBytes) {
-      await handleAddPages(files);
-    } else if (images.length && !pdfBytes) {
-      await handleImages(images);
-    } else if (images.length && pdfBytes) {
+    if (!pdfBytes) {
+      // Route through the Open / Merge dialog so encrypted PDFs are handled natively
+      openMergeDialog();
+      handleMergeDialogFiles(files);
+    } else {
+      // Append pages to the existing document
       await handleAddPages(files);
     }
   });
@@ -1153,6 +1139,7 @@ async function doExport() {
         fillingForms: !readOnly,
         contentAccessibility: true,
         documentAssembly: !readOnly,
+        encryptionType: 'aes256',
       },
     };
   }
