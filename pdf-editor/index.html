@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Peppy PDF Mini Editor BETA</title>
   <meta name="description" content="Interactive PDF editor — import (including encrypted PDFs), edit pages visually, and export with AES-256 encryption. Merge, split, rotate, rearrange, watermark, password protect and more. 100% client-side.">
+  <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../lib/bootstrap-icons/bootstrap-icons.min.css">
   <link rel="stylesheet" href="style.css">
   <!-- CDN: @cantoo/pdf-lib@2.6.2 — fork of pdf-lib that adds userPassword/ownerPassword encryption support
        jsDelivr: https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.6.2/dist/pdf-lib.min.js
@@ -18,13 +20,13 @@
   <!-- ═══ TOP BAR ═══ -->
   <div class="top-bar">
     <div class="top-bar-left">
-      <a href="../index.html" class="top-bar-back" title="Home">&#8592;</a>
-      <span class="top-bar-title">&#128196; Peppy PDF Mini Editor BETA</span>
+      <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+      <span class="top-bar-title"><i class="bi bi-file-earmark-text" aria-hidden="true"></i> Peppy PDF Mini Editor BETA</span>
     </div>
     <div class="top-bar-center" id="file-name-display"></div>
     <div class="top-bar-right">
-      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen">&#9974;</button>
-      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">&#9728;</button>
+      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
     </div>
   </div>
 
@@ -35,24 +37,24 @@
     <aside class="action-sidebar" id="action-sidebar">
       <div class="action-section">
         <div class="action-section-title">Import</div>
-        <button class="action-btn" onclick="openMergeDialog()"><span class="action-icon">&#128194;</span> Open / Merge PDF(s)</button>
+        <button class="action-btn" onclick="openMergeDialog()"><span class="action-icon"><i class="bi bi-folder2-open" aria-hidden="true"></i></span> Open / Merge PDF(s)</button>
       </div>
       <div class="action-section">
         <div class="action-section-title">Edit Pages</div>
-        <button class="action-btn" onclick="openWatermarkDialog()"><span class="action-icon">&#128167;</span> Watermark</button>
+        <button class="action-btn" onclick="openWatermarkDialog()"><span class="action-icon"><i class="bi bi-droplet" aria-hidden="true"></i></span> Watermark</button>
         <button class="action-btn" onclick="openPageNumbersDialog()"><span class="action-icon">#</span> Page Numbers</button>
-        <button class="action-btn" onclick="openCropDialog()"><span class="action-icon">&#9986;</span> Crop</button>
-        <button class="action-btn" onclick="openResizeDialog()"><span class="action-icon">&#8596;</span> Resize</button>
-        <button class="action-btn" onclick="openAnnotationDialog()"><span class="action-icon">&#9998;</span> Text Annotation</button>
-        <button class="action-btn" onclick="toggleRedactMode()"><span class="action-icon">&#9608;</span> Redact</button>
+        <button class="action-btn" onclick="openCropDialog()"><span class="action-icon"><i class="bi bi-scissors" aria-hidden="true"></i></span> Crop</button>
+        <button class="action-btn" onclick="openResizeDialog()"><span class="action-icon"><i class="bi bi-arrows-expand" aria-hidden="true"></i></span> Resize</button>
+        <button class="action-btn" onclick="openAnnotationDialog()"><span class="action-icon"><i class="bi bi-pencil" aria-hidden="true"></i></span> Text Annotation</button>
+        <button class="action-btn" onclick="toggleRedactMode()"><span class="action-icon"><i class="bi bi-square-fill" aria-hidden="true"></i></span> Redact</button>
       </div>
       <div class="action-section">
         <div class="action-section-title">Document</div>
-        <button class="action-btn" onclick="openDocInfoDialog()"><span class="action-icon">&#9432;</span> Document Info</button>
+        <button class="action-btn" onclick="openDocInfoDialog()"><span class="action-icon"><i class="bi bi-info-circle" aria-hidden="true"></i></span> Document Info</button>
       </div>
       <div class="action-section">
         <div class="action-section-title">Export</div>
-        <button class="action-btn action-btn-primary" onclick="openExportPanel()"><span class="action-icon">&#128190;</span> Export</button>
+        <button class="action-btn action-btn-primary" onclick="openExportPanel()"><span class="action-icon"><i class="bi bi-save" aria-hidden="true"></i></span> Export</button>
       </div>
     </aside>
 
@@ -60,11 +62,11 @@
     <main class="workspace" id="workspace">
       <!-- Empty state -->
       <div class="workspace-empty" id="workspace-empty">
-        <div class="empty-icon">&#128196;</div>
+        <div class="empty-icon"><i class="bi bi-file-earmark-text" style="font-size:4rem" aria-hidden="true"></i></div>
         <h2>Open a PDF to get started</h2>
         <p>Import a PDF, merge multiple files, or convert images to PDF</p>
         <div class="empty-actions">
-          <button class="empty-btn primary" onclick="openMergeDialog()">&#128194; Open / Merge PDF(s)</button>
+          <button class="empty-btn primary" onclick="openMergeDialog()"><i class="bi bi-folder2-open" aria-hidden="true"></i> Open / Merge PDF(s)</button>
         </div>
         <div class="drop-hint" id="global-drop-zone">
           <span>or drop PDF / images here</span>
@@ -74,29 +76,29 @@
       <!-- Toolbar (shown when doc loaded) -->
       <div class="workspace-toolbar" id="workspace-toolbar" style="display:none">
         <div class="toolbar-left">
-          <button class="tb-btn" onclick="undo()" id="btn-undo" disabled title="Undo (Ctrl+Z)">&#8617; Undo</button>
-          <button class="tb-btn" onclick="redo()" id="btn-redo" disabled title="Redo (Ctrl+Y)">&#8618; Redo</button>
+          <button class="tb-btn" onclick="undo()" id="btn-undo" disabled title="Undo (Ctrl+Z)"><i class="bi bi-arrow-return-left" aria-hidden="true"></i> Undo</button>
+          <button class="tb-btn" onclick="redo()" id="btn-redo" disabled title="Redo (Ctrl+Y)"><i class="bi bi-arrow-return-right" aria-hidden="true"></i> Redo</button>
           <span class="tb-sep"></span>
-          <button class="tb-btn" onclick="deletePages()" title="Delete page(s)">&#128465; Delete</button>
-          <button class="tb-btn" onclick="rotatePages(90)" title="Rotate page(s) clockwise">&#8635; CW</button>
-          <button class="tb-btn" onclick="rotatePages(-90)" title="Rotate page(s) counter-clockwise">&#8634; CCW</button>
+          <button class="tb-btn" onclick="deletePages()" title="Delete page(s)"><i class="bi bi-trash" aria-hidden="true"></i> Delete</button>
+          <button class="tb-btn" onclick="rotatePages(90)" title="Rotate page(s) clockwise"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i> CW</button>
+          <button class="tb-btn" onclick="rotatePages(-90)" title="Rotate page(s) counter-clockwise"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> CCW</button>
           <span class="tb-sep"></span>
           <div class="view-toggle">
-            <button class="vt-btn active" id="vt-grid" onclick="switchView('grid')" title="Grid view">&#9638; Grid</button>
-            <button class="vt-btn" id="vt-reader" onclick="switchView('reader')" title="Reader view">&#128196; Reader</button>
+            <button class="vt-btn active" id="vt-grid" onclick="switchView('grid')" title="Grid view"><i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> Grid</button>
+            <button class="vt-btn" id="vt-reader" onclick="switchView('reader')" title="Reader view"><i class="bi bi-file-earmark-text" aria-hidden="true"></i> Reader</button>
           </div>
         </div>
         <div class="toolbar-right">
-          <button class="tb-btn" onclick="zoom(-1)" title="Zoom out">&#8722;</button>
+          <button class="tb-btn" onclick="zoom(-1)" title="Zoom out"><i class="bi bi-dash" aria-hidden="true"></i></button>
           <span class="tb-zoom-label" id="zoom-label">100%</span>
-          <button class="tb-btn" onclick="zoom(1)" title="Zoom in">&#43;</button>
+          <button class="tb-btn" onclick="zoom(1)" title="Zoom in"><i class="bi bi-plus" aria-hidden="true"></i></button>
           <span class="tb-sep"></span>
-          <button class="tb-btn" onclick="addMorePages()" title="Add more PDFs or images">&#43; Add PDFs</button>
+          <button class="tb-btn" onclick="addMorePages()" title="Add more PDFs or images"><i class="bi bi-plus" aria-hidden="true"></i> Add PDFs</button>
         </div>
       </div>
       <!-- Grid navigation bar -->
       <div class="grid-nav" id="grid-nav" style="display:none">
-        <button class="tb-btn" onclick="selectAllPages()" title="Select all">&#9744; All</button>
+        <button class="tb-btn" onclick="selectAllPages()" title="Select all"><i class="bi bi-check2-square" aria-hidden="true"></i> All</button>
         <button class="tb-btn" onclick="deselectAllPages()" title="Deselect all">Deselect</button>
         <span class="tb-sep"></span>
         <span class="tb-info" id="page-count-info"></span>
@@ -108,13 +110,13 @@
       <!-- Reader view (single page with zoom and navigation) -->
       <div class="reader-view" id="reader-view" style="display:none">
         <div class="reader-nav">
-          <button class="tb-btn" onclick="readerPrev()" title="Previous page">&#9664;</button>
+          <button class="tb-btn" onclick="readerPrev()" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
           <input type="number" class="reader-page-input" id="reader-page-input" min="1" value="1" title="Go to page">
           <span class="reader-page-total" id="reader-page-total">/ 1</span>
-          <button class="tb-btn" onclick="readerNext()" title="Next page">&#9654;</button>
+          <button class="tb-btn" onclick="readerNext()" title="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
           <span class="tb-sep"></span>
-          <button class="tb-btn redact-toggle" id="redact-toggle" onclick="toggleRedactMode()" title="Toggle redact drawing mode">&#9608; Redact</button>
-          <button class="tb-btn" id="btn-apply-redact" onclick="applyRedactions()" title="Burn drawn redactions into PDF" style="display:none">&#10003; Apply Redact</button>
+          <button class="tb-btn redact-toggle" id="redact-toggle" onclick="toggleRedactMode()" title="Toggle redact drawing mode"><i class="bi bi-square-fill" aria-hidden="true"></i> Redact</button>
+          <button class="tb-btn" id="btn-apply-redact" onclick="applyRedactions()" title="Burn drawn redactions into PDF" style="display:none"><i class="bi bi-check-lg" aria-hidden="true"></i> Apply Redact</button>
         </div>
         <div class="reader-canvas-wrap" id="reader-canvas-wrap">
           <canvas id="reader-canvas"></canvas>
@@ -130,7 +132,7 @@
   <div class="dialog-overlay" id="dlg-watermark" style="display:none">
     <div class="dialog">
       <div class="dialog-header">
-        <h3>&#128167; Add Watermark</h3>
+        <h3><i class="bi bi-droplet" aria-hidden="true"></i> Add Watermark</h3>
         <button class="dialog-close" onclick="closeDialog('dlg-watermark')">&times;</button>
       </div>
       <div class="dialog-body">
@@ -207,7 +209,7 @@
   <div class="dialog-overlay" id="dlg-crop" style="display:none">
     <div class="dialog">
       <div class="dialog-header">
-        <h3>&#9986; Crop Pages</h3>
+        <h3><i class="bi bi-scissors" aria-hidden="true"></i> Crop Pages</h3>
         <button class="dialog-close" onclick="closeDialog('dlg-crop')">&times;</button>
       </div>
       <div class="dialog-body">
@@ -240,7 +242,7 @@
   <div class="dialog-overlay" id="dlg-resize" style="display:none">
     <div class="dialog">
       <div class="dialog-header">
-        <h3>&#8596; Resize Pages</h3>
+        <h3><i class="bi bi-arrows-expand" aria-hidden="true"></i> Resize Pages</h3>
         <button class="dialog-close" onclick="closeDialog('dlg-resize')">&times;</button>
       </div>
       <div class="dialog-body">
@@ -280,7 +282,7 @@
   <div class="dialog-overlay" id="dlg-export-panel" style="display:none">
     <div class="dialog dialog-lg">
       <div class="dialog-header">
-        <h3>&#128190; Export</h3>
+        <h3><i class="bi bi-save" aria-hidden="true"></i> Export</h3>
         <button class="dialog-close" onclick="closeDialog('dlg-export-panel')">&times;</button>
       </div>
       <div class="dialog-body">
@@ -335,7 +337,7 @@
 
         <!-- Protect PDF -->
         <div class="pl-section" style="margin-top:14px">
-          <div class="pl-section-title">&#128274; Protect PDF</div>
+          <div class="pl-section-title"><i class="bi bi-lock" aria-hidden="true"></i> Protect PDF</div>
           <p class="dlg-info" style="margin-bottom:8px">Encrypt the output PDF. When Split PDF is selected, protection is applied to every output file.</p>
           <label class="export-opt" style="margin-bottom:6px">
             <input type="checkbox" id="export-protect-enable" onchange="onProtectToggle()">
@@ -360,7 +362,7 @@
         <div class="export-info" id="export-info" style="margin-top:10px;font-size:12px;color:var(--text2)"></div>
       </div>
       <div class="dialog-footer">
-        <button class="dlg-btn primary" onclick="doExport()">&#128190; Export &amp; Download</button>
+        <button class="dlg-btn primary" onclick="doExport()"><i class="bi bi-save" aria-hidden="true"></i> Export &amp; Download</button>
         <button class="dlg-btn" onclick="closeDialog('dlg-export-panel')">Close</button>
       </div>
     </div>
@@ -370,7 +372,7 @@
   <div class="dialog-overlay" id="dlg-pdf-password" style="display:none">
     <div class="dialog" style="max-width:400px">
       <div class="dialog-header">
-        <h3>&#128274; Password Required</h3>
+        <h3><i class="bi bi-lock" aria-hidden="true"></i> Password Required</h3>
       </div>
       <div class="dialog-body">
         <p class="dlg-info" id="pw-prompt-msg">This PDF is password protected. Enter the password to unlock it.</p>
@@ -379,7 +381,7 @@
         </label>
       </div>
       <div class="dialog-footer">
-        <button class="dlg-btn primary" onclick="pwPromptSubmit()">&#128275; Unlock &amp; Open</button>
+        <button class="dlg-btn primary" onclick="pwPromptSubmit()"><i class="bi bi-unlock" aria-hidden="true"></i> Unlock &amp; Open</button>
         <button class="dlg-btn" onclick="pwPromptCancel()">Cancel</button>
       </div>
     </div>
@@ -389,7 +391,7 @@
   <div class="dialog-overlay" id="dlg-annotation" style="display:none">
     <div class="dialog">
       <div class="dialog-header">
-        <h3>&#9998; Text Annotation</h3>
+        <h3><i class="bi bi-pencil" aria-hidden="true"></i> Text Annotation</h3>
         <button class="dialog-close" onclick="closeDialog('dlg-annotation')">&times;</button>
       </div>
       <div class="dialog-body">
@@ -429,7 +431,7 @@
   <div class="dialog-overlay" id="dlg-docinfo" style="display:none">
     <div class="dialog">
       <div class="dialog-header">
-        <h3>&#9432; Document Info</h3>
+        <h3><i class="bi bi-info-circle" aria-hidden="true"></i> Document Info</h3>
         <button class="dialog-close" onclick="closeDialog('dlg-docinfo')">&times;</button>
       </div>
       <div class="dialog-body">
@@ -441,8 +443,8 @@
         <div class="doc-info-stats" id="doc-info-stats"></div>
       </div>
       <div class="dialog-footer dialog-footer-wrap">
-        <button class="dlg-btn danger-btn" onclick="removeMetadataAction()">&#128295; Remove Metadata</button>
-        <button class="dlg-btn danger-btn" onclick="removeHiddenDataAction()">&#128065; Remove Hidden Data</button>
+        <button class="dlg-btn danger-btn" onclick="removeMetadataAction()"><i class="bi bi-wrench" aria-hidden="true"></i> Remove Metadata</button>
+        <button class="dlg-btn danger-btn" onclick="removeHiddenDataAction()"><i class="bi bi-eye" aria-hidden="true"></i> Remove Hidden Data</button>
         <button class="dlg-btn primary" onclick="applyDocInfo()">Save Info</button>
         <button class="dlg-btn" onclick="closeDialog('dlg-docinfo')">Cancel</button>
       </div>
@@ -453,20 +455,20 @@
   <div class="dialog-overlay" id="dlg-merge" style="display:none">
     <div class="dialog dialog-lg">
       <div class="dialog-header">
-        <h3>&#128194; Open / Merge PDF(s) &amp; Images</h3>
+        <h3><i class="bi bi-folder2-open" aria-hidden="true"></i> Open / Merge PDF(s) &amp; Images</h3>
         <button class="dialog-close" onclick="closeDialog('dlg-merge')">&times;</button>
       </div>
       <div class="dialog-body">
         <div class="merge-drop-zone" id="merge-drop-zone" onclick="triggerMergeFileInput()">
-          <div class="merge-drop-icon">&#128196;</div>
+          <div class="merge-drop-icon"><i class="bi bi-file-earmark-text" aria-hidden="true"></i></div>
           <p>Drop PDF or image files here, or click to add</p>
           <p class="dlg-info">Files will be merged in order &mdash; supports PDF, JPEG and PNG</p>
         </div>
         <div class="merge-file-list" id="merge-file-list"></div>
       </div>
       <div class="dialog-footer">
-        <button class="dlg-btn" onclick="triggerMergeFileInput()">&#43; Add Files</button>
-        <button class="dlg-btn primary" onclick="applyMerge()" id="btn-apply-merge" disabled>&#128194; Open / Merge</button>
+        <button class="dlg-btn" onclick="triggerMergeFileInput()"><i class="bi bi-plus" aria-hidden="true"></i> Add Files</button>
+        <button class="dlg-btn primary" onclick="applyMerge()" id="btn-apply-merge" disabled><i class="bi bi-folder2-open" aria-hidden="true"></i> Open / Merge</button>
         <button class="dlg-btn" onclick="closeDialog('dlg-merge')">Cancel</button>
       </div>
     </div>
@@ -480,6 +482,7 @@
   <input type="file" id="file-input-merge" accept=".pdf,application/pdf,image/jpeg,image/png,image/jpg" multiple style="display:none" onchange="handleMergeDialogFiles(this.files)">
   <input type="file" id="file-input-add" accept=".pdf,application/pdf,image/jpeg,image/png,image/jpg" multiple style="display:none" onchange="handleAddPages(this.files)">
 
+  <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

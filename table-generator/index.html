@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Peppy Table Generator</title>
   <meta name="description" content="Create, style, and export HTML tables with cell merge, spreadsheet paste, undo/redo, and HTML/Markdown/CSV/LaTeX export — all in the browser.">
+  <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../lib/bootstrap-icons/bootstrap-icons.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,12 +15,12 @@
   <!-- App header -->
   <div class="top-bar">
     <div class="top-bar-left">
-      <a href="../index.html" class="top-bar-back" title="Home">&#8592;</a>
-      <span class="top-bar-title">&#128203; Peppy Table Generator</span>
+      <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+      <span class="top-bar-title"><i class="bi bi-clipboard" aria-hidden="true"></i> Peppy Table Generator</span>
     </div>
     <div class="top-bar-right">
-      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen">&#9974;</button>
-      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">&#9728;</button>
+      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
     </div>
   </div>
 
@@ -28,8 +30,8 @@
   <div class="toolbar">
     <div class="tb-group">
       <span class="tb-label">History</span>
-      <button id="btn-undo" onclick="doUndo()" title="Undo (Ctrl+Z)" disabled>&#8617; Undo</button>
-      <button id="btn-redo" onclick="doRedo()" title="Redo (Ctrl+Y)" disabled>&#8618; Redo</button>
+      <button id="btn-undo" onclick="doUndo()" title="Undo (Ctrl+Z)" disabled><i class="bi bi-arrow-return-left" aria-hidden="true"></i> Undo</button>
+      <button id="btn-redo" onclick="doRedo()" title="Redo (Ctrl+Y)" disabled><i class="bi bi-arrow-return-right" aria-hidden="true"></i> Redo</button>
     </div>
     <div class="tb-sep"></div>
     <div class="tb-group">
@@ -115,9 +117,9 @@
         <div class="sg">
           <label>H-Align</label>
           <div class="btn-trio">
-            <button class="style-btn" onclick="applyCellStyle('textAlign','left')"   title="Left">&#8676;</button>
-            <button class="style-btn" onclick="applyCellStyle('textAlign','center')" title="Center">&#8596;</button>
-            <button class="style-btn" onclick="applyCellStyle('textAlign','right')"  title="Right">&#8677;</button>
+            <button class="style-btn" onclick="applyCellStyle('textAlign','left')"   title="Left"><i class="bi bi-text-left" aria-hidden="true"></i></button>
+            <button class="style-btn" onclick="applyCellStyle('textAlign','center')" title="Center"><i class="bi bi-text-center" aria-hidden="true"></i></button>
+            <button class="style-btn" onclick="applyCellStyle('textAlign','right')"  title="Right"><i class="bi bi-text-right" aria-hidden="true"></i></button>
           </div>
         </div>
         <div class="sg">
@@ -176,7 +178,7 @@
     <div class="dlg">
       <div class="dlg-hdr">
         <span id="import-title">Import</span>
-        <button class="dlg-x" onclick="closeDlg('import-overlay')">&#x2715;</button>
+        <button class="dlg-x" onclick="closeDlg('import-overlay')"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
       </div>
       <div class="dlg-body">
         <textarea id="import-ta" rows="9" placeholder="Paste here&hellip;"></textarea>
@@ -194,7 +196,7 @@
     <div class="dlg dlg-wide">
       <div class="dlg-hdr">
         <span id="preview-title">Output</span>
-        <button class="dlg-x" onclick="closeDlg('preview-overlay')">&#x2715;</button>
+        <button class="dlg-x" onclick="closeDlg('preview-overlay')"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
       </div>
       <div class="dlg-body">
         <div class="dlg-btns">
@@ -209,17 +211,17 @@
 
   <!-- Right-click context menu -->
   <div id="ctx-menu" class="ctx-menu" role="menu">
-    <button onclick="ctxInsertRowAbove()">&#8593; Insert Row Above</button>
-    <button onclick="ctxInsertRowBelow()">&#8595; Insert Row Below</button>
+    <button onclick="ctxInsertRowAbove()"><i class="bi bi-arrow-up" aria-hidden="true"></i> Insert Row Above</button>
+    <button onclick="ctxInsertRowBelow()"><i class="bi bi-arrow-down" aria-hidden="true"></i> Insert Row Below</button>
     <hr>
-    <button onclick="ctxInsertColLeft()">&#8592; Insert Column Left</button>
-    <button onclick="ctxInsertColRight()">&#8594; Insert Column Right</button>
+    <button onclick="ctxInsertColLeft()"><i class="bi bi-arrow-left" aria-hidden="true"></i> Insert Column Left</button>
+    <button onclick="ctxInsertColRight()"><i class="bi bi-arrow-right" aria-hidden="true"></i> Insert Column Right</button>
     <hr>
-    <button onclick="ctxDeleteRow()" class="ctx-danger">&#10005; Delete Row</button>
-    <button onclick="ctxDeleteCol()" class="ctx-danger">&#10005; Delete Column</button>
+    <button onclick="ctxDeleteRow()" class="ctx-danger"><i class="bi bi-x-lg" aria-hidden="true"></i> Delete Row</button>
+    <button onclick="ctxDeleteCol()" class="ctx-danger"><i class="bi bi-x-lg" aria-hidden="true"></i> Delete Column</button>
     <hr>
-    <button onclick="ctxCopyCell()">&#128203; Copy Cell</button>
-    <button onclick="ctxPasteCell()">&#128196; Paste Cell</button>
+    <button onclick="ctxCopyCell()"><i class="bi bi-clipboard" aria-hidden="true"></i> Copy Cell</button>
+    <button onclick="ctxPasteCell()"><i class="bi bi-file-earmark-text" aria-hidden="true"></i> Paste Cell</button>
   </div>
 
   <!-- Status bar -->
@@ -228,13 +230,14 @@
     <span id="sb-sel-info"></span>
     <span id="sb-hint">Click cells to select · Shift+click to extend</span>
     <span class="sb-zoom-group">
-      <button class="sb-btn" onclick="tableZoomOut()" title="Zoom Out">A&#8315;</button>
+      <button class="sb-btn" onclick="tableZoomOut()" title="Zoom Out"><i class="bi bi-zoom-out" aria-hidden="true"></i></button>
       <span id="sb-tbl-zoom">100%</span>
-      <button class="sb-btn" onclick="tableZoomIn()" title="Zoom In">A+</button>
-      <button class="sb-btn" onclick="tableZoomReset()" title="Reset Zoom">&#8857;</button>
+      <button class="sb-btn" onclick="tableZoomIn()" title="Zoom In"><i class="bi bi-zoom-in" aria-hidden="true"></i></button>
+      <button class="sb-btn" onclick="tableZoomReset()" title="Reset Zoom"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i></button>
     </span>
   </div>
 
+  <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

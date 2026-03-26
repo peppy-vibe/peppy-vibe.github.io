@@ -16,7 +16,7 @@ function toggleTheme() {
 function updateThemeBtn() {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
   const btn = document.getElementById('theme-btn');
-  if (btn) btn.textContent = isDark ? '\u2600' : '\u263E';
+  if (btn) btn.innerHTML = isDark ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
 }
 
 /** Toggle fullscreen mode */

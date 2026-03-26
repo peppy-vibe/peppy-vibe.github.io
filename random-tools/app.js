@@ -19,7 +19,7 @@ function toggleTheme() {
 function updateThemeBtn() {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
   const btn = document.getElementById('theme-btn');
-  if (btn) btn.textContent = isDark ? '\u2600' : '\u263E';
+  if (btn) btn.innerHTML = isDark ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
 }
 
 /** Toggle fullscreen mode for casting on large screens */
@@ -242,7 +242,7 @@ function spinWheel() {
       const relAngle = ((-wheelAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
       const winnerIdx = Math.floor(relAngle / arc) % wheelOptions.length;
       const winner = wheelOptions[winnerIdx];
-      document.getElementById('wheel-result').textContent = '\uD83C\uDF89 ' + winner + '!';
+      document.getElementById('wheel-result').innerHTML = '<i class="bi bi-balloon" aria-hidden="true"></i> ' + escHtml(winner) + '!';
 
       wheelHistory.push(winner);
       if (wheelHistory.length > 20) wheelHistory.shift();
@@ -363,7 +363,7 @@ function escHtml(s) {
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    4. WINNER PICKER
 â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-const trophies = ['\uD83E\uDD47', '\uD83E\uDD48', '\uD83E\uDD49', '\u2B50', '\uD83C\uDFC5'];
+const trophies = ['<i class="bi bi-trophy-fill text-warning"></i>', '<i class="bi bi-trophy-fill" style="color:#aaa"></i>', '<i class="bi bi-trophy-fill" style="color:#cd7f32"></i>', '<i class="bi bi-star-fill text-warning"></i>', '<i class="bi bi-award"></i>'];
 
 function pickWinners() {
   const names = getLines('winner-list');
@@ -388,7 +388,7 @@ function pickWinners() {
   const result = document.getElementById('winner-result');
   result.innerHTML = winners.map((w, i) =>
     '<div class="winner-row' + (i === 0 ? ' first' : '') + '" style="animation-delay:' + (i * 0.1) + 's">' +
-    '<span class="w-rank">' + (trophies[i] || '\uD83C\uDF9F\uFE0F') + '</span>' +
+    '<span class="w-rank">' + (trophies[i] || '<i class="bi bi-bookmark"></i>') + '</span>' +
     '<span class="w-name">' + escHtml(w) + '</span>' +
     '<span style="margin-left:auto;font-size:12px;color:var(--text2);">Place #' + (i + 1) + '</span>' +
     '</div>'
@@ -500,11 +500,11 @@ function flipCoin() {
     coin.classList.remove('flipping');
     if (isHeads) {
       coinHeads++;
-      label.textContent = '\uD83E\uDE99 Heads!';
+      label.textContent = 'Heads!';
       label.style.color = '#c8882a';
     } else {
       coinTails++;
-      label.textContent = '\uD83E\uDE88 Tails!';
+      label.textContent = 'Tails!';
       label.style.color = '#8888a0';
     }
     document.getElementById('coin-heads').textContent = coinHeads;

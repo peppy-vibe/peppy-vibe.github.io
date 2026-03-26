@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>QR &amp; Barcode Tools</title>
 <meta name="description" content="Generate and scan QR codes (URL, WiFi, vCard, email, SMS) and barcodes (CODE128, EAN-13, UPC-A and more). Fully client-side — no data leaves your browser.">
+<link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="../lib/bootstrap-icons/bootstrap-icons.min.css">
 <link rel="stylesheet" href="style.css" />
 <!-- qrcodejs v1.0.0 — QR code generation (cached by SW for offline) -->
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
@@ -22,13 +24,13 @@
 <!-- ═══ APP HEADER ═══════════════════════════════════════════ -->
 <header class="top-bar">
   <div class="top-bar-left">
-    <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu">&#9776;</button>
-    <a href="../index.html" class="top-bar-back" title="Home">&#8592;</a>
-    <span class="top-bar-title">&#128274; QR &amp; Barcode Tools</span>
+    <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu"><i class="bi bi-list" aria-hidden="true"></i></button>
+    <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+    <span class="top-bar-title"><i class="bi bi-lock" aria-hidden="true"></i> QR &amp; Barcode Tools</span>
   </div>
   <div class="top-bar-right">
-    <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen">&#9974;</button>
-    <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">&#9728;</button>
+    <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+    <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
   </div>
 </header>
 
@@ -42,7 +44,7 @@
       <!-- QR Group -->
       <div class="sidebar-group" id="grp-qr">
         <button class="grp-hdr" onclick="toggleGroup('grp-qr')">
-          <span>⬛ QR Code</span><span class="grp-chevron">▼</span>
+          <span><i class="bi bi-qr-code" aria-hidden="true"></i> QR Code</span><span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
         </button>
         <div class="grp-tools">
           <button class="tab-btn active" onclick="showTool('panel-qr')">QR Generator</button>
@@ -53,7 +55,7 @@
       <!-- Barcode Group -->
       <div class="sidebar-group" id="grp-bc">
         <button class="grp-hdr" onclick="toggleGroup('grp-bc')">
-          <span>▬ Barcode</span><span class="grp-chevron">▼</span>
+          <span><i class="bi bi-upc-scan" aria-hidden="true"></i> Barcode</span><span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
         </button>
         <div class="grp-tools">
           <button class="tab-btn" onclick="showTool('panel-barcode')">Barcode Generator</button>
@@ -70,20 +72,20 @@
          QR CODE GENERATOR
     ═══════════════════════════════════════════ -->
     <div class="tool-panel active" id="panel-qr">
-      <div class="panel-title">⬛ QR Code Generator</div>
+      <div class="panel-title"><i class="bi bi-qr-code" aria-hidden="true"></i> QR Code Generator</div>
       <p class="tool-desc">Generate QR codes for URLs, WiFi, contacts, email, SMS, phone numbers, or plain text. Supports logo overlay and color customization.</p>
 
       <!-- QR Type Selector -->
       <div class="form-group">
         <span class="io-label">QR Type</span>
         <div class="qr-types">
-          <button class="qr-type-btn active" onclick="qrSetType('url',this)">🔗 URL</button>
-          <button class="qr-type-btn"        onclick="qrSetType('text',this)">📝 Text</button>
-          <button class="qr-type-btn"        onclick="qrSetType('wifi',this)">📶 WiFi</button>
-          <button class="qr-type-btn"        onclick="qrSetType('vcard',this)">👤 Contact</button>
-          <button class="qr-type-btn"        onclick="qrSetType('email',this)">✉ Email</button>
-          <button class="qr-type-btn"        onclick="qrSetType('sms',this)">💬 SMS</button>
-          <button class="qr-type-btn"        onclick="qrSetType('phone',this)">📞 Phone</button>
+          <button class="qr-type-btn active" onclick="qrSetType('url',this)"><i class="bi bi-link-45deg" aria-hidden="true"></i> URL</button>
+          <button class="qr-type-btn"        onclick="qrSetType('text',this)"><i class="bi bi-card-text" aria-hidden="true"></i> Text</button>
+          <button class="qr-type-btn"        onclick="qrSetType('wifi',this)"><i class="bi bi-wifi" aria-hidden="true"></i> WiFi</button>
+          <button class="qr-type-btn"        onclick="qrSetType('vcard',this)"><i class="bi bi-person" aria-hidden="true"></i> Contact</button>
+          <button class="qr-type-btn"        onclick="qrSetType('email',this)"><i class="bi bi-envelope" aria-hidden="true"></i> Email</button>
+          <button class="qr-type-btn"        onclick="qrSetType('sms',this)"><i class="bi bi-chat-dots" aria-hidden="true"></i> SMS</button>
+          <button class="qr-type-btn"        onclick="qrSetType('phone',this)"><i class="bi bi-telephone" aria-hidden="true"></i> Phone</button>
         </div>
       </div>
 
@@ -194,7 +196,7 @@
             <span class="io-label">Logo Overlay (optional)</span>
             <div class="logo-section">
               <img id="logo-preview" class="logo-preview" src="" alt="" style="display:none" />
-              <button class="btn-secondary" onclick="document.getElementById('logo-input').click()">📁 Upload Logo</button>
+              <button class="btn-secondary" onclick="document.getElementById('logo-input').click()"><i class="bi bi-folder" aria-hidden="true"></i> Upload Logo</button>
               <button class="btn-secondary" onclick="clearLogo()">✕ Remove</button>
               <input type="file" id="logo-input" accept="image/*" style="display:none" onchange="loadLogo(this)" />
               <span style="font-size:11px;color:var(--text2)">Use H error correction for best results with logos.</span>
@@ -202,9 +204,9 @@
           </div>
           <!-- Action buttons -->
           <div class="btn-row">
-            <button onclick="qrGenerate()" id="qr-gen-btn" style="display:none">⬛ Generate</button>
+            <button onclick="qrGenerate()" id="qr-gen-btn" style="display:none"><i class="bi bi-qr-code" aria-hidden="true"></i> Generate</button>
             <button onclick="qrDownload()">↓ Download PNG</button>
-            <button onclick="qrCopyClipboard()" class="btn-secondary">📋 Copy</button>
+            <button onclick="qrCopyClipboard()" class="btn-secondary"><i class="bi bi-clipboard" aria-hidden="true"></i> Copy</button>
             <button onclick="qrClear()" class="btn-secondary">✕ Clear</button>
           </div>
           <div class="form-row" style="margin-top:6px">
@@ -223,7 +225,7 @@
          BATCH QR
     ═══════════════════════════════════════════ -->
     <div class="tool-panel" id="panel-qr-batch">
-      <div class="panel-title">⬛ Batch QR Generator</div>
+      <div class="panel-title"><i class="bi bi-qr-code" aria-hidden="true"></i> Batch QR Generator</div>
       <p class="tool-desc">Generate multiple QR codes at once — one per line. Each QR code can be downloaded individually or all at once.</p>
 
       <div class="form-group">
@@ -249,7 +251,7 @@
       </div>
 
       <div class="btn-row">
-        <button onclick="batchGenerate()">⬛ Generate All</button>
+        <button onclick="batchGenerate()"><i class="bi bi-qr-code" aria-hidden="true"></i> Generate All</button>
         <button onclick="batchDownloadAll()" class="btn-secondary" id="batch-dl-all" disabled>↓ Download All</button>
         <button onclick="clearBatch()" class="btn-secondary">✕ Clear</button>
       </div>
@@ -262,7 +264,7 @@
          QR SCANNER
     ═══════════════════════════════════════════ -->
     <div class="tool-panel" id="panel-qr-scan">
-      <div class="panel-title">📷 QR Code Scanner</div>
+      <div class="panel-title"><i class="bi bi-camera" aria-hidden="true"></i> QR Code Scanner</div>
       <p class="tool-desc">Use your camera to scan a QR code. Click Start Scanner to activate the camera, then point it at a QR code.</p>
 
       <div class="scanner-area">
@@ -279,8 +281,8 @@
         <span class="io-label">Scan Result</span>
         <div class="scan-result-box" id="scan-result">Waiting for scan…</div>
         <div class="btn-row" style="margin-top:6px">
-          <button onclick="copyScanResult()" class="btn-secondary">📋 Copy Result</button>
-          <button onclick="openScanResult()" class="btn-secondary">🔗 Open URL</button>
+          <button onclick="copyScanResult()" class="btn-secondary"><i class="bi bi-clipboard" aria-hidden="true"></i> Copy Result</button>
+          <button onclick="openScanResult()" class="btn-secondary"><i class="bi bi-link-45deg" aria-hidden="true"></i> Open URL</button>
           <button onclick="clearScanResult()" class="btn-secondary">✕ Clear</button>
         </div>
       </div>
@@ -295,7 +297,7 @@
          BARCODE GENERATOR
     ═══════════════════════════════════════════ -->
     <div class="tool-panel" id="panel-barcode">
-      <div class="panel-title">▬ Barcode Generator</div>
+      <div class="panel-title"><i class="bi bi-upc-scan" aria-hidden="true"></i> Barcode Generator</div>
       <p class="tool-desc">Generate barcodes in a wide range of formats. Customize size, colors, and label display.</p>
 
       <div class="qr-layout">
@@ -379,7 +381,7 @@
           </div>
           <!-- Action buttons -->
           <div class="btn-row">
-            <button onclick="bcGenerate()" id="bc-gen-btn" style="display:none">▬ Generate</button>
+            <button onclick="bcGenerate()" id="bc-gen-btn" style="display:none"><i class="bi bi-upc-scan" aria-hidden="true"></i> Generate</button>
             <button onclick="bcDownloadSVG()">↓ SVG</button>
             <button onclick="bcDownloadPNG()" class="btn-secondary">↓ PNG</button>
             <button onclick="bcClear()" class="btn-secondary">✕ Clear</button>
@@ -401,7 +403,7 @@
          BATCH BARCODES
     ═══════════════════════════════════════════ -->
     <div class="tool-panel" id="panel-bc-batch">
-      <div class="panel-title">▬ Batch Barcode Generator</div>
+      <div class="panel-title"><i class="bi bi-upc-scan" aria-hidden="true"></i> Batch Barcode Generator</div>
       <p class="tool-desc">Generate multiple barcodes at once — one value per line. Download each individually.</p>
 
       <div class="form-group">
@@ -423,7 +425,7 @@
       </div>
 
       <div class="btn-row">
-        <button onclick="bcBatchGenerate()">▬ Generate All</button>
+        <button onclick="bcBatchGenerate()"><i class="bi bi-upc-scan" aria-hidden="true"></i> Generate All</button>
         <button onclick="clearBcBatch()" class="btn-secondary">✕ Clear</button>
       </div>
 
@@ -433,6 +435,7 @@
   </div><!--/.tool-area-->
 </div><!--/.app-body-->
 
+<script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Peppy Dev Tools</title>
   <meta name="description" content="33 developer utilities in one app: Base64, URL, hashing, password, UUID, JWT, JSON, YAML, XML, colours, timestamps, regex and more — all client-side.">
+  <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../lib/bootstrap-icons/bootstrap-icons.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,13 +17,13 @@
   <!-- App header -->
   <div class="top-bar">
     <div class="top-bar-left">
-      <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu">&#9776;</button>
-      <a href="../index.html" class="top-bar-back" title="Home">&#8592;</a>
-      <span class="top-bar-title">&#128736; Peppy Dev Tools</span>
+      <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu"><i class="bi bi-list" aria-hidden="true"></i></button>
+      <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+      <span class="top-bar-title"><i class="bi bi-tools" aria-hidden="true"></i> Peppy Dev Tools</span>
     </div>
     <div class="top-bar-right">
-      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen">&#9974;</button>
-      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">&#9728;</button>
+      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
     </div>
   </div>
 
@@ -35,8 +37,8 @@
 
         <div class="sidebar-group" id="grp-encoding">
           <button class="grp-hdr" onclick="toggleGroup('encoding')">
-            <span>&#128274; Encoding &amp; Security</span>
-            <span class="grp-chevron">&#9660;</span>
+            <span><i class="bi bi-lock" aria-hidden="true"></i> Encoding &amp; Security</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
             <button class="tab-btn active" data-tool="base64"   data-grp="encoding" onclick="showTool('base64')">Base64</button>
@@ -51,8 +53,8 @@
 
         <div class="sidebar-group" id="grp-text">
           <button class="grp-hdr" onclick="toggleGroup('text')">
-            <span>&#128196; Text Tools</span>
-            <span class="grp-chevron">&#9660;</span>
+            <span><i class="bi bi-file-text" aria-hidden="true"></i> Text Tools</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
             <button class="tab-btn" data-tool="diff"  data-grp="text" onclick="showTool('diff')">Text Diff</button>
@@ -66,25 +68,25 @@
 
         <div class="sidebar-group" id="grp-json">
           <button class="grp-hdr" onclick="toggleGroup('json')">
-            <span>&#123;&#125; JSON / Data</span>
-            <span class="grp-chevron">&#9660;</span>
+            <span><i class="bi bi-braces" aria-hidden="true"></i> JSON / Data</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
             <button class="tab-btn" data-tool="jf"   data-grp="json" onclick="showTool('jf')">JSON Formatter</button>
             <button class="tab-btn" data-tool="jv"   data-grp="json" onclick="showTool('jv')">JSON Viewer</button>
             <button class="tab-btn" data-tool="jval" data-grp="json" onclick="showTool('jval')">JSON Validator</button>
-            <button class="tab-btn" data-tool="jcsv" data-grp="json" onclick="showTool('jcsv')">JSON &#8594; CSV</button>
-            <button class="tab-btn" data-tool="jy"   data-grp="json" onclick="showTool('jy')">JSON &#8594; YAML</button>
-            <button class="tab-btn" data-tool="yj"   data-grp="json" onclick="showTool('yj')">YAML &#8594; JSON</button>
+            <button class="tab-btn" data-tool="jcsv" data-grp="json" onclick="showTool('jcsv')">JSON <i class="bi bi-arrow-right" aria-hidden="true"></i> CSV</button>
+            <button class="tab-btn" data-tool="jy"   data-grp="json" onclick="showTool('jy')">JSON <i class="bi bi-arrow-right" aria-hidden="true"></i> YAML</button>
+            <button class="tab-btn" data-tool="yj"   data-grp="json" onclick="showTool('yj')">YAML <i class="bi bi-arrow-right" aria-hidden="true"></i> JSON</button>
             <button class="tab-btn" data-tool="xf"   data-grp="json" onclick="showTool('xf')">XML Formatter</button>
-            <button class="tab-btn" data-tool="xj"   data-grp="json" onclick="showTool('xj')">XML &#8594; JSON</button>
+            <button class="tab-btn" data-tool="xj"   data-grp="json" onclick="showTool('xj')">XML <i class="bi bi-arrow-right" aria-hidden="true"></i> JSON</button>
           </div>
         </div>
 
         <div class="sidebar-group" id="grp-colors">
           <button class="grp-hdr" onclick="toggleGroup('colors')">
-            <span>&#127912; Colors</span>
-            <span class="grp-chevron">&#9660;</span>
+            <span><i class="bi bi-palette" aria-hidden="true"></i> Colors</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
             <button class="tab-btn" data-tool="convert"  data-grp="colors" onclick="showTool('convert')">Color Converter</button>
@@ -96,8 +98,8 @@
 
         <div class="sidebar-group" id="grp-time">
           <button class="grp-hdr" onclick="toggleGroup('time')">
-            <span>&#128336; Timestamps</span>
-            <span class="grp-chevron">&#9660;</span>
+            <span><i class="bi bi-clock" aria-hidden="true"></i> Timestamps</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
             <button class="tab-btn" data-tool="unix"      data-grp="time" onclick="showTool('unix')">Unix Converter</button>
@@ -108,8 +110,8 @@
 
         <div class="sidebar-group" id="grp-regex">
           <button class="grp-hdr" onclick="toggleGroup('regex')">
-            <span>&#128269; Regex</span>
-            <span class="grp-chevron">&#9660;</span>
+            <span><i class="bi bi-search" aria-hidden="true"></i> Regex</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
             <button class="tab-btn" data-tool="tester"  data-grp="regex" onclick="showTool('tester')">Pattern Tester</button>
@@ -138,9 +140,9 @@
             <textarea id="b64-in" class="io-area" placeholder="Enter plain text or Base64 string&#8230;" spellcheck="false"></textarea>
           </div>
           <div class="io-btns">
-            <button onclick="b64Encode()">Encode &#8594;</button>
-            <button onclick="b64Decode()">&#8592; Decode</button>
-            <button class="btn-secondary" onclick="b64Swap()">&#8644; Swap</button>
+            <button onclick="b64Encode()">Encode <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+            <button onclick="b64Decode()"><i class="bi bi-arrow-left" aria-hidden="true"></i> Decode</button>
+            <button class="btn-secondary" onclick="b64Swap()"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Swap</button>
             <button class="btn-secondary" onclick="clearTool('b64-in','b64-out','b64-msg')">Clear</button>
           </div>
           <div class="io-col">
@@ -163,9 +165,9 @@
             <textarea id="url-in" class="io-area" placeholder="Enter URL or URL-encoded string&#8230;" spellcheck="false"></textarea>
           </div>
           <div class="io-btns">
-            <button onclick="urlEncode()">Encode &#8594;</button>
-            <button onclick="urlDecode()">&#8592; Decode</button>
-            <button class="btn-secondary" onclick="urlSwap()">&#8644; Swap</button>
+            <button onclick="urlEncode()">Encode <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+            <button onclick="urlDecode()"><i class="bi bi-arrow-left" aria-hidden="true"></i> Decode</button>
+            <button class="btn-secondary" onclick="urlSwap()"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Swap</button>
             <button class="btn-secondary" onclick="clearTool('url-in','url-out','url-msg')">Clear</button>
           </div>
           <div class="io-col">
@@ -197,7 +199,7 @@
           </div>
         </div>
         <div class="form-row">
-          <button onclick="computeHash()">&#128273; Generate Hash</button>
+          <button onclick="computeHash()"><i class="bi bi-key" aria-hidden="true"></i> Generate Hash</button>
         </div>
         <div class="result-box">
           <label class="io-label">Hash Output</label>
@@ -224,8 +226,8 @@
           <label><input type="checkbox" id="pwd-noambig"> Exclude ambiguous (0, O, l, I)</label>
         </div>
         <div class="form-row">
-          <button onclick="generatePassword()">&#128272; Generate Password</button>
-          <button class="btn-secondary" onclick="generatePassword()">&#8635; Regenerate</button>
+          <button onclick="generatePassword()"><i class="bi bi-shield-lock" aria-hidden="true"></i> Generate Password</button>
+          <button class="btn-secondary" onclick="generatePassword()"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Regenerate</button>
         </div>
         <div class="result-box">
           <label class="io-label">Generated Password</label>
@@ -256,7 +258,7 @@
           <input type="number" id="uuid-count" min="1" max="100" value="1" class="short-input">
         </div>
         <div class="form-row">
-          <button onclick="generateUUIDs()">&#127381; Generate</button>
+          <button onclick="generateUUIDs()"><i class="bi bi-upc" aria-hidden="true"></i> Generate</button>
           <button class="btn-secondary" onclick="clearUUIDs()">Clear</button>
         </div>
         <div class="result-box">
@@ -304,9 +306,9 @@
             <textarea id="hent-in" class="io-area" placeholder="Enter plain HTML or entity-encoded text&hellip;" spellcheck="false"></textarea>
           </div>
           <div class="io-btns">
-            <button onclick="hentEncode()">Encode &#8594;</button>
-            <button onclick="hentDecode()">&#8592; Decode</button>
-            <button class="btn-secondary" onclick="hentSwap()">&#8644; Swap</button>
+            <button onclick="hentEncode()">Encode <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+            <button onclick="hentDecode()"><i class="bi bi-arrow-left" aria-hidden="true"></i> Decode</button>
+            <button class="btn-secondary" onclick="hentSwap()"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Swap</button>
             <button class="btn-secondary" onclick="clearTool('hent-in','hent-out','hent-msg')">Clear</button>
           </div>
           <div class="io-col">
@@ -338,7 +340,7 @@
           </div>
         </div>
         <div class="form-row">
-          <button onclick="runDiff()">&#128269; Compare</button>
+          <button onclick="runDiff()"><i class="bi bi-search" aria-hidden="true"></i> Compare</button>
           <button class="btn-secondary" onclick="clearDiff()">Clear</button>
           <span class="diff-stats" id="diff-stats"></span>
         </div>
@@ -361,8 +363,8 @@
           <div class="form-group">
             <label class="io-label">Sort Mode</label>
             <select id="sort-mode">
-              <option value="alpha-asc">Alphabetical A&#8594;Z</option>
-              <option value="alpha-desc">Alphabetical Z&#8594;A</option>
+              <option value="alpha-asc">Alphabetical A<i class="bi bi-arrow-right" aria-hidden="true"></i>Z</option>
+              <option value="alpha-desc">Alphabetical Z<i class="bi bi-arrow-right" aria-hidden="true"></i>A</option>
               <option value="length-asc">Length (shortest first)</option>
               <option value="length-desc">Length (longest first)</option>
               <option value="numeric">Numeric</option>
@@ -379,8 +381,8 @@
             <textarea id="sort-input" class="io-area large" placeholder="Paste lines to sort&#8230;" spellcheck="false"></textarea>
           </div>
           <div class="io-btns">
-            <button onclick="sortLines()">Sort &#8693;</button>
-            <button class="btn-secondary" onclick="swapIO('sort-input','sort-output')">&#8644; Swap</button>
+            <button onclick="sortLines()">Sort <i class="bi bi-sort-alpha-down" aria-hidden="true"></i></button>
+            <button class="btn-secondary" onclick="swapIO('sort-input','sort-output')"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Swap</button>
             <button class="btn-secondary" onclick="clearPair('sort-input','sort-output','sort-msg')">Clear</button>
           </div>
           <div class="io-col">
@@ -408,8 +410,8 @@
             <textarea id="dedup-input" class="io-area large" placeholder="Paste text with duplicate lines&#8230;" spellcheck="false"></textarea>
           </div>
           <div class="io-btns">
-            <button onclick="removeDuplicates()">Remove Dupes &#8658;</button>
-            <button class="btn-secondary" onclick="swapIO('dedup-input','dedup-output')">&#8644; Swap</button>
+            <button onclick="removeDuplicates()">Remove Dupes <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+            <button class="btn-secondary" onclick="swapIO('dedup-input','dedup-output')"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Swap</button>
             <button class="btn-secondary" onclick="clearPair('dedup-input','dedup-output','dedup-msg')">Clear</button>
           </div>
           <div class="io-col">
@@ -449,7 +451,7 @@
             placeholder="Add extra characters e.g. &#9618;&#9619;&#9620;" spellcheck="false">
         </div>
         <div class="btn-row">
-          <button onclick="generateRandom()">&#127922; Generate</button>
+          <button onclick="generateRandom()"><i class="bi bi-dice-5" aria-hidden="true"></i> Generate</button>
           <button class="btn-secondary" onclick="document.getElementById('rand-output').value='';setMsg('rand-msg','','')">Clear</button>
         </div>
         <div class="rand-result">
@@ -486,7 +488,7 @@
           </label>
         </div>
         <div class="btn-row">
-          <button onclick="generateLorem()">&#128218; Generate</button>
+          <button onclick="generateLorem()"><i class="bi bi-book" aria-hidden="true"></i> Generate</button>
           <button class="btn-secondary" onclick="document.getElementById('lorem-output').value='';setMsg('lorem-msg','','')">Clear</button>
         </div>
         <div class="rand-result">
@@ -511,7 +513,7 @@
           </div>
         </div>
         <div class="btn-row">
-          <button onclick="analyzeText()">&#128202; Analyze</button>
+          <button onclick="analyzeText()"><i class="bi bi-bar-chart" aria-hidden="true"></i> Analyze</button>
           <button class="btn-secondary" onclick="document.getElementById('stats-in').value='';analyzeText()">Clear</button>
         </div>
         <div id="stats-out" class="stats-grid" style="display:none">
@@ -546,9 +548,9 @@
               <option value="tab">Tab</option>
             </select>
           </div>
-          <button onclick="jsonFormat()">&#127381; Format</button>
-          <button class="btn-secondary" onclick="jsonMinify()">&#9906; Minify</button>
-          <button class="btn-secondary" onclick="swapIO('jf-input','jf-output')">&#8644; Swap</button>
+          <button onclick="jsonFormat()"><i class="bi bi-upc" aria-hidden="true"></i> Format</button>
+          <button class="btn-secondary" onclick="jsonMinify()"><i class="bi bi-code-slash" aria-hidden="true"></i> Minify</button>
+          <button class="btn-secondary" onclick="swapIO('jf-input','jf-output')"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Swap</button>
           <button class="btn-secondary" onclick="clearPair('jf-input','jf-output','jf-msg')">Clear</button>
         </div>
         <div class="io-wrap">
@@ -558,7 +560,7 @@
               placeholder="Paste JSON here&#8230;" spellcheck="false"></textarea>
           </div>
           <div class="io-btns" style="justify-content:flex-start;padding-top:20px">
-            <button style="padding:6px 10px" onclick="jsonFormat()">&#8594;</button>
+            <button style="padding:6px 10px" onclick="jsonFormat()"><i class="bi bi-arrow-right" aria-hidden="true"></i></button>
           </div>
           <div class="io-col">
             <label class="io-label">Output</label>
@@ -580,9 +582,9 @@
             placeholder="Paste JSON here&#8230;" spellcheck="false"></textarea>
         </div>
         <div class="btn-row">
-          <button onclick="jsonViewTree()">&#128065; View Tree</button>
-          <button class="btn-secondary" onclick="jsonExpandAll()">&#9660; Expand All</button>
-          <button class="btn-secondary" onclick="jsonCollapseAll()">&#9654; Collapse All</button>
+          <button onclick="jsonViewTree()"><i class="bi bi-eye" aria-hidden="true"></i> View Tree</button>
+          <button class="btn-secondary" onclick="jsonExpandAll()"><i class="bi bi-chevron-down" aria-hidden="true"></i> Expand All</button>
+          <button class="btn-secondary" onclick="jsonCollapseAll()"><i class="bi bi-chevron-right" aria-hidden="true"></i> Collapse All</button>
           <button class="btn-secondary" onclick="clearTree()">Clear</button>
           <span class="tool-msg" id="jv-msg"></span>
         </div>
@@ -599,7 +601,7 @@
         </div>
         <div id="jval-result" class="validator-result" style="display:none"></div>
         <div class="btn-row">
-          <button onclick="jsonValidate()">&#10004; Validate</button>
+          <button onclick="jsonValidate()"><i class="bi bi-check-lg" aria-hidden="true"></i> Validate</button>
           <button class="btn-secondary" onclick="document.getElementById('jval-input').value='';document.getElementById('jval-result').style.display='none'">Clear</button>
         </div>
       </div><!-- /panel-jval -->
@@ -616,7 +618,7 @@
               spellcheck="false"></textarea>
           </div>
           <div class="io-btns">
-            <button onclick="jsonToCSV()">Convert &#8594;</button>
+            <button onclick="jsonToCSV()">Convert <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
             <button class="btn-secondary" onclick="clearPair('jcsv-input','jcsv-output','jcsv-msg')">Clear</button>
           </div>
           <div class="io-col">
@@ -640,7 +642,7 @@
               placeholder="Paste JSON here&#8230;" spellcheck="false"></textarea>
           </div>
           <div class="io-btns">
-            <button onclick="jsonToYAML()">Convert &#8594;</button>
+            <button onclick="jsonToYAML()">Convert <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
             <button class="btn-secondary" onclick="clearPair('jy-input','jy-output','jy-msg')">Clear</button>
           </div>
           <div class="io-col">
@@ -664,7 +666,7 @@
               placeholder="Paste YAML here&#8230;" spellcheck="false"></textarea>
           </div>
           <div class="io-btns">
-            <button onclick="yamlToJSON()">Convert &#8594;</button>
+            <button onclick="yamlToJSON()">Convert <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
             <button class="btn-secondary" onclick="clearPair('yj-input','yj-output','yj-msg')">Clear</button>
           </div>
           <div class="io-col">
@@ -690,9 +692,9 @@
               <option value="tab">Tab</option>
             </select>
           </div>
-          <button onclick="xmlFormat()">&#127381; Format</button>
-          <button class="btn-secondary" onclick="xmlMinify()">&#9906; Minify</button>
-          <button class="btn-secondary" onclick="swapIO('xf-input','xf-output')">&#8644; Swap</button>
+          <button onclick="xmlFormat()"><i class="bi bi-upc" aria-hidden="true"></i> Format</button>
+          <button class="btn-secondary" onclick="xmlMinify()"><i class="bi bi-code-slash" aria-hidden="true"></i> Minify</button>
+          <button class="btn-secondary" onclick="swapIO('xf-input','xf-output')"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Swap</button>
           <button class="btn-secondary" onclick="clearPair('xf-input','xf-output','xf-msg')">Clear</button>
         </div>
         <div class="io-wrap">
@@ -702,7 +704,7 @@
               placeholder="Paste XML here&#8230;" spellcheck="false"></textarea>
           </div>
           <div class="io-btns" style="justify-content:flex-start;padding-top:20px">
-            <button style="padding:6px 10px" onclick="xmlFormat()">&#8594;</button>
+            <button style="padding:6px 10px" onclick="xmlFormat()"><i class="bi bi-arrow-right" aria-hidden="true"></i></button>
           </div>
           <div class="io-col">
             <label class="io-label">Output</label>
@@ -726,7 +728,7 @@
               placeholder="Paste XML here&#8230;" spellcheck="false"></textarea>
           </div>
           <div class="io-btns">
-            <button onclick="xmlToJSON()">Convert &#8594;</button>
+            <button onclick="xmlToJSON()">Convert <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
             <button class="btn-secondary" onclick="clearPair('xj-input','xj-output','xj-msg')">Clear</button>
           </div>
           <div class="io-col">
@@ -858,7 +860,7 @@
             </select>
           </div>
           <div class="btn-row">
-            <button onclick="generatePalette()">&#127774; Generate</button>
+            <button onclick="generatePalette()"><i class="bi bi-palette2" aria-hidden="true"></i> Generate</button>
             <button class="btn-secondary" onclick="copyPalette()">Copy All HEX</button>
           </div>
         </div>
@@ -1155,6 +1157,7 @@
   <!-- js-yaml v4 — YAML parsing (cached by SW for offline) -->
   <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
 
+  <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

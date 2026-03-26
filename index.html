@@ -7,6 +7,8 @@
   <meta name="description" content="Nine free, fully client-side browser tools: notepad, table generator, dev tools, PDF tools, PDF editor, random tools, people tools, QR &amp; barcode, and clock tools. No uploads. Works offline.">
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#5646F5">
+  <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="lib/bootstrap-icons/bootstrap-icons.min.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -307,21 +309,21 @@
   </script>
 
   <div id="update-banner" onclick="location.reload(true)" title="Click to reload">
-    &#8635; A new version is available &mdash; click to reload.
+    <i class="bi bi-arrow-clockwise" aria-hidden="true"></i> A new version is available &mdash; click to reload.
   </div>
 
-  <div id="offline-banner" hidden>&#9888; You are offline &mdash; all tools still work from cache.</div>
+  <div id="offline-banner" hidden><i class="bi bi-exclamation-triangle" aria-hidden="true"></i> You are offline &mdash; all tools still work from cache.</div>
 
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <nav aria-label="Site navigation">
     <div class="nav-brand">
-      <span class="nav-logo">&#9889;</span>
+      <span class="nav-logo"><i class="bi bi-lightning-charge-fill" aria-hidden="true"></i></span>
       <p class="nav-title">Peppy Vibe Tools</p>
     </div>
     <div class="nav-actions">
-      <button id="install-btn" class="nav-btn" onclick="installPWA()" aria-label="Install app">&#128245; Install App</button>
-      <button id="theme-btn" class="nav-btn" onclick="togglePortalTheme()" aria-label="Toggle colour theme">&#9728; Light</button>
+      <button id="install-btn" class="nav-btn" onclick="installPWA()" aria-label="Install app"><i class="bi bi-download" aria-hidden="true"></i> Install App</button>
+      <button id="theme-btn" class="nav-btn" onclick="togglePortalTheme()" aria-label="Toggle colour theme"><i class="bi bi-sun" aria-hidden="true"></i> Light</button>
     </div>
   </nav>
 
@@ -333,7 +335,7 @@
       <div class="stat-item"><span class="stat-num">9</span><span class="stat-label">Tools</span></div>
       <div class="stat-item"><span class="stat-num">120+</span><span class="stat-label">Features</span></div>
       <div class="stat-item"><span class="stat-num">0 bytes</span><span class="stat-label">Uploaded</span></div>
-      <div class="stat-item"><span class="stat-num">&#10003;&nbsp;Offline</span><span class="stat-label">Ready</span></div>
+      <div class="stat-item"><span class="stat-num"><i class="bi bi-check-lg" aria-hidden="true"></i>&nbsp;Offline</span><span class="stat-label">Ready</span></div>
     </div>
     <div class="search-wrap">
       <input type="search" id="tool-search" placeholder="Search tools&hellip;"
@@ -350,16 +352,16 @@
   <main id="main-content">
     <div class="cards-wrap">
       <div class="privacy-banner" role="note">
-        <span class="shield">&#128274;</span>
+        <span class="shield"><i class="bi bi-shield-lock" aria-hidden="true"></i></span>
         <span>Everything runs locally in your browser. No data is ever sent to any server. All tools work offline.</span>
       </div>
 
       <div class="cards" id="cards-grid">
         <a class="card" href="./advanced-notepad/"
            data-tags="notepad editor text markdown latex katex preview word-count find replace"
-           onclick="trackRecent('Advanced Notepad','./advanced-notepad/','&#128221;')">
+           onclick="trackRecent('Advanced Notepad','./advanced-notepad/','')">
           <div class="card-header">
-            <div class="card-icon">&#128221;</div>
+            <div class="card-icon"><i class="bi bi-journal-text" aria-hidden="true"></i></div>
           </div>
           <h2>Advanced Notepad</h2>
           <p class="card-desc">A feature-rich text editor running entirely in your browser. Open &amp; save local files, preview Markdown + LaTeX in real time.</p>
@@ -377,14 +379,14 @@
             <li>Export Markdown as HTML</li>
             <li>Text Case Converter</li>
           </ul>
-          <span class="btn-launch">Launch &#8594;</span>
+          <span class="btn-launch">Launch <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
         </a>
 
         <a class="card" href="./table-generator/"
            data-tags="table generator html markdown latex csv export grid cell style"
-           onclick="trackRecent('Table Generator','./table-generator/','&#128202;')">
+           onclick="trackRecent('Table Generator','./table-generator/','')">
           <div class="card-header">
-            <div class="card-icon">&#128202;</div>
+            <div class="card-icon"><i class="bi bi-table" aria-hidden="true"></i></div>
           </div>
           <h2>Table Generator</h2>
           <p class="card-desc">Create, style, and export HTML tables with total feature parity with TablesGenerator.com &mdash; all client-side.</p>
@@ -399,14 +401,14 @@
             <li>Merge, split, insert &amp; delete cells</li>
             <li>Export: HTML, Markdown, LaTeX, CSV</li>
           </ul>
-          <span class="btn-launch">Launch &#8594;</span>
+          <span class="btn-launch">Launch <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
         </a>
 
         <a class="card" href="./pdf-tools/"
            data-tags="pdf merge split extract delete rotate watermark password compress crop resize sanitize"
-           onclick="trackRecent('Peppy Easy PDF Tools','./pdf-tools/','&#128196;')">
+           onclick="trackRecent('Peppy Easy PDF Tools','./pdf-tools/','')">
           <div class="card-header">
-            <div class="card-icon">&#128196;</div>
+            <div class="card-icon"><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i></div>
             <div class="card-badges">
               <span class="badge badge-count">18 tools</span>
             </div>
@@ -426,14 +428,14 @@
             <li>Compress, Crop, Resize &amp; Flatten</li>
             <li>Add Password &amp; Permissions, Remove Password, Redact &amp; Sanitize PDF</li>
           </ul>
-          <span class="btn-launch">Launch &#8594;</span>
+          <span class="btn-launch">Launch <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
         </a>
 
         <a class="card" href="./pdf-editor/"
            data-tags="pdf editor mini import merge split rotate delete watermark crop resize password encrypt"
-           onclick="trackRecent('PDF Mini Editor BETA','./pdf-editor/','&#128221;')">
+           onclick="trackRecent('PDF Mini Editor BETA','./pdf-editor/','')">
           <div class="card-header">
-            <div class="card-icon">&#128221;</div>
+            <div class="card-icon"><i class="bi bi-pencil-square" aria-hidden="true"></i></div>
             <div class="card-badges">
               <span class="badge badge-count">Visual Editor</span>
             </div>
@@ -453,14 +455,14 @@
             <li>Watermark (with position), Page Numbers &amp; Text Annotation</li>
             <li>Export with AES-256 password protection &amp; permissions</li>
           </ul>
-          <span class="btn-launch">Launch &#8594;</span>
+          <span class="btn-launch">Launch <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
         </a>
 
         <a class="card" href="./random-tools/"
            data-tags="random wheel spinner dice coin picker winner generator number card day time"
-           onclick="trackRecent('Random Tools','./random-tools/','&#127922;')">
+           onclick="trackRecent('Random Tools','./random-tools/','')">
           <div class="card-header">
-            <div class="card-icon">&#127922;</div>
+            <div class="card-icon"><i class="bi bi-dice-5" aria-hidden="true"></i></div>
             <div class="card-badges">
               <span class="badge badge-count">10 tools</span>
             </div>
@@ -477,14 +479,14 @@
             <li>Option Picker &amp; Winner Picker</li>
             <li>Number, Dice, Coin, Card &amp; Day Generators</li>
           </ul>
-          <span class="btn-launch">Launch &#8594;</span>
+          <span class="btn-launch">Launch <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
         </a>
 
         <a class="card" href="./people-tools/"
            data-tags="people team group attendance seating secret santa pairs classroom picker random"
-           onclick="trackRecent('People and Group Tools','./people-tools/','&#128101;')">
+           onclick="trackRecent('People and Group Tools','./people-tools/','')">
           <div class="card-header">
-            <div class="card-icon">&#128101;</div>
+            <div class="card-icon"><i class="bi bi-people" aria-hidden="true"></i></div>
             <div class="card-badges">
               <span class="badge badge-count">11 tools</span>
             </div>
@@ -502,14 +504,14 @@
             <li>Attendance Roll Call &amp; Seating Chart</li>
             <li>Secret Santa with reveal &amp; export</li>
           </ul>
-          <span class="btn-launch">Launch &#8594;</span>
+          <span class="btn-launch">Launch <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
         </a>
 
         <a class="card" href="./qr-barcode/"
            data-tags="qr code barcode scanner generator url wifi vcard email sms scan camera"
-           onclick="trackRecent('QR and Barcode Tools','./qr-barcode/','&#9636;')">
+           onclick="trackRecent('QR and Barcode Tools','./qr-barcode/','')">
           <div class="card-header">
-            <div class="card-icon">&#9636;</div>
+            <div class="card-icon"><i class="bi bi-qr-code" aria-hidden="true"></i></div>
           </div>
           <h2>QR &amp; Barcode Tools</h2>
           <p class="card-desc">Generate, scan, and export QR codes and barcodes &mdash; fully client-side, no uploads.</p>
@@ -524,14 +526,14 @@
             <li>QR Scanner via device camera</li>
             <li>Barcode Generator in 15+ formats</li>
           </ul>
-          <span class="btn-launch">Launch &#8594;</span>
+          <span class="btn-launch">Launch <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
         </a>
 
         <a class="card" href="./clock-tools/"
            data-tags="clock stopwatch timer countdown world clocks pomodoro alarm time zones"
-           onclick="trackRecent('Clock Tools','./clock-tools/','&#128339;')">
+           onclick="trackRecent('Clock Tools','./clock-tools/','')">
           <div class="card-header">
-            <div class="card-icon">&#128339;</div>
+            <div class="card-icon"><i class="bi bi-clock" aria-hidden="true"></i></div>
             <div class="card-badges">
               <span class="badge badge-count">5 tools</span>
             </div>
@@ -551,14 +553,14 @@
             <li>Pomodoro Timer (work/break cycles)</li>
             <li>Alarm Clock with audio notification</li>
           </ul>
-          <span class="btn-launch">Launch &#8594;</span>
+          <span class="btn-launch">Launch <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
         </a>
 
         <a class="card" href="./dev-tools/"
            data-tags="dev developer base64 url hash password uuid jwt json yaml xml regex diff sort dedup color timestamp"
-           onclick="trackRecent('Dev Tools','./dev-tools/','&#128736;')">
+           onclick="trackRecent('Dev Tools','./dev-tools/','')">
           <div class="card-header">
-            <div class="card-icon">&#128736;</div>
+            <div class="card-icon"><i class="bi bi-tools" aria-hidden="true"></i></div>
             <div class="card-badges">
               <span class="badge badge-count">34 tools</span>
             </div>
@@ -577,7 +579,7 @@
             <li>JSON / YAML / XML (8 tools)</li>
             <li>Color Tools, Timestamps &amp; Regex Builder</li>
           </ul>
-          <span class="btn-launch">Launch &#8594;</span>
+          <span class="btn-launch">Launch <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
         </a>
       </div>
 
@@ -604,7 +606,8 @@
     /* Theme */
     function updatePortalThemeBtn() {
       var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      document.getElementById('theme-btn').textContent = isDark ? '\u2600 Light' : '\u263e Dark';
+      var btn = document.getElementById('theme-btn');
+      btn.innerHTML = isDark ? '<i class=\"bi bi-sun\" aria-hidden=\"true\"></i> Light' : '<i class=\"bi bi-moon-stars\" aria-hidden=\"true\"></i> Dark';
     }
     function togglePortalTheme() {
       var cur = document.documentElement.getAttribute('data-theme');
@@ -718,5 +721,6 @@
       sync();
     })();
   </script>
+  <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

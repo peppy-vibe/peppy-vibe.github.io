@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>People &amp; Group Tools</title>
 <meta name="description" content="11 tools for teams, classrooms and events: person picker, team generator, Secret Santa, seating chart, pair generator, attendance tracker, and more.">
+<link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="../lib/bootstrap-icons/bootstrap-icons.min.css">
 <link rel="stylesheet" href="style.css" />
 <script>
   (function(){
@@ -18,13 +20,13 @@
 <!-- ═══ APP HEADER ═══════════════════════════════════════════ -->
 <div class="top-bar">
   <div class="top-bar-left">
-    <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu">&#9776;</button>
-    <a href="../index.html" class="top-bar-back" title="Home">&#8592;</a>
-    <span class="top-bar-title">&#128101; People &amp; Group Tools</span>
+    <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu"><i class="bi bi-list" aria-hidden="true"></i></button>
+    <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+    <span class="top-bar-title"><i class="bi bi-people-fill" aria-hidden="true"></i> People &amp; Group Tools</span>
   </div>
   <div class="top-bar-right">
-    <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen">&#9974;</button>
-    <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">&#9728;</button>
+    <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+    <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
   </div>
 </div>
 
@@ -51,36 +53,36 @@
       <!-- Pickers -->
       <div class="sidebar-group" id="grp-pickers">
         <button class="grp-hdr" onclick="toggleGroup('grp-pickers')">
-          <span>🎯 Pickers</span><span class="grp-chevron">▼</span>
+          <span><i class="bi bi-bullseye" aria-hidden="true"></i> Pickers</span><span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
         </button>
         <div class="grp-tools">
-          <button class="tab-btn active" onclick="showTool('tool-person')">👤 Person Picker</button>
-          <button class="tab-btn"        onclick="showTool('tool-meeting-host')">🎤 Host Picker</button>
-          <button class="tab-btn"        onclick="showTool('tool-attendance')">📋 Attendance</button>
-          <button class="tab-btn"        onclick="showTool('tool-speaker')">🗣 Speaker Selector</button>
-          <button class="tab-btn"        onclick="showTool('tool-winner')">🏆 Winner Picker</button>
+          <button class="tab-btn active" onclick="showTool('tool-person')"><i class="bi bi-person" aria-hidden="true"></i> Person Picker</button>
+          <button class="tab-btn"        onclick="showTool('tool-meeting-host')"><i class="bi bi-mic" aria-hidden="true"></i> Host Picker</button>
+          <button class="tab-btn"        onclick="showTool('tool-attendance')"><i class="bi bi-clipboard-check" aria-hidden="true"></i> Attendance</button>
+          <button class="tab-btn"        onclick="showTool('tool-speaker')"><i class="bi bi-megaphone" aria-hidden="true"></i> Speaker Selector</button>
+          <button class="tab-btn"        onclick="showTool('tool-winner')"><i class="bi bi-trophy" aria-hidden="true"></i> Winner Picker</button>
         </div>
       </div>
       <!-- Teams -->
       <div class="sidebar-group" id="grp-teams">
         <button class="grp-hdr" onclick="toggleGroup('grp-teams')">
-          <span>🤝 Teams &amp; Groups</span><span class="grp-chevron">▼</span>
+          <span><i class="bi bi-people" aria-hidden="true"></i> Teams &amp; Groups</span><span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
         </button>
         <div class="grp-tools">
-          <button class="tab-btn" onclick="showTool('tool-team-gen')">👥 Team Generator</button>
-          <button class="tab-btn" onclick="showTool('tool-pair-gen')">👫 Pair Generator</button>
-          <button class="tab-btn" onclick="showTool('tool-group-creator')">📦 Group Creator</button>
-          <button class="tab-btn" onclick="showTool('tool-seating')">💺 Seating Chart</button>
+          <button class="tab-btn" onclick="showTool('tool-team-gen')"><i class="bi bi-people-fill" aria-hidden="true"></i> Team Generator</button>
+          <button class="tab-btn" onclick="showTool('tool-pair-gen')"><i class="bi bi-person-standing" aria-hidden="true"></i> Pair Generator</button>
+          <button class="tab-btn" onclick="showTool('tool-group-creator')"><i class="bi bi-box" aria-hidden="true"></i> Group Creator</button>
+          <button class="tab-btn" onclick="showTool('tool-seating')"><i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> Seating Chart</button>
         </div>
       </div>
       <!-- Events -->
       <div class="sidebar-group" id="grp-events">
         <button class="grp-hdr" onclick="toggleGroup('grp-events')">
-          <span>🎉 Events</span><span class="grp-chevron">▼</span>
+          <span><i class="bi bi-balloon" aria-hidden="true"></i> Events</span><span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
         </button>
         <div class="grp-tools">
-          <button class="tab-btn" onclick="showTool('tool-name-shuffle')">🔀 Name Shuffler</button>
-          <button class="tab-btn" onclick="showTool('tool-secret-santa')">🎁 Secret Santa</button>
+          <button class="tab-btn" onclick="showTool('tool-name-shuffle')"><i class="bi bi-shuffle" aria-hidden="true"></i> Name Shuffler</button>
+          <button class="tab-btn" onclick="showTool('tool-secret-santa')"><i class="bi bi-gift" aria-hidden="true"></i> Secret Santa</button>
         </div>
       </div>
     </div>
@@ -93,7 +95,7 @@
          1. PERSON PICKER
     ═══════════════════════════════════════════ -->
     <div class="tool-panel active" id="tool-person">
-      <div class="panel-title">👤 Random Person Picker</div>
+      <div class="panel-title"><i class="bi bi-person" aria-hidden="true"></i> Random Person Picker</div>
       <p class="tool-desc">Pick one name at a time without repeats. Everyone is picked before the pool resets. Uses round-robin tracking.</p>
 
       <div class="names-section">
@@ -124,8 +126,8 @@ Eve</textarea>
       <div class="slot-display" id="person-slot">Press Pick!</div>
 
       <div class="form-row">
-        <button onclick="pickPerson()" style="flex:1">🎯 Pick Person</button>
-        <button class="btn-secondary" onclick="resetPersonPool()">↺ Reset Pool</button>
+        <button onclick="pickPerson()" style="flex:1"><i class="bi bi-bullseye" aria-hidden="true"></i> Pick Person</button>
+        <button class="btn-secondary" onclick="resetPersonPool()"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Reset Pool</button>
       </div>
 
       <div id="person-pool-wrap" style="display:none">
@@ -151,7 +153,7 @@ Eve</textarea>
          2. MEETING HOST PICKER
     ═══════════════════════════════════════════ -->
     <div class="tool-panel" id="tool-meeting-host">
-      <div class="panel-title">🎤 Meeting Host Picker</div>
+      <div class="panel-title"><i class="bi bi-mic" aria-hidden="true"></i> Meeting Host Picker</div>
       <p class="tool-desc">Fairly rotate who runs the meeting. Tracks full rotation history so no one hosts twice until everyone has hosted.</p>
 
       <div class="names-section">
@@ -176,8 +178,8 @@ Dave</textarea>
       <div class="slot-display" id="host-slot">Press Pick!</div>
 
       <div class="form-row">
-        <button onclick="pickHost()" style="flex:1">🎤 Pick Host</button>
-        <button class="btn-secondary" onclick="resetHostHistory()">↺ New Round</button>
+        <button onclick="pickHost()" style="flex:1"><i class="bi bi-mic" aria-hidden="true"></i> Pick Host</button>
+        <button class="btn-secondary" onclick="resetHostHistory()"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i> New Round</button>
       </div>
 
       <div>
@@ -198,7 +200,7 @@ Dave</textarea>
          3. ATTENDANCE PICKER
     ═══════════════════════════════════════════ -->
     <div class="tool-panel" id="tool-attendance">
-      <div class="panel-title">📋 Attendance Picker</div>
+      <div class="panel-title"><i class="bi bi-clipboard-check" aria-hidden="true"></i> Attendance Picker</div>
       <p class="tool-desc">Pick from a list of absent or available people, or check roll call. Great for virtual meetings.</p>
 
       <div class="names-section">
@@ -223,8 +225,8 @@ Eve</textarea>
       <div class="slot-display" id="att-slot">Press Pick!</div>
 
       <div class="form-row">
-        <button onclick="pickAttendance()" style="flex:1">📋 Pick One</button>
-        <button class="btn-secondary" onclick="resetAttendancePool()">↺ Reset</button>
+        <button onclick="pickAttendance()" style="flex:1"><i class="bi bi-clipboard-check" aria-hidden="true"></i> Pick One</button>
+        <button class="btn-secondary" onclick="resetAttendancePool()"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Reset</button>
       </div>
 
       <div>
@@ -243,7 +245,7 @@ Eve</textarea>
          4. SPEAKER SELECTOR
     ═══════════════════════════════════════════ -->
     <div class="tool-panel" id="tool-speaker">
-      <div class="panel-title">🗣 Speaker Selector</div>
+      <div class="panel-title"><i class="bi bi-megaphone" aria-hidden="true"></i> Speaker Selector</div>
       <p class="tool-desc">Pick the next speaker in a queue, with skip and memory so you always know who's spoken and who is next.</p>
 
       <div class="names-section">
@@ -271,8 +273,8 @@ Dave</textarea>
       </div>
 
       <div class="form-row">
-        <button onclick="selectSpeaker()" style="flex:1">🗣 Next Speaker</button>
-        <button class="btn-secondary" onclick="resetSpeakerHistory()">↺ Reset</button>
+        <button onclick="selectSpeaker()" style="flex:1"><i class="bi bi-megaphone" aria-hidden="true"></i> Next Speaker</button>
+        <button class="btn-secondary" onclick="resetSpeakerHistory()"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Reset</button>
       </div>
 
       <div>
@@ -290,7 +292,7 @@ Dave</textarea>
          5. WINNER PICKER
     ═══════════════════════════════════════════ -->
     <div class="tool-panel" id="tool-winner">
-      <div class="panel-title">🏆 Winner Picker</div>
+      <div class="panel-title"><i class="bi bi-trophy" aria-hidden="true"></i> Winner Picker</div>
       <p class="tool-desc">Pick 1st, 2nd, 3rd, or more winners from a list. Great for giveaways and raffle draws.</p>
 
       <div class="names-section">
@@ -320,9 +322,9 @@ Frank</textarea>
       </div>
 
       <div class="form-row">
-        <button onclick="pickWinners()" style="flex:1">🏆 Pick Winners!</button>
-        <button onclick="copyResultText('win-results')" class="btn-secondary">📋 Copy</button>
-        <button onclick="printResults('win-results')" class="btn-secondary">🖨 Print</button>
+        <button onclick="pickWinners()" style="flex:1"><i class="bi bi-trophy" aria-hidden="true"></i> Pick Winners!</button>
+        <button onclick="copyResultText('win-results')" class="btn-secondary"><i class="bi bi-clipboard-check" aria-hidden="true"></i> Copy</button>
+        <button onclick="printResults('win-results')" class="btn-secondary"><i class="bi bi-printer" aria-hidden="true"></i> Print</button>
       </div>
 
       <div id="win-results" class="winners-list"></div>
@@ -332,7 +334,7 @@ Frank</textarea>
          6. TEAM GENERATOR
     ═══════════════════════════════════════════ -->
     <div class="tool-panel" id="tool-team-gen">
-      <div class="panel-title">👥 Team Generator</div>
+      <div class="panel-title"><i class="bi bi-people-fill" aria-hidden="true"></i> Team Generator</div>
       <p class="tool-desc">Split a list of names into balanced, randomised teams. You can name each team.</p>
 
       <div class="names-section">
@@ -370,10 +372,10 @@ Hank</textarea>
       </div>
 
       <div class="form-row">
-        <button onclick="generateTeams()" style="flex:1">🔀 Generate Teams</button>
+        <button onclick="generateTeams()" style="flex:1"><i class="bi bi-shuffle" aria-hidden="true"></i> Generate Teams</button>
         <button onclick="exportTeamsText()" class="btn-secondary">↓ Export</button>
-        <button onclick="copyResultText('tg-results')" class="btn-secondary">📋 Copy</button>
-        <button onclick="printResults('tg-results')" class="btn-secondary">🖨 Print</button>
+        <button onclick="copyResultText('tg-results')" class="btn-secondary"><i class="bi bi-clipboard-check" aria-hidden="true"></i> Copy</button>
+        <button onclick="printResults('tg-results')" class="btn-secondary"><i class="bi bi-printer" aria-hidden="true"></i> Print</button>
       </div>
 
       <div id="tg-results" class="teams-grid"></div>
@@ -383,7 +385,7 @@ Hank</textarea>
          7. PAIR GENERATOR
     ═══════════════════════════════════════════ -->
     <div class="tool-panel" id="tool-pair-gen">
-      <div class="panel-title">👫 Pair Generator</div>
+      <div class="panel-title"><i class="bi bi-person-standing" aria-hidden="true"></i> Pair Generator</div>
       <p class="tool-desc">Create random pairs from a list. Odd numbers produce one trio. Useful for buddy systems, code reviews, or activities.</p>
 
       <div class="names-section">
@@ -407,10 +409,10 @@ Frank</textarea>
       </div>
 
       <div class="btn-row">
-        <button onclick="generatePairs()">🔀 Generate Pairs</button>
+        <button onclick="generatePairs()"><i class="bi bi-shuffle" aria-hidden="true"></i> Generate Pairs</button>
         <button onclick="exportPairs()" class="btn-secondary">↓ Export</button>
-        <button onclick="copyResultText('pg-results')" class="btn-secondary">📋 Copy</button>
-        <button onclick="printResults('pg-results')" class="btn-secondary">🖨 Print</button>
+        <button onclick="copyResultText('pg-results')" class="btn-secondary"><i class="bi bi-clipboard-check" aria-hidden="true"></i> Copy</button>
+        <button onclick="printResults('pg-results')" class="btn-secondary"><i class="bi bi-printer" aria-hidden="true"></i> Print</button>
       </div>
 
       <div id="pg-results" class="pairs-list"></div>
@@ -420,7 +422,7 @@ Frank</textarea>
          8. GROUP CREATOR
     ═══════════════════════════════════════════ -->
     <div class="tool-panel" id="tool-group-creator">
-      <div class="panel-title">📦 Group Creator</div>
+      <div class="panel-title"><i class="bi bi-box" aria-hidden="true"></i> Group Creator</div>
       <p class="tool-desc">Create groups either by specifying how many groups, or the size of each group.</p>
 
       <div class="names-section">
@@ -456,9 +458,9 @@ Hank</textarea>
       </div>
 
       <div class="form-row">
-        <button onclick="createGroups()" style="flex:1">📦 Create Groups</button>
-        <button onclick="copyResultText('gc-results')" class="btn-secondary">📋 Copy</button>
-        <button onclick="printResults('gc-results')" class="btn-secondary">🖨 Print</button>
+        <button onclick="createGroups()" style="flex:1"><i class="bi bi-box" aria-hidden="true"></i> Create Groups</button>
+        <button onclick="copyResultText('gc-results')" class="btn-secondary"><i class="bi bi-clipboard-check" aria-hidden="true"></i> Copy</button>
+        <button onclick="printResults('gc-results')" class="btn-secondary"><i class="bi bi-printer" aria-hidden="true"></i> Print</button>
       </div>
 
       <div id="gc-results" class="teams-grid"></div>
@@ -468,7 +470,7 @@ Hank</textarea>
          9. SEATING CHART
     ═══════════════════════════════════════════ -->
     <div class="tool-panel" id="tool-seating">
-      <div class="panel-title">💺 Seating Chart</div>
+      <div class="panel-title"><i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> Seating Chart</div>
       <p class="tool-desc">Generate a randomized seating arrangement. Set the number of columns to match your room layout.</p>
 
       <div class="names-section">
@@ -500,9 +502,9 @@ Grace</textarea>
       </div>
 
       <div class="btn-row">
-        <button onclick="generateSeating()">💺 Generate Seating</button>
-        <button onclick="copyResultText('seating-grid-display')" class="btn-secondary">📋 Copy</button>
-        <button onclick="printResults('seating-grid-display')" class="btn-secondary">🖨 Print</button>
+        <button onclick="generateSeating()"><i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> Generate Seating</button>
+        <button onclick="copyResultText('seating-grid-display')" class="btn-secondary"><i class="bi bi-clipboard-check" aria-hidden="true"></i> Copy</button>
+        <button onclick="printResults('seating-grid-display')" class="btn-secondary"><i class="bi bi-printer" aria-hidden="true"></i> Print</button>
       </div>
 
       <div class="seating-grid-wrap">
@@ -514,7 +516,7 @@ Grace</textarea>
          10. NAME SHUFFLER
     ═══════════════════════════════════════════ -->
     <div class="tool-panel" id="tool-name-shuffle">
-      <div class="panel-title">🔀 Name Shuffler</div>
+      <div class="panel-title"><i class="bi bi-shuffle" aria-hidden="true"></i> Name Shuffler</div>
       <p class="tool-desc">Randomize the order of any list. Export the shuffled result as text or CSV.</p>
 
       <div class="names-section">
@@ -538,10 +540,10 @@ Frank</textarea>
       </div>
 
       <div class="btn-row">
-        <button onclick="shuffleNames()">🔀 Shuffle</button>
+        <button onclick="shuffleNames()"><i class="bi bi-shuffle" aria-hidden="true"></i> Shuffle</button>
         <button onclick="exportText('ns-result','shuffled_order')" class="btn-secondary">↓ Export</button>
-        <button onclick="copyResultText('ns-result-display')" class="btn-secondary">📋 Copy</button>
-        <button onclick="printResults('ns-result-display')" class="btn-secondary">🖨 Print</button>
+        <button onclick="copyResultText('ns-result-display')" class="btn-secondary"><i class="bi bi-clipboard-check" aria-hidden="true"></i> Copy</button>
+        <button onclick="printResults('ns-result-display')" class="btn-secondary"><i class="bi bi-printer" aria-hidden="true"></i> Print</button>
       </div>
 
       <div>
@@ -555,7 +557,7 @@ Frank</textarea>
          11. SECRET SANTA
     ═══════════════════════════════════════════ -->
     <div class="tool-panel" id="tool-secret-santa">
-      <div class="panel-title">🎁 Secret Santa</div>
+      <div class="panel-title"><i class="bi bi-gift" aria-hidden="true"></i> Secret Santa</div>
       <p class="tool-desc">Generate assignments so everyone gives a gift to exactly one person. Supports exclusion pairs so partners don't give to each other.</p>
 
       <div class="names-section">
@@ -584,9 +586,9 @@ Eve</textarea>
       </div>
 
       <div class="btn-row">
-        <button onclick="generateSanta()">🎁 Generate</button>
-        <button onclick="revealAllSanta()" class="btn-secondary">👁 Reveal All</button>
-        <button onclick="hideAllSanta()" class="btn-secondary">🙈 Hide All</button>
+        <button onclick="generateSanta()"><i class="bi bi-gift" aria-hidden="true"></i> Generate</button>
+        <button onclick="revealAllSanta()" class="btn-secondary"><i class="bi bi-eye" aria-hidden="true"></i> Reveal All</button>
+        <button onclick="hideAllSanta()" class="btn-secondary"><i class="bi bi-eye-slash" aria-hidden="true"></i> Hide All</button>
         <button onclick="exportSanta()" class="btn-secondary">↓ Export</button>
       </div>
 
@@ -597,6 +599,7 @@ Eve</textarea>
   </div><!--/.tool-area-->
 </div><!--/.app-body-->
 
+<script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

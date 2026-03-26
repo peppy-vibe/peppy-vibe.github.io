@@ -959,7 +959,7 @@ function updateThemeBtn() {
   const btn = document.getElementById('theme-btn');
   if (!btn) return;
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  btn.textContent = isDark ? '\u2600' : '\u263e';
+  btn.innerHTML = isDark ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
 }
 
 updateThemeBtn();

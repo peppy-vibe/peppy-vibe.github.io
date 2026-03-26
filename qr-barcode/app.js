@@ -11,13 +11,13 @@ function toggleTheme() {
   const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   html.setAttribute('data-theme', next);
   localStorage.setItem('stp-theme', next);
-  document.getElementById('theme-btn').textContent = next === 'dark' ? '\u2600' : '\u263E';
+  document.getElementById('theme-btn').innerHTML = next === 'dark' ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
 }
 (function initTheme() {
   const t = localStorage.getItem('stp-theme') || 'dark';
   document.documentElement.setAttribute('data-theme', t);
   const btn = document.getElementById('theme-btn');
-  if (btn) btn.textContent = t === 'dark' ? '\u2600' : '\u263E';
+  if (btn) btn.innerHTML = t === 'dark' ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
 })();
 
 /** Toggle fullscreen mode */
@@ -433,7 +433,7 @@ function startScanner() {
       video.play();
       document.getElementById('scan-start-btn').disabled = true;
       document.getElementById('scan-stop-btn').disabled  = false;
-      setMsg('scan-status', '📷 Camera active — point at a QR code…');
+      setMsg('scan-status', '<i class="bi bi-camera" aria-hidden="true"></i> Camera active — point at a QR code…');
       scanLoop();
     })
     .catch(err => {
@@ -545,7 +545,7 @@ function copyScanResult() {
   }
   navigator.clipboard.writeText(result.textContent).then(() => {
     setMsg('scan-status', 'Copied!', 'ok');
-    setTimeout(() => setMsg('scan-status', scanStream ? '📷 Camera active…' : 'Camera is off.'), 2000);
+    setTimeout(() => setMsg('scan-status', scanStream ? '<i class="bi bi-camera" aria-hidden="true"></i> Camera active…' : 'Camera is off.'), 2000);
   }).catch(() => alert('Could not copy.'));
 }
 
@@ -560,7 +560,7 @@ function clearScanResult() {
   if (result) result.textContent = 'Waiting for scan…';
   scanHistory = [];
   renderScanHistory();
-  setMsg('scan-status', scanStream ? '📷 Camera active…' : 'Camera is off.');
+  setMsg('scan-status', scanStream ? '<i class="bi bi-camera" aria-hidden="true"></i> Camera active…' : 'Camera is off.');
 }
 
 // ══════════════════════════════════════════════════════════

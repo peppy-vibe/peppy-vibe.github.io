@@ -5,7 +5,7 @@
 ═══════════════════════════════════════════ */
 'use strict';
 
-const CACHE = 'peppy-v4';
+const CACHE = 'peppy-v5';
 
 /* ── CDN dependencies (jsDelivr) ── */
 const CDN_DEPS = [
@@ -78,6 +78,12 @@ const APP_ASSETS = [
   './clock-tools/index.html',
   './clock-tools/style.css',
   './clock-tools/app.js',
+  /* Bootstrap & Bootstrap Icons (local) */
+  './lib/bootstrap/css/bootstrap.min.css',
+  './lib/bootstrap/js/bootstrap.bundle.min.js',
+  './lib/bootstrap-icons/bootstrap-icons.min.css',
+  './lib/bootstrap-icons/fonts/bootstrap-icons.woff2',
+  './lib/bootstrap-icons/fonts/bootstrap-icons.woff',
 ];
 
 const PRECACHE = APP_ASSETS.concat(CDN_DEPS);

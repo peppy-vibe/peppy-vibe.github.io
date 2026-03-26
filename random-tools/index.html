@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Peppy Random Tools</title>
   <meta name="description" content="10 decision and randomisation tools: wheel spinner, dice roller, coin flip, card picker, yes/no generator, number generator, and more.">
+  <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../lib/bootstrap-icons/bootstrap-icons.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,13 +15,13 @@
 
   <div class="top-bar">
     <div class="top-bar-left">
-      <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu">&#9776;</button>
-      <a href="../index.html" class="top-bar-back" title="Home">&#8592;</a>
-      <span class="top-bar-title">&#127922; Peppy Random Tools</span>
+      <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu"><i class="bi bi-list" aria-hidden="true"></i></button>
+      <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+      <span class="top-bar-title"><i class="bi bi-dice-5" aria-hidden="true"></i> Peppy Random Tools</span>
     </div>
     <div class="top-bar-right">
-      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen">&#9974;</button>
-      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">&#9728;</button>
+      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
     </div>
   </div>
 
@@ -34,8 +36,8 @@
         <!-- Group 1: Decision & Random Choice -->
         <div class="sidebar-group" id="grp-decision">
           <button class="grp-hdr" onclick="toggleGroup('decision')">
-            <span>&#127922; Decision &amp; Random</span>
-            <span class="grp-chevron">&#9660;</span>
+            <span><i class="bi bi-dice-5" aria-hidden="true"></i> Decision &amp; Random</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
             <button class="tab-btn active" data-tool="wheel"         data-grp="decision" onclick="showTool('wheel')">Wheel Spinner</button>
@@ -59,7 +61,7 @@
 
       <!-- ── 1. Wheel Spinner ── -->
       <div class="tool-panel active" id="tool-wheel">
-        <div class="panel-title">&#127921; Random Wheel Spinner</div>
+        <div class="panel-title"><i class="bi bi-circle" aria-hidden="true"></i> Random Wheel Spinner</div>
         <div class="wheel-layout">
           <div class="wheel-left">
             <div class="form-group">
@@ -73,15 +75,15 @@ Option F</textarea>
             </div>
             <div class="btn-row">
               <button onclick="buildWheel()">Update Wheel</button>
-              <button id="spin-btn" onclick="spinWheel()">&#127922; Spin!</button>
+              <button id="spin-btn" onclick="spinWheel()"><i class="bi bi-dice-5" aria-hidden="true"></i> Spin!</button>
               <button class="btn-secondary" onclick="resetWheel()">Reset</button>
-              <button class="btn-secondary" onclick="shuffleWheelOptions()">&#128256; Shuffle</button>
-              <button class="btn-secondary" onclick="sortWheelOptions()">&#8593;&#8595; Sort</button>
+              <button class="btn-secondary" onclick="shuffleWheelOptions()"><i class="bi bi-shuffle" aria-hidden="true"></i> Shuffle</button>
+              <button class="btn-secondary" onclick="sortWheelOptions()"><i class="bi bi-arrow-down-up" aria-hidden="true"></i> Sort</button>
             </div>
           </div>
           <div class="wheel-right">
             <div class="wheel-container">
-              <div class="wheel-pointer">&#9660;</div>
+              <div class="wheel-pointer"><i class="bi bi-chevron-down" aria-hidden="true"></i></div>
               <canvas id="wheel-canvas" width="300" height="300"></canvas>
             </div>
             <div class="wheel-result-text" id="wheel-result">&nbsp;</div>
@@ -92,27 +94,27 @@ Option F</textarea>
 
       <!-- ── 2. Yes / No Generator ── -->
       <div class="tool-panel" id="tool-yesno">
-        <div class="panel-title">&#10067; Yes / No Decision Generator</div>
+        <div class="panel-title"><i class="bi bi-question-circle" aria-hidden="true"></i> Yes / No Decision Generator</div>
         <div class="form-group">
           <label class="io-label">Your question (optional)</label>
           <input type="text" id="yesno-q" class="io-area" placeholder="Should I go for it?" style="height:auto;padding:8px 10px;">
         </div>
         <div class="yesno-center">
           <div class="yesno-display" id="yesno-display">?</div>
-          <button onclick="decideYesNo()" style="font-size:1rem;padding:10px 32px;">&#127922; Decide!</button>
+          <button onclick="decideYesNo()" style="font-size:1rem;padding:10px 32px;"><i class="bi bi-dice-5" aria-hidden="true"></i> Decide!</button>
           <div id="yesno-msg" style="font-size:0.9rem;color:var(--text2);text-align:center;min-height:1.2rem;"></div>
         </div>
       </div>
 
       <!-- ── 3. Option Picker ── -->
       <div class="tool-panel" id="tool-option-picker">
-        <div class="panel-title">&#127919; Random Option Picker</div>
+        <div class="panel-title"><i class="bi bi-bullseye" aria-hidden="true"></i> Random Option Picker</div>
         <div class="form-group">
           <label class="io-label">Options (one per line)</label>
           <textarea class="io-area" id="option-list" rows="8" placeholder="Option A&#10;Option B&#10;Option C"></textarea>
         </div>
         <div class="btn-row">
-          <button onclick="pickOption()">&#127922; Pick One!</button>
+          <button onclick="pickOption()"><i class="bi bi-dice-5" aria-hidden="true"></i> Pick One!</button>
           <button class="btn-secondary" onclick="clearOptionPicker()">Clear</button>
         </div>
         <div class="big-result" id="option-result" style="display:none;">
@@ -127,7 +129,7 @@ Option F</textarea>
 
       <!-- ── 4. Winner Picker ── -->
       <div class="tool-panel" id="tool-winner">
-        <div class="panel-title">&#127942; Random Winner Picker</div>
+        <div class="panel-title"><i class="bi bi-trophy" aria-hidden="true"></i> Random Winner Picker</div>
         <div class="form-group">
           <label class="io-label">Participants (one per line)</label>
           <textarea class="io-area" id="winner-list" rows="8" placeholder="Alice&#10;Bob&#10;Charlie&#10;Diana"></textarea>
@@ -138,7 +140,7 @@ Option F</textarea>
           <label class="checkbox-label"><input type="checkbox" id="winner-unique" checked> No repeats</label>
         </div>
         <div class="btn-row">
-          <button onclick="pickWinners()">&#127942; Pick Winners!</button>
+          <button onclick="pickWinners()"><i class="bi bi-trophy" aria-hidden="true"></i> Pick Winners!</button>
           <button class="btn-secondary" onclick="clearEl('winner-result-wrap')">Clear</button>
         </div>
         <div id="winner-result-wrap" style="display:none;">
@@ -148,7 +150,7 @@ Option F</textarea>
 
       <!-- ── 5. Number Generator ── -->
       <div class="tool-panel" id="tool-number-gen">
-        <div class="panel-title">&#128257; Random Number Generator</div>
+        <div class="panel-title"><i class="bi bi-123" aria-hidden="true"></i> Random Number Generator</div>
         <div class="form-row">
           <div class="form-group">
             <label class="io-label">Min</label>
@@ -168,7 +170,7 @@ Option F</textarea>
           <label class="checkbox-label"><input type="checkbox" id="num-sort"> Sort results</label>
         </div>
         <div class="btn-row">
-          <button onclick="generateNumbers()">&#127922; Generate</button>
+          <button onclick="generateNumbers()"><i class="bi bi-dice-5" aria-hidden="true"></i> Generate</button>
           <button class="btn-secondary" onclick="clearEl('num-result')">Clear</button>
         </div>
         <div class="number-results" id="num-result"></div>
@@ -177,7 +179,7 @@ Option F</textarea>
 
       <!-- ── 6. Dice Roller ── -->
       <div class="tool-panel" id="tool-dice">
-        <div class="panel-title">&#127922; Dice Roller</div>
+        <div class="panel-title"><i class="bi bi-dice-5" aria-hidden="true"></i> Dice Roller</div>
         <div class="form-row">
           <div class="form-group">
             <label class="io-label">Dice Type</label>
@@ -196,7 +198,7 @@ Option F</textarea>
             <input type="number" id="dice-count" value="2" min="1" max="20" style="width:80px;">
           </div>
           <div style="align-self:flex-end;">
-            <button onclick="rollDice()">&#127922; Roll!</button>
+            <button onclick="rollDice()"><i class="bi bi-dice-5" aria-hidden="true"></i> Roll!</button>
           </div>
         </div>
         <div class="dice-grid" id="dice-result"></div>
@@ -205,7 +207,7 @@ Option F</textarea>
 
       <!-- ── 7. Coin Flip ── -->
       <div class="tool-panel" id="tool-coin">
-        <div class="panel-title">&#129689; Coin Flip</div>
+        <div class="panel-title"><i class="bi bi-coin" aria-hidden="true"></i> Coin Flip</div>
         <div class="coin-wrap">
           <div class="coin" id="coin" onclick="flipCoin()">
             <div class="coin-inner" id="coin-inner">
@@ -214,14 +216,14 @@ Option F</textarea>
             </div>
           </div>
           <div class="coin-label" id="coin-label">Click the coin or button to flip</div>
-          <button onclick="flipCoin()" style="font-size:1rem;padding:10px 32px;">&#129689; Flip Coin!</button>
+          <button onclick="flipCoin()" style="font-size:1rem;padding:10px 32px;"><i class="bi bi-coin" aria-hidden="true"></i> Flip Coin!</button>
           <div style="font-size:0.88rem;color:var(--text2);">Heads: <strong id="coin-heads">0</strong> &nbsp;|&nbsp; Tails: <strong id="coin-tails">0</strong> &nbsp;|&nbsp; <button class="btn-secondary" onclick="resetCoin()" style="font-size:12px;padding:3px 10px;">Reset Stats</button></div>
         </div>
       </div>
 
       <!-- ── 8. Card Picker ── -->
       <div class="tool-panel" id="tool-card">
-        <div class="panel-title">&#127183; Random Card Picker</div>
+        <div class="panel-title"><i class="bi bi-suit-spade" aria-hidden="true"></i> Random Card Picker</div>
         <div class="form-row">
           <div class="form-group">
             <label class="io-label">Number of Cards</label>
@@ -235,7 +237,7 @@ Option F</textarea>
             </select>
           </div>
           <div style="align-self:flex-end;">
-            <button onclick="pickCards()">&#127183; Pick Cards</button>
+            <button onclick="pickCards()"><i class="bi bi-suit-spade" aria-hidden="true"></i> Pick Cards</button>
           </div>
           <div style="align-self:flex-end;">
             <button class="btn-secondary" onclick="resetDeck()">New Deck</button>
@@ -247,7 +249,7 @@ Option F</textarea>
 
       <!-- ── 9. Day Picker ── -->
       <div class="tool-panel" id="tool-day">
-        <div class="panel-title">&#128197; Random Day Picker</div>
+        <div class="panel-title"><i class="bi bi-calendar" aria-hidden="true"></i> Random Day Picker</div>
         <div class="form-group">
           <label class="io-label">Mode</label>
           <div class="form-row">
@@ -268,7 +270,7 @@ Option F</textarea>
         <div class="form-row">
           <label class="io-label">Count:</label>
           <input type="number" id="day-count" value="1" min="1" max="30" style="width:70px;">
-          <button onclick="pickDay()">&#127922; Pick!</button>
+          <button onclick="pickDay()"><i class="bi bi-dice-5" aria-hidden="true"></i> Pick!</button>
           <button class="btn-secondary" onclick="clearEl('day-result')">Clear</button>
         </div>
         <div id="day-result"></div>
@@ -276,7 +278,7 @@ Option F</textarea>
 
       <!-- ── 10. Time Generator ── -->
       <div class="tool-panel" id="tool-time-gen">
-        <div class="panel-title">&#128336; Random Time Generator</div>
+        <div class="panel-title"><i class="bi bi-clock" aria-hidden="true"></i> Random Time Generator</div>
         <div class="form-row">
           <div class="form-group">
             <label class="io-label">From</label>
@@ -297,7 +299,7 @@ Option F</textarea>
           <label class="checkbox-label"><input type="checkbox" id="time-seconds"> Include seconds</label>
         </div>
         <div class="btn-row">
-          <button onclick="generateTimes()">&#128336; Generate</button>
+          <button onclick="generateTimes()"><i class="bi bi-clock" aria-hidden="true"></i> Generate</button>
           <button class="btn-secondary" onclick="clearEl('time-result')">Clear</button>
         </div>
         <div class="number-results" id="time-result" style="flex-direction:column;align-items:flex-start;"></div>
@@ -307,6 +309,7 @@ Option F</textarea>
     </div><!-- /tool-area -->
   </div><!-- /app-body -->
 
+  <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

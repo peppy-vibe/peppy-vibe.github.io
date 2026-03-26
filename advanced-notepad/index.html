@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Peppy Advanced Notepad</title>
   <meta name="description" content="A browser-based text editor with Markdown and LaTeX live preview, split pane, find &amp; replace, font controls, auto-save, and local file support.">
+  <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../lib/bootstrap-icons/bootstrap-icons.min.css">
   <link rel="stylesheet" href="style.css">
   <!-- KaTeX v0.16 — LaTeX math rendering (cached by SW for offline) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.css">
@@ -17,12 +19,12 @@
     <!-- App header -->
     <div class="top-bar">
       <div class="top-bar-left">
-        <a href="../index.html" class="top-bar-back" title="Home">&#8592;</a>
-        <span class="top-bar-title">&#128221; Peppy Advanced Notepad</span>
+        <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i><span class="visually-hidden">Home</span></a>
+        <span class="top-bar-title"><i class="bi bi-journal-text" aria-hidden="true"></i> Peppy Advanced Notepad</span>
       </div>
       <div class="top-bar-right">
-        <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen">&#9974;</button>
-        <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">&#9728;</button>
+        <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+        <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
       </div>
     </div>
 
@@ -128,7 +130,7 @@
     </div>
     <div class="tb-sep"></div>
     <div class="tb-group">
-      <button id="btn-split" title="Toggle Preview (Ctrl+Shift+P)" onclick="toggleSplit()">&#128065; Preview</button>
+      <button id="btn-split" title="Toggle Preview (Ctrl+Shift+P)" onclick="toggleSplit()"><i class="bi bi-eye" aria-hidden="true"></i> Preview</button>
     </div>
   </div>
 
@@ -264,6 +266,7 @@
   <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
   <!-- KaTeX v0.16 — LaTeX math rendering (cached by SW for offline) -->
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.js"></script>
+  <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

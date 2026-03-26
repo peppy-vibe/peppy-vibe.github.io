@@ -41,7 +41,7 @@ function toggleTheme() {
   const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   html.setAttribute('data-theme', next);
   localStorage.setItem('stp-theme', next);
-  document.getElementById('theme-btn').textContent = next === 'dark' ? '\u2600' : '\u263E';
+  document.getElementById('theme-btn').innerHTML = next === 'dark' ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
 }
 
 /** Toggle fullscreen mode for casting on large screens */
@@ -56,7 +56,7 @@ function toggleFullscreen() {
   const t = localStorage.getItem('stp-theme') || 'dark';
   document.documentElement.setAttribute('data-theme', t);
   const btn = document.getElementById('theme-btn');
-  if (btn) btn.textContent = t === 'dark' ? '\u2600' : '\u263E';
+  if (btn) btn.innerHTML = t === 'dark' ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
 })();
 
 /** Toggle mobile sidebar drawer */
@@ -820,7 +820,7 @@ function generateSanta() {
   div.innerHTML = assignment.givers.map((g, i) => `
     <div class="santa-row">
       <span class="santa-giver">${g}</span>
-      <span class="santa-arrow">→ 🎁 →</span>
+      <span class="santa-arrow">→ <i class="bi bi-gift" aria-hidden="true"></i> →</span>
       <span class="santa-receiver" id="santa-rec-${i}" style="filter:blur(8px)">❓</span>
       <button class="santa-reveal" onclick="revealSanta(${i})">Reveal</button>
     </div>`).join('');
