@@ -519,7 +519,8 @@ function renderPreview() {
   } else {
     html = html.replace(/\x02MATH(\d+)\x03/g, (_, i) => {
       const { expr, display } = mathStore[+i];
-      return display ? `<pre>$$${expr}$$</pre>` : `$${expr}$`;
+      const esc = expr.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return display ? `<pre>$$${esc}$$</pre>` : `<code>$${esc}$</code>`;
     });
   }
 

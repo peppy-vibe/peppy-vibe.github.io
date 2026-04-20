@@ -1,0 +1,27 @@
+{
+  "name": "peppy-tools",
+  "version": "1.0.0",
+  "description": "A collection of nine powerful, fully client-side browser tools. No server required — works offline and can be hosted on GitHub Pages for free.",
+  "main": "sw.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peppy-vibe/peppy-vibe.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/peppy-vibe/peppy-vibe.github.io/issues"
+  },
+  "homepage": "https://github.com/peppy-vibe/peppy-vibe.github.io#readme",
+  "devDependencies": {
+    "vitest": "^4.1.2"
+  }
+}

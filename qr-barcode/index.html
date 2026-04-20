@@ -2,6 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://cdn.jsdelivr.net; worker-src 'self' blob: https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>QR &amp; Barcode Tools</title>
 <meta name="description" content="Generate and scan QR codes (URL, WiFi, vCard, email, SMS) and barcodes (CODE128, EAN-13, UPC-A and more). Fully client-side — no data leaves your browser.">
@@ -29,8 +30,8 @@
     <span class="top-bar-title"><i class="bi bi-lock" aria-hidden="true"></i> QR &amp; Barcode Tools</span>
   </div>
   <div class="top-bar-right">
-    <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
-    <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
+    <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+    <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
   </div>
 </header>
 
@@ -436,6 +437,7 @@
 </div><!--/.app-body-->
 
 <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../lib/error-handler.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

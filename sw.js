@@ -5,7 +5,7 @@
 ═══════════════════════════════════════════ */
 'use strict';
 
-const CACHE = 'peppy-v5';
+const CACHE = 'peppy-v6';
 
 /* ── CDN dependencies (jsDelivr) ── */
 const CDN_DEPS = [
@@ -84,6 +84,10 @@ const APP_ASSETS = [
   './lib/bootstrap-icons/bootstrap-icons.min.css',
   './lib/bootstrap-icons/fonts/bootstrap-icons.woff2',
   './lib/bootstrap-icons/fonts/bootstrap-icons.woff',
+  /* Global error handler */
+  './lib/error-handler.js',
+  /* Shared PDF utilities */
+  './lib/pdf-utils.js',
 ];
 
 const PRECACHE = APP_ASSETS.concat(CDN_DEPS);

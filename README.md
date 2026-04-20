@@ -1,6 +1,35 @@
-# Peppy Tools Portal V.0.4.2
+# Peppy Tools Portal V.0.5.1
 
 A collection of nine powerful, fully client-side browser tools. No server required — works offline and can be hosted on GitHub Pages for free.
+
+---
+
+## What's New in V.0.4.3 — Security & Quality Hardening
+
+### Security Fixes (P0)
+* **XSS fix — KaTeX fallback** (`advanced-notepad`): Escaped raw math expressions in the fallback branch when KaTeX is unavailable.
+* **XSS fix — QR error messages** (`qr-barcode`): Replaced `innerHTML` with DOM API for error rendering.
+* **XSS fix — Batch barcode errors** (`qr-barcode`): Replaced `outerHTML` injection with `replaceWith()` + `textContent`.
+* **Injection fix — Roll Call handler** (`people-tools`): Switched inline `onchange` string interpolation to `data-name` attribute pattern.
+* **Duplicate `escHtml()` removed** (`random-tools`): Eliminated redundant function definition.
+* **Service Worker cache bumped** to `peppy-v6`.
+
+### Hardening (P1)
+* **Content-Security-Policy** added to all 10 HTML pages via `<meta>` tag — restricts scripts/styles to `'self'` + jsDelivr CDN.
+* **Notification permission** (`clock-tools`): Moved from page load to user-gesture-triggered functions (`timerStart`, `pomoStart`).
+* **Global error handler** (`lib/error-handler.js`): New IIFE catches uncaught errors and unhandled promise rejections, logs to console, and shows a 5-second toast notification.
+* **`hentDecode` safety comment** (`dev-tools`): Documented the safe detached-element innerHTML pattern.
+
+### Architecture & Quality (P2)
+* **Shared PDF utilities** (`lib/pdf-utils.js`): Extracted 6 duplicate functions (`readFileAsArrayBuffer`, `downloadBytes`, `stemName`, `hexToRgb`, `parsePageRanges`, `fmtBytes`) from pdf-tools and pdf-editor into a shared module.
+* **PDF Editor undo memory cap**: 50 MB budget on the undo stack — oldest snapshots are automatically evicted when the limit is exceeded.
+* **Unit tests**: Added Vitest with 14 tests for the shared PDF utility functions.
+* **Text diff guard tightened** (`dev-tools`): Reduced LCS cell limit from 250K → 100K to prevent UI freezes.
+* **Accessibility**: Added `aria-label` to all icon-only buttons (fullscreen, theme toggle) across all 9 tool pages.
+
+### Documentation
+* Full technical review: `notes/tech_review.md`
+* Implementation changelog: `notes/changes.md`
 
 ---
 
@@ -171,7 +200,7 @@ Host the folder on GitHub Pages or open `index.html` locally in any modern brows
 ├── README.md
 ├── bug_report.md                 # Bug audit report
 ├── implementation.md             # Feature implementation plan
-├── sw.js                         # Service Worker (offline cache, peppy-v4)
+├── sw.js                         # Service Worker (offline cache, peppy-v6)
 ├── advanced-notepad/
 │   ├── index.html
 │   ├── style.css
@@ -208,6 +237,16 @@ Host the folder on GitHub Pages or open `index.html` locally in any modern brows
     ├── index.html
     ├── style.css
     └── app.js
+├── lib/
+│   ├── error-handler.js          # Global error/rejection handler
+│   ├── pdf-utils.js              # Shared PDF utility functions
+│   ├── bootstrap/
+│   └── bootstrap-icons/
+├── tests/
+│   └── utils.test.js             # Unit tests (Vitest)
+└── notes/
+    ├── tech_review.md            # Technical review document
+    └── changes.md                # Implementation changelog
 ```
 
 ---
@@ -217,7 +256,8 @@ Host the folder on GitHub Pages or open `index.html` locally in any modern brows
 1. Clone or download this repository.
 2. Open `index.html` in any modern browser (Chrome, Edge, Firefox, Safari).
 3. No build step, no dependencies to install — everything is plain HTML/CSS/JS.
-4. All tools are fully responsive — desktop-first with mobile hamburger menus at < 768 px.
+4. To run unit tests: `npm install && npm test` (requires Node.js).
+5. All tools are fully responsive — desktop-first with mobile hamburger menus at < 768 px.
 
 > **Note:** The File > Open / Save features use the [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API) fallback (`<input type="file">` + Blob download). All file access is local and nothing is sent to a server.
 

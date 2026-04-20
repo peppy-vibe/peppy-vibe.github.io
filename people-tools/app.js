@@ -475,7 +475,7 @@ function buildRollCall() {
     <tr id="rc-${CSS.escape(n)}">
       <td>${escHtml(n)}</td>
       <td><label class="checkbox-label" style="justify-content:center">
-        <input type="checkbox" onchange="rcMarkPresent('${n.replace(/'/g,"\\'")}', this.checked)" /> Present
+        <input type="checkbox" data-name="${escHtml(n)}" onchange="rcMarkPresent(this.dataset.name, this.checked)" /> Present
       </label></td>
     </tr>`).join('');
   wrap.innerHTML = `<table class="attendance-table"><thead><tr><th>Name</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>`;

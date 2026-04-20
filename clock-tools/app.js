@@ -169,6 +169,10 @@ let timerEndTime = 0;
 
 function timerStart() {
   if (timerRunning) return;
+  // Request notification permission on first user-initiated timer start
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
   if (timerRemaining <= 0) {
     const h = parseInt(document.getElementById('timer-h').value) || 0;
     const m = parseInt(document.getElementById('timer-m').value) || 0;
@@ -323,6 +327,10 @@ function getPomoSettings() {
 
 function pomoStart() {
   if (pomoRunning) return;
+  // Request notification permission on first user-initiated pomodoro start
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
   const s = getPomoSettings();
   if (pomoRemaining <= 0) {
     pomoPhase = 'work';
@@ -623,8 +631,4 @@ document.addEventListener('DOMContentLoaded', () => {
   tickClocks();
   setInterval(updateCurrentTime, 1000);
   updateCurrentTime();
-  // Request notification permission early
-  if ('Notification' in window && Notification.permission === 'default') {
-    Notification.requestPermission();
-  }
 });

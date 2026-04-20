@@ -2,6 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://cdn.jsdelivr.net; worker-src 'self' blob: https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Peppy PDF Mini Editor BETA</title>
   <meta name="description" content="Interactive PDF editor — import (including encrypted PDFs), edit pages visually, and export with AES-256 encryption. Merge, split, rotate, rearrange, watermark, password protect and more. 100% client-side.">
@@ -25,8 +26,8 @@
     </div>
     <div class="top-bar-center" id="file-name-display"></div>
     <div class="top-bar-right">
-      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
-      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
+      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
     </div>
   </div>
 
@@ -483,6 +484,8 @@
   <input type="file" id="file-input-add" accept=".pdf,application/pdf,image/jpeg,image/png,image/jpg" multiple style="display:none" onchange="handleAddPages(this.files)">
 
   <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../lib/pdf-utils.js"></script>
+  <script src="../lib/error-handler.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

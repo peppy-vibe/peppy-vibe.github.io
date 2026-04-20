@@ -34,11 +34,22 @@ let _renderSeq = 0;
 const undoStack = [];        // array of Uint8Array snapshots
 const redoStack = [];
 const MAX_UNDO = 20;
+const MAX_UNDO_BYTES = 50 * 1024 * 1024; // 50 MB total undo budget
+
+function undoStackBytes() {
+  let total = 0;
+  for (const s of undoStack) total += s.byteLength;
+  return total;
+}
 
 function pushUndo() {
   if (!pdfBytes) return;
   undoStack.push(pdfBytes.slice());
   if (undoStack.length > MAX_UNDO) undoStack.shift();
+  // Enforce memory budget — drop oldest snapshots until under limit
+  while (undoStack.length > 1 && undoStackBytes() > MAX_UNDO_BYTES) {
+    undoStack.shift();
+  }
   redoStack.length = 0;
   updateUndoRedoUI();
 }
@@ -163,66 +174,12 @@ async function loadPDFHandlingPassword(buf, filename) {
 
 /* ────────────────────────────────────────────────────────────
    UTILITY
+   (readFileAsArrayBuffer, downloadBytes, stemName, hexToRgb,
+    parsePageRanges, fmtBytes are in ../lib/pdf-utils.js)
 ──────────────────────────────────────────────────────────── */
-function readFileAsArrayBuffer(file) {
-  return new Promise((resolve, reject) => {
-    const fr = new FileReader();
-    fr.onload = () => resolve(fr.result);
-    fr.onerror = () => reject(new Error('Failed to read file'));
-    fr.readAsArrayBuffer(file);
-  });
-}
-
-function downloadBytes(bytes, filename) {
-  const blob = new Blob([bytes], { type: 'application/pdf' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 2000);
-}
-
-function stemName(name) {
-  return name.replace(/\.pdf$/i, '');
-}
-
-function hexToRgb(hex) {
-  return {
-    r: parseInt(hex.slice(1, 3), 16) / 255,
-    g: parseInt(hex.slice(3, 5), 16) / 255,
-    b: parseInt(hex.slice(5, 7), 16) / 255
-  };
-}
-
-function parsePageRanges(str, total) {
-  const indices = new Set();
-  const parts = str.split(',').map(s => s.trim()).filter(Boolean);
-  for (const part of parts) {
-    if (part.includes('-')) {
-      const [a, b] = part.split('-').map(s => parseInt(s.trim(), 10));
-      if (isNaN(a) || isNaN(b)) return null;
-      for (let i = Math.min(a, b); i <= Math.max(a, b); i++) {
-        if (i >= 1 && i <= total) indices.add(i - 1);
-      }
-    } else {
-      const n = parseInt(part, 10);
-      if (isNaN(n)) return null;
-      if (n >= 1 && n <= total) indices.add(n - 1);
-    }
-  }
-  return [...indices].sort((a, b) => a - b);
-}
 
 function getSelectedIndices() {
   return [...selectedPages].sort((a, b) => a - b);
-}
-
-function fmtBytes(n) {
-  if (n < 1024) return n + ' B';
-  if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
-  return (n / 1048576).toFixed(2) + ' MB';
 }
 
 function toggleRangesInput(wrapId, value) {

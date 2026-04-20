@@ -212,7 +212,11 @@ function qrGenerate() {
       correctLevel: QRCode.CorrectLevel[ecl] ?? QRCode.CorrectLevel.M
     });
   } catch (e) {
-    outputEl.innerHTML = `<span style="color:#e05252;font-size:12px">Cannot encode: ${e.message || 'invalid input'}</span>`;
+    outputEl.textContent = '';
+    const errSpan = document.createElement('span');
+    errSpan.style.cssText = 'color:#e05252;font-size:12px';
+    errSpan.textContent = 'Cannot encode: ' + (e.message || 'invalid input');
+    outputEl.appendChild(errSpan);
     if (hint) hint.textContent = '';
     return;
   }
@@ -723,7 +727,12 @@ function bcBatchGenerate() {
     try {
       JsBarcode(svgEl, line, { format, height, width: 2, margin: 8, displayValue: true, fontSize: 12 });
     } catch (e) {
-      if (svgEl) svgEl.outerHTML = `<span style="color:#e05252;font-size:11px">Error: ${e.message}</span>`;
+      if (svgEl) {
+        const errSpan = document.createElement('span');
+        errSpan.style.cssText = 'color:#e05252;font-size:11px';
+        errSpan.textContent = 'Error: ' + (e.message || 'invalid input');
+        svgEl.replaceWith(errSpan);
+      }
     }
   });
 }

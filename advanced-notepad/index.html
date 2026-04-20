@@ -2,6 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://cdn.jsdelivr.net; worker-src 'self' blob: https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Peppy Advanced Notepad</title>
   <meta name="description" content="A browser-based text editor with Markdown and LaTeX live preview, split pane, find &amp; replace, font controls, auto-save, and local file support.">
@@ -23,8 +24,8 @@
         <span class="top-bar-title"><i class="bi bi-journal-text" aria-hidden="true"></i> Peppy Advanced Notepad</span>
       </div>
       <div class="top-bar-right">
-        <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
-        <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
+        <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+        <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
       </div>
     </div>
 
@@ -267,6 +268,7 @@
   <!-- KaTeX v0.16 — LaTeX math rendering (cached by SW for offline) -->
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.js"></script>
   <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../lib/error-handler.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

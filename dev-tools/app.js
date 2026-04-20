@@ -555,6 +555,8 @@ function hentEncode() {
 
 function hentDecode() {
   const input = document.getElementById('hent-in').value;
+  // Safe: uses a detached (never-attached-to-DOM) element so no scripts
+  // or event handlers execute; only the parsed text content is extracted.
   const div   = document.createElement('div');
   div.innerHTML = input;
   document.getElementById('hent-out').value = div.textContent;
@@ -592,9 +594,9 @@ function runDiff() {
   const linesA = textA.split('\n');
   const linesB = textB.split('\n');
 
-  if (linesA.length * linesB.length > 250000) {
+  if (linesA.length * linesB.length > 100000) {
     document.getElementById('diff-stats').innerHTML =
-      '<span style="color:#c00">Texts too large for diff (reduce to ~500 lines each)</span>';
+      '<span style="color:#c00">Texts too large for diff (reduce to ~300 lines each)</span>';
     return;
   }
 

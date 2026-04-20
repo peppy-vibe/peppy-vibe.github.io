@@ -109,12 +109,9 @@ function dzDrop(e, id, cb) {
 
 /* ────────────────────────────────────────────────────────────
    UTILITY FUNCTIONS
+   (readFileAsArrayBuffer, downloadBytes, stemName, hexToRgb,
+    parsePageRanges, fmtBytes are in ../lib/pdf-utils.js)
 ──────────────────────────────────────────────────────────── */
-function fmtBytes(n) {
-  if (n < 1024) return n + ' B';
-  if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
-  return (n / 1048576).toFixed(2) + ' MB';
-}
 
 function setMsg(id, text, type) {
   const el = document.getElementById(id);
@@ -130,53 +127,6 @@ function setProgress(barId, wrapId, pct) {
   if (pct === null) { wrap.style.display = 'none'; return; }
   wrap.style.display = '';
   bar.style.width = pct + '%';
-}
-
-/**
- * Parse a page-range string like "1, 3-5, 8" into a sorted array of
- * 0-based indices, clamped to [0, total).
- */
-function parsePageRanges(str, total) {
-  const indices = new Set();
-  const parts = str.split(',').map(s => s.trim()).filter(Boolean);
-  for (const part of parts) {
-    if (part.includes('-')) {
-      const [a, b] = part.split('-').map(s => parseInt(s.trim(), 10));
-      if (isNaN(a) || isNaN(b)) return null;
-      for (let i = Math.min(a, b); i <= Math.max(a, b); i++) {
-        if (i >= 1 && i <= total) indices.add(i - 1);
-      }
-    } else {
-      const n = parseInt(part, 10);
-      if (isNaN(n)) return null;
-      if (n >= 1 && n <= total) indices.add(n - 1);
-    }
-  }
-  return [...indices].sort((a, b) => a - b);
-}
-
-function readFileAsArrayBuffer(file) {
-  return new Promise((resolve, reject) => {
-    const fr = new FileReader();
-    fr.onload  = () => resolve(fr.result);
-    fr.onerror = () => reject(new Error('Failed to read file'));
-    fr.readAsArrayBuffer(file);
-  });
-}
-
-function downloadBytes(bytes, filename) {
-  const blob = new Blob([bytes], { type: 'application/pdf' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 2000);
-}
-
-function stemName(file) {
-  return file.name.replace(/\.pdf$/i, '');
 }
 
 function makeFileItem(name, size, onRemove, draggable) {
@@ -213,14 +163,6 @@ async function renderPDFPage(pdfDoc, pageNum, canvas, scale) {
   canvas.width   = viewport.width;
   canvas.height  = viewport.height;
   await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
-}
-
-/* hex color (#rrggbb) to rgb floats 0-1 */
-function hexToRgb(hex) {
-  const r = parseInt(hex.slice(1, 3), 16) / 255;
-  const g = parseInt(hex.slice(3, 5), 16) / 255;
-  const b = parseInt(hex.slice(5, 7), 16) / 255;
-  return { r, g, b };
 }
 
 /* ====================================================================
@@ -383,7 +325,7 @@ async function splitPDF() {
       setMsg('split-ranges-msg', '', '');
     }
 
-    const stem = stemName(splitFile);
+    const stem = stemName(splitFile.name);
     for (let r = 0; r < ranges.length; r++) {
       const newDoc = await PDFDocument.create();
       const copied = await newDoc.copyPages(src, ranges[r]);
@@ -452,7 +394,7 @@ async function extractPages() {
     const copied = await newDoc.copyPages(src, idxs);
     copied.forEach(p => newDoc.addPage(p));
     const bytes = await newDoc.save();
-    downloadBytes(bytes, stemName(extractFile) + '_extracted.pdf');
+    downloadBytes(bytes, stemName(extractFile.name) + '_extracted.pdf');
     setMsg('extract-msg', idxs.length + ' page(s) extracted — ' + fmtBytes(bytes.length) + '.', 'ok');
   } catch (err) {
     setMsg('extract-msg', 'Error: ' + err.message, 'err');
@@ -510,7 +452,7 @@ async function deletePages() {
     const copied = await newDoc.copyPages(src, keep);
     copied.forEach(p => newDoc.addPage(p));
     const bytes = await newDoc.save();
-    downloadBytes(bytes, stemName(deleteFile) + '_deleted.pdf');
+    downloadBytes(bytes, stemName(deleteFile.name) + '_deleted.pdf');
     setMsg('delete-msg', toDelete.size + ' page(s) removed. ' + fmtBytes(bytes.length) + ' saved.', 'ok');
   } catch (err) {
     setMsg('delete-msg', 'Error: ' + err.message, 'err');
@@ -584,7 +526,7 @@ async function rotatePDF() {
     });
 
     const bytes = await doc.save();
-    downloadBytes(bytes, stemName(rotateFile) + '_rotated.pdf');
+    downloadBytes(bytes, stemName(rotateFile.name) + '_rotated.pdf');
     setMsg('rotate-msg', idxs.length + ' page(s) rotated ' + angle + '°. ' + fmtBytes(bytes.length) + ' saved.', 'ok');
   } catch (err) {
     setMsg('rotate-msg', 'Error: ' + err.message, 'err');
@@ -719,7 +661,7 @@ async function rearrangePDF() {
     const copied = await newDoc.copyPages(src, idxs);
     copied.forEach(p => newDoc.addPage(p));
     const bytes = await newDoc.save();
-    downloadBytes(bytes, stemName(rearrangeFile) + '_reordered.pdf');
+    downloadBytes(bytes, stemName(rearrangeFile.name) + '_reordered.pdf');
     setMsg('rearrange-msg', 'Saved ' + idxs.length + ' pages (' + fmtBytes(bytes.length) + ').', 'ok');
   } catch (err) {
     setMsg('rearrange-msg', 'Error: ' + err.message, 'err');
@@ -805,7 +747,7 @@ async function addWatermark() {
     });
 
     const bytes = await doc.save();
-    downloadBytes(bytes, stemName(watermarkFile) + '_watermarked.pdf');
+    downloadBytes(bytes, stemName(watermarkFile.name) + '_watermarked.pdf');
     setMsg('watermark-msg', 'Watermark applied to ' + pages.length + ' page(s). ' + fmtBytes(bytes.length) + ' saved.', 'ok');
   } catch (err) {
     setMsg('watermark-msg', 'Error: ' + err.message, 'err');
@@ -885,7 +827,7 @@ async function addPageNumbers() {
     });
 
     const bytes = await doc.save();
-    downloadBytes(bytes, stemName(pnFile) + '_numbered.pdf');
+    downloadBytes(bytes, stemName(pnFile.name) + '_numbered.pdf');
     setMsg('pn-msg', 'Page numbers added to ' + total + ' page(s). ' + fmtBytes(bytes.length) + '.', 'ok');
   } catch (err) {
     setMsg('pn-msg', 'Error: ' + err.message, 'err');
@@ -1140,7 +1082,7 @@ async function compressPDF() {
     // Use objectsPerTick and useObjectStreams options to optimize output
     const bytes = await doc.save({ useObjectStreams: true, addDefaultPage: false });
     const saved = compressFile.size - bytes.length;
-    downloadBytes(bytes, stemName(compressFile) + '_compressed.pdf');
+    downloadBytes(bytes, stemName(compressFile.name) + '_compressed.pdf');
     const pctStr = compressFile.size > 0 ? ' (' + Math.round(saved / compressFile.size * 100) + '% reduction)' : '';
     setMsg('compress-msg',
       'Done! Original: ' + fmtBytes(compressFile.size) + ' → Compressed: ' + fmtBytes(bytes.length) + pctStr, 'ok');
@@ -1216,7 +1158,7 @@ async function cropPDF() {
     });
 
     const bytes = await doc.save();
-    downloadBytes(bytes, stemName(cropFile) + '_cropped.pdf');
+    downloadBytes(bytes, stemName(cropFile.name) + '_cropped.pdf');
     setMsg('crop-msg', 'Cropped ' + idxs.length + ' page(s). ' + fmtBytes(bytes.length) + ' saved.', 'ok');
   } catch (err) {
     setMsg('crop-msg', 'Error: ' + err.message, 'err');
@@ -1289,7 +1231,7 @@ async function resizePDF() {
     }
 
     const bytes = await dest.save();
-    downloadBytes(bytes, stemName(resizeFile) + '_resized.pdf');
+    downloadBytes(bytes, stemName(resizeFile.name) + '_resized.pdf');
     setMsg('resize-msg', pages.length + ' page(s) resized to ' + Math.round(targetW) + '×' + Math.round(targetH) + ' pt. ' + fmtBytes(bytes.length) + '.', 'ok');
   } catch (err) {
     setMsg('resize-msg', 'Error: ' + err.message, 'err');
@@ -1333,7 +1275,7 @@ async function flattenPDF() {
     form.flatten();
 
     const bytes = await doc.save();
-    downloadBytes(bytes, stemName(flattenFile) + '_flattened.pdf');
+    downloadBytes(bytes, stemName(flattenFile.name) + '_flattened.pdf');
     setMsg('flatten-msg', 'Flattened successfully. ' + fmtBytes(bytes.length) + ' saved.', 'ok');
   } catch (err) {
     setMsg('flatten-msg', 'Error: ' + err.message, 'err');
@@ -1422,7 +1364,7 @@ async function addPassword() {
     if (userPw)  saveOpts.userPassword  = userPw;
     if (ownerPw) saveOpts.ownerPassword = ownerPw;
     const bytes = await doc.save(saveOpts);
-    downloadBytes(bytes, stemName(addpwFile) + '_protected.pdf');
+    downloadBytes(bytes, stemName(addpwFile.name) + '_protected.pdf');
     setMsg('addpw-msg', 'PDF encrypted and downloaded. ' + fmtBytes(bytes.length), 'ok');
   } catch (err) {
     setMsg('addpw-msg', 'Error: ' + err.message, 'err');
@@ -1473,7 +1415,7 @@ async function removePassword() {
     const doc = await PDFDocument.load(buf, { password: pw, ignoreEncryption: false });
     // Save without any encryption options to produce an unencrypted PDF
     const bytes = await doc.save({ useObjectStreams: false });
-    downloadBytes(bytes, stemName(rmpwFile) + '_unlocked.pdf');
+    downloadBytes(bytes, stemName(rmpwFile.name) + '_unlocked.pdf');
     setMsg('rmpw-msg', 'Password removed. ' + fmtBytes(bytes.length) + ' saved.', 'ok');
   } catch (err) {
     const msg = (err.message || '').toLowerCase();
@@ -1661,7 +1603,7 @@ async function applyRedactions() {
     }
 
     const bytes = await doc.save();
-    downloadBytes(bytes, stemName(redactFile) + '_redacted.pdf');
+    downloadBytes(bytes, stemName(redactFile.name) + '_redacted.pdf');
     setMsg('redact-msg', 'Redactions applied and downloaded.', 'ok');
   } catch (err) {
     setMsg('redact-msg', 'Error: ' + err.message, 'err');
@@ -1808,7 +1750,7 @@ async function removeHiddenData() {
     }
 
     const bytes = await doc.save({ useObjectStreams: true });
-    downloadBytes(bytes, stemName(hiddenFile) + '_sanitized.pdf');
+    downloadBytes(bytes, stemName(hiddenFile.name) + '_sanitized.pdf');
     setMsg('hidden-msg', 'Hidden data removed. ' + fmtBytes(bytes.length) + ' saved.', 'ok');
   } catch (err) {
     setMsg('hidden-msg', 'Error: ' + err.message, 'err');
