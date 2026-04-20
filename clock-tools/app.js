@@ -4,43 +4,8 @@
 'use strict';
 
 /* ──────────────────────────────────────────
-   THEME
+   THEME, FULLSCREEN, MOBILE MENU → ../lib/shared-ui.js
 ────────────────────────────────────────── */
-function toggleTheme() {
-  const cur = document.documentElement.getAttribute('data-theme');
-  const next = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('stp-theme', next);
-  updateThemeBtn();
-}
-function updateThemeBtn() {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  const btn = document.getElementById('theme-btn');
-  if (btn) btn.innerHTML = isDark ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
-}
-
-/** Toggle fullscreen mode */
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
-  } else {
-    document.exitFullscreen().catch(() => {});
-  }
-}
-
-/** Toggle mobile sidebar drawer */
-function toggleMobileMenu() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  if (sidebar) sidebar.classList.toggle('open');
-  if (overlay) overlay.classList.toggle('active');
-}
-function closeMobileMenu() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  if (sidebar) sidebar.classList.remove('open');
-  if (overlay) overlay.classList.remove('active');
-}
 
 /* ──────────────────────────────────────────
    SIDEBAR NAVIGATION
@@ -625,7 +590,7 @@ function stopAlarmSound() {
    INIT
 ────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
-  updateThemeBtn();
+  initTheme();
   buildClocks();
   setInterval(tickClocks, 1000);
   tickClocks();

@@ -91,44 +91,7 @@ function jumpGroup(grpId) {
   setActiveGroup(grpId);
 }
 
-/* â”€â”€ Theme â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-function toggleTheme() {
-  const cur  = document.documentElement.getAttribute('data-theme');
-  const next = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('stp-theme', next);
-  updateThemeBtn();
-}
-
-function updateThemeBtn() {
-  const btn    = document.getElementById('theme-btn');
-  if (!btn) return;
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  btn.innerHTML = isDark ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
-}
-
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
-  } else {
-    document.exitFullscreen().catch(() => {});
-  }
-}
-
-/** Toggle mobile sidebar drawer */
-function toggleMobileMenu() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  if (sidebar) sidebar.classList.toggle('open');
-  if (overlay) overlay.classList.toggle('active');
-}
-/** Close mobile sidebar drawer */
-function closeMobileMenu() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  if (sidebar) sidebar.classList.remove('open');
-  if (overlay) overlay.classList.remove('active');
-}
+/* Theme, fullscreen, mobile menu loaded from shared-ui.js */
 
 /* â”€â”€ Shared helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function setMsg(id, text, type) {
@@ -1095,67 +1058,15 @@ function csvEscape(value) {
 function jsonToYAML() {
   const input = document.getElementById('jy-input').value.trim();
   if (!input) { setMsg('jy-msg', 'No input', 'err'); return; }
+  if (typeof jsyaml === 'undefined') {
+    setMsg('jy-msg', 'js-yaml library failed to load', 'err');
+    return;
+  }
   try {
-    document.getElementById('jy-output').value = toYAML(JSON.parse(input), 0);
+    const obj = JSON.parse(input);
+    document.getElementById('jy-output').value = jsyaml.dump(obj, { lineWidth: -1 });
     setMsg('jy-msg', 'Converted \u2713', 'ok');
   } catch (e) { setMsg('jy-msg', 'Parse error: ' + e.message, 'err'); }
-}
-
-function toYAML(value, level) {
-  const pad = '  '.repeat(level);
-  if (value === null || value === undefined) return 'null';
-  if (typeof value === 'boolean') return String(value);
-  if (typeof value === 'number')  return isFinite(value) ? String(value) : 'null';
-  if (typeof value === 'string')  return yamlScalar(value);
-  if (Array.isArray(value)) {
-    if (value.length === 0) return '[]';
-    return value.map(v => {
-      if (v !== null && typeof v === 'object') {
-        const rendered = toYAML(v, level + 1);
-        const lines    = rendered.split('\n');
-        return pad + '- ' + lines[0].trimStart()
-          + (lines.length > 1 ? '\n' + lines.slice(1).join('\n') : '');
-      }
-      return pad + '- ' + toYAML(v, level);
-    }).join('\n');
-  }
-  if (typeof value === 'object') {
-    const keys = Object.keys(value);
-    if (keys.length === 0) return '{}';
-    return keys.map(k => {
-      const v  = value[k];
-      const ks = yamlKey(k);
-      if (v !== null && typeof v === 'object') {
-        return pad + ks + ':\n' + toYAML(v, level + 1);
-      }
-      return pad + ks + ': ' + toYAML(v, level);
-    }).join('\n');
-  }
-  return String(value);
-}
-
-function yamlScalar(s) {
-  if (!s) return '""';
-  const needsQuote =
-    /^(true|false|null|yes|no|on|off|~)$/i.test(s) ||
-    /^[-+]?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?$/.test(s) ||
-    /^0x[0-9a-fA-F]+$/.test(s) ||
-    /[:\{\}\[\],&*?|<>\=!%@`#]/.test(s) ||
-    /^[-\s]/.test(s) || /\s$/.test(s) ||
-    s.includes('\n') || s.includes('\r');
-  if (!needsQuote) return s;
-  return '"' + s
-    .replace(/\\/g, '\\\\').replace(/"/g, '\\"')
-    .replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t') + '"';
-}
-
-function yamlKey(k) {
-  const needsQuote =
-    !k || /[:\{\}\[\],&*?|<>\=!%@`#\s]/.test(k) ||
-    /^(true|false|null|yes|no|on|off|~)$/i.test(k) ||
-    /^[-?]/.test(k);
-  if (!needsQuote) return k;
-  return '"' + k.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
 }
 
 function yamlToJSON() {
@@ -1882,7 +1793,7 @@ function copyReplaceResult() {
    INIT
 â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 document.addEventListener('DOMContentLoaded', () => {
-  updateThemeBtn();
+  initTheme();
 
   /* Color tool init */
   onPickerChange();

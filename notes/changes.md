@@ -1,49 +1,55 @@
-# Changes Log — Tech Review Implementation
+# Changes Implemented
 
-All items from `notes/tech_review.md` roadmap (P0 / P1 / P2) implemented.
+This document summarizes all roadmap items from notes/tech_review.md that were implemented in this pass.
 
----
+## P0 Implemented
+1. Disabled MD5 in Dev Tools hash flow and set SHA-256 as default.
+- Updated UI options in dev-tools/index.html.
+- Blocked MD5 execution path with explicit user-facing message in dev-tools/app.js.
 
-## P0 — Critical (security / correctness)
+2. Added safe storage wrappers and migrated high-risk call sites.
+- Added safeStorageGet, safeStorageSet, safeStorageRemove in lib/shared-utils.js.
+- Migrated theme persistence in lib/shared-ui.js.
+- Migrated saved-list operations in people-tools/app.js with fallback alerts.
+- Updated notepad draft read/write paths in advanced-notepad/app.js.
 
-| # | Issue | File(s) | Change |
-|---|-------|---------|--------|
-| P0-1 | KaTeX fallback XSS — unescaped `expr` in else branch | `advanced-notepad/app.js` | Escape `expr` with `&`/`<`/`>` replacement before injection, matching catch-block pattern |
-| P0-2 | QR error message XSS — `innerHTML` with `e.message` | `qr-barcode/app.js` ~L215 | Replaced with DOM API (`textContent` + `createElement`) |
-| P0-3 | Batch barcode error XSS — `outerHTML` with `e.message` | `qr-barcode/app.js` ~L726 | Replaced `outerHTML` with `replaceWith()` + `textContent` |
-| P0-4 | People Tools inline handler injection — unescaped names in `onchange` | `people-tools/app.js` L478 | Switched to `data-name` attribute + `this.dataset.name` |
-| P0-5 | Duplicate `escHtml()` definition | `random-tools/app.js` | Removed first copy (L256); single definition at ~L355 covers all call sites via hoisting |
-| P0-6 | Stale service worker cache | `sw.js` L9 | Bumped cache name from `peppy-v5` → `peppy-v6` |
+3. Hardened notepad preview sink.
+- Added sanitizeRenderedHtml() in advanced-notepad/app.js.
+- Applied sanitization immediately before preview-pane innerHTML assignment.
 
-## P1 — High (hardening / best practices)
+## P1 Implemented
+1. Added page-range parser guardrails.
+- Extended parsePageRanges in lib/pdf-utils.js with max token/span limits.
+- Kept backward compatibility for existing call sites.
 
-| # | Issue | File(s) | Change |
-|---|-------|---------|--------|
-| P1-1 | No Content-Security-Policy | All 10 `index.html` files | Added `<meta http-equiv="Content-Security-Policy">` with `default-src 'self'`, CDN allowlist, `'unsafe-inline'` for inline scripts/styles, `object-src 'none'` |
-| P1-2 | Notification permission requested at load time | `clock-tools/app.js` | Removed `Notification.requestPermission()` from `DOMContentLoaded`; added to `timerStart()` and `pomoStart()` (user-gesture triggered) |
-| P1-3 | No global error handler | `lib/error-handler.js` (new) + all 10 HTML files + `sw.js` | Created IIFE that catches `window.error` and `unhandledrejection`, logs to console, shows 5-second toast |
-| P1-4 | `document.execCommand('paste')` — deprecated | `advanced-notepad/app.js` | Already implemented as Clipboard API primary with `execCommand` fallback — no change needed |
-| P1-5 | `hentDecode` innerHTML on detached element — looks risky | `dev-tools/app.js` L559 | Added safety comment documenting the detached-element pattern |
+2. Improved service worker observability and failure handling.
+- Added warning/error logging for CDN warmup failures and install failures.
+- Added logging on runtime fetch/cache write failures in sw.js.
 
-## P2 — Medium (architecture / quality / a11y)
+3. Added tests for new reliability/security guardrails.
+- Extended tests/utils.test.js for:
+  - safe storage helper success/failure behavior
+  - parsePageRanges complexity limits
+  - shared shuffle helper sanity
 
-| # | Issue | File(s) | Change |
-|---|-------|---------|--------|
-| P2-1 | Duplicate PDF utilities across pdf-tools & pdf-editor | `lib/pdf-utils.js` (new), `pdf-tools/app.js`, `pdf-editor/app.js`, both `index.html`, `sw.js` | Extracted 6 shared functions (`readFileAsArrayBuffer`, `downloadBytes`, `stemName`, `hexToRgb`, `parsePageRanges`, `fmtBytes`) into shared module; updated `stemName` interface to accept string; updated all call sites in pdf-tools |
-| P2-2 | Unbounded undo stack memory in PDF Editor | `pdf-editor/app.js` | Added 50 MB memory budget (`MAX_UNDO_BYTES`); `pushUndo()` drops oldest snapshots when over budget |
-| P2-3 | Zero test coverage | `tests/utils.test.js` (new), `package.json` | Added Vitest with 14 unit tests for `fmtBytes`, `parsePageRanges`, `hexToRgb`, `stemName` |
-| P2-4 | Text diff O(n²) guard too generous | `dev-tools/app.js` L597 | Tightened LCS cell limit from 250 000 → 100 000 (~300 lines each) |
-| P2-5 | Icon-only buttons missing aria-labels | All 9 tool `index.html` files | Added `aria-label` to fullscreen and theme toggle buttons (18 buttons total) |
+## P2 Implemented
+1. Persisted stopwatch and countdown timer state across refresh.
+- Added sessionStorage-backed state persistence and restoration in clock-tools/app.js.
+- Restores running/paused states and UI controls on reload.
 
----
+2. Started utility de-duplication using shared helpers.
+- Added cryptoRandomFloat and shuffleArray to lib/shared-utils.js.
+- Updated people-tools/app.js to consume shared random/shuffle helpers.
 
-## New files
+## Validation
+- Ran unit tests: 31/31 passing (vitest).
+- Ran editor diagnostics on all changed files: no reported errors.
 
-| File | Purpose |
-|------|---------|
-| `lib/error-handler.js` | Global error/rejection handler with toast UI |
-| `lib/pdf-utils.js` | Shared PDF utility functions |
-| `tests/utils.test.js` | Unit tests for pure utility functions |
-| `package.json` | Node project manifest (Vitest dev dep) |
-| `notes/tech_review.md` | Full technical review document |
-| `notes/changes.md` | This file |
+## Human Review Required Before Merge
+1. Product/security policy decision on SHA-1 visibility.
+- SHA-1 remains selectable for compatibility workflows.
+- If policy requires stronger defaults only, remove SHA-1 from UI as follow-up.
+
+2. Service worker CDN list alignment.
+- sw.js pre-cache list currently includes pdf-lib@1.17.1 while pdf-tools/index.html loads @cantoo/pdf-lib@2.6.2.
+- Consider aligning to one source/version for predictable offline behavior.

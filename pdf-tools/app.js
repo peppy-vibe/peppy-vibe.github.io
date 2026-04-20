@@ -12,46 +12,8 @@ if (window.pdfjsLib) {
     'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
 }
 
-/* ────────────────────────────────────────────────────────────
-   THEME
-──────────────────────────────────────────────────────────── */
-function toggleTheme() {
-  const cur = document.documentElement.getAttribute('data-theme');
-  const next = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('stp-theme', next);
-  updateThemeBtn();
-}
-function updateThemeBtn() {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  const btn = document.getElementById('theme-btn');
-  if (btn) btn.innerHTML = isDark ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
-}
-updateThemeBtn();
-
-/** Toggle fullscreen mode */
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
-  } else {
-    document.exitFullscreen().catch(() => {});
-  }
-}
-
-/** Toggle mobile sidebar drawer */
-function toggleMobileMenu() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  if (sidebar) sidebar.classList.toggle('open');
-  if (overlay) overlay.classList.toggle('active');
-}
-/** Close mobile sidebar drawer */
-function closeMobileMenu() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  if (sidebar) sidebar.classList.remove('open');
-  if (overlay) overlay.classList.remove('active');
-}
+/* Theme, fullscreen, mobile menu loaded from shared-ui.js */
+initTheme();
 
 /* ────────────────────────────────────────────────────────────
    SIDEBAR NAVIGATION
@@ -893,12 +855,7 @@ function img2pdfDragEnd() {
   img2pdfDragSrcIdx = null;
 }
 
-const PAGE_SIZES = {
-  a4:     [595, 842],
-  letter: [612, 792],
-  a3:     [842, 1191],
-  a5:     [420, 595],
-};
+/* PAGE_SIZES is loaded from ../lib/pdf-utils.js */
 
 function loadImageToBitmap(file) {
   return new Promise((resolve, reject) => {

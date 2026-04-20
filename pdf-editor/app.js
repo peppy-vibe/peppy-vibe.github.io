@@ -23,6 +23,18 @@ let currentView = 'grid';   // 'grid' or 'reader'
 let readerPage = 1;          // current page in reader view (1-based)
 let readerScale = 1;         // zoom scale in reader view
 let redactMode = false;      // whether redact drawing is active
+
+/* ── Cached PDF.js document to avoid re-parsing identical bytes ── */
+let _cachedPdfDoc = null;
+let _cachedPdfRef = null;    // reference to the pdfBytes that was parsed
+async function getCachedPdfDoc() {
+  if (_cachedPdfDoc && _cachedPdfRef === pdfBytes) return _cachedPdfDoc;
+  const doc = await pdfjsLib.getDocument({ data: pdfBytes.slice() }).promise;
+  _cachedPdfDoc = doc;
+  _cachedPdfRef = pdfBytes;
+  return doc;
+}
+function invalidatePdfCache() { _cachedPdfDoc = null; _cachedPdfRef = null; }
 let redactRects = [];        // array of {page, x, y, w, h} for redactions
 let redactDrawing = false;   // currently dragging a redact rect
 let redactStart = null;      // {x, y} start of current redact drag
@@ -80,30 +92,7 @@ async function refreshCurrentView() {
   else await renderReaderPage();
 }
 
-/* ────────────────────────────────────────────────────────────
-   THEME
-──────────────────────────────────────────────────────────── */
-function toggleTheme() {
-  const cur = document.documentElement.getAttribute('data-theme');
-  const next = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('stp-theme', next);
-  updateThemeBtn();
-}
-function updateThemeBtn() {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  const btn = document.getElementById('theme-btn');
-  if (btn) btn.innerHTML = isDark ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
-}
-
-/* ── FULLSCREEN ── */
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
-  } else {
-    document.exitFullscreen();
-  }
-}
+/* Theme, fullscreen loaded from shared-ui.js */
 
 /* ────────────────────────────────────────────────────────────
    TOAST
@@ -342,10 +331,9 @@ async function renderWorkspace() {
   grid.innerHTML = '';
 
   // Render thumbnails with PDF.js
-  const loadingTask = pdfjsLib.getDocument({ data: pdfBytes.slice() });
   let pdfDoc;
   try {
-    pdfDoc = await loadingTask.promise;
+    pdfDoc = await getCachedPdfDoc();
   } catch (err) {
     if (mySeq !== _renderSeq) return; // superseded; silently drop
     toast('Render error: ' + err.message, 'error');
@@ -547,7 +535,7 @@ async function rearrangePages(fromIdx, toIdx) {
    GLOBAL DRAG & DROP — import files by dropping
 ──────────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
-  updateThemeBtn();
+  initTheme();
 
   const body = document.body;
   const dropHint = document.getElementById('global-drop-zone');
@@ -873,13 +861,7 @@ function openResizeDialog() {
   openDialog('dlg-resize');
 }
 
-const PAGE_SIZES = {
-  A4:     [595.28, 841.89],
-  Letter: [612, 792],
-  Legal:  [612, 1008],
-  A3:     [841.89, 1190.55],
-  A5:     [419.53, 595.28],
-};
+/* PAGE_SIZES is loaded from ../lib/pdf-utils.js */
 
 async function applyResize() {
   const preset = document.getElementById('resize-preset').value;
@@ -1031,7 +1013,7 @@ function openExportPanel(/* tab unused, kept for legacy callers */) {
   if (fn) fn.value = pdfFileName || 'edited.pdf';
   const info = document.getElementById('export-info');
   if (info) {
-    pdfjsLib.getDocument({ data: pdfBytes.slice() }).promise.then(doc => {
+    getCachedPdfDoc().then(doc => {
       info.textContent = 'Pages: ' + doc.numPages + '   Size: ' + fmtBytes(pdfBytes.length);
     }).catch(() => {});
   }
@@ -1266,7 +1248,7 @@ function switchView(view) {
 async function renderReaderPage() {
   if (!pdfBytes) return;
   try {
-    const doc = await pdfjsLib.getDocument({ data: pdfBytes.slice() }).promise;
+    const doc = await getCachedPdfDoc();
     const numPages = doc.numPages;
     if (readerPage > numPages) readerPage = numPages;
     if (readerPage < 1) readerPage = 1;
@@ -1543,7 +1525,7 @@ async function openDocInfoDialog() {
     document.getElementById('doc-creator').value = doc.getCreator() || '';
 
     const stats = document.getElementById('doc-info-stats');
-    const pDoc = await pdfjsLib.getDocument({ data: pdfBytes.slice() }).promise;
+    const pDoc = await getCachedPdfDoc();
     stats.innerHTML =
       '<b>Pages:</b> ' + pDoc.numPages +
       '<br><b>File Size:</b> ' + fmtBytes(pdfBytes.length) +

@@ -5,7 +5,7 @@
 ═══════════════════════════════════════════ */
 'use strict';
 
-const CACHE = 'peppy-v6';
+const CACHE = 'peppy-v7';
 
 /* ── CDN dependencies (jsDelivr) ── */
 const CDN_DEPS = [
@@ -88,6 +88,10 @@ const APP_ASSETS = [
   './lib/error-handler.js',
   /* Shared PDF utilities */
   './lib/pdf-utils.js',
+  /* Shared HTML-escape utility */
+  './lib/shared-utils.js',
+  /* Shared UI boilerplate */
+  './lib/shared-ui.js',
 ];
 
 const PRECACHE = APP_ASSETS.concat(CDN_DEPS);

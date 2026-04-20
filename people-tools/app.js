@@ -4,18 +4,9 @@
 'use strict';
 
 // ──────────────────────────────────────────
-// Security — HTML entity escaping
-// Prevents XSS when user-typed names are
-// injected into innerHTML templates.
+// Security — escHtml() is loaded from
+// ../lib/shared-utils.js
 // ──────────────────────────────────────────
-function escHtml(s) {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;');
-}
 
 /** Copy text content of a container to clipboard */
 function copyResultText(containerId) {
@@ -33,47 +24,8 @@ function showToast(msg) {
   clearTimeout(t._tid); t._tid = setTimeout(() => t.classList.remove('show'), 1800);
 }
 
-// ──────────────────────────────────────────
-// Theme
-// ──────────────────────────────────────────
-function toggleTheme() {
-  const html = document.documentElement;
-  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  html.setAttribute('data-theme', next);
-  localStorage.setItem('stp-theme', next);
-  document.getElementById('theme-btn').innerHTML = next === 'dark' ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
-}
-
-/** Toggle fullscreen mode for casting on large screens */
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
-  } else {
-    document.exitFullscreen().catch(() => {});
-  }
-}
-(function initTheme() {
-  const t = localStorage.getItem('stp-theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', t);
-  const btn = document.getElementById('theme-btn');
-  if (btn) btn.innerHTML = t === 'dark' ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
-})();
-
-/** Toggle mobile sidebar drawer */
-function toggleMobileMenu() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  if (sidebar) sidebar.classList.toggle('open');
-  if (overlay) overlay.classList.toggle('active');
-}
-/** Close mobile sidebar drawer */
-function closeMobileMenu() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  if (sidebar) sidebar.classList.remove('open');
-  if (overlay) overlay.classList.remove('active');
-}
-
+/* Theme, fullscreen, mobile menu loaded from shared-ui.js */
+initTheme();
 // ──────────────────────────────────────────
 // Navigation
 // ──────────────────────────────────────────
@@ -94,10 +46,19 @@ function toggleGroup(grpId) {
 // ──────────────────────────────────────────
 // Utilities
 // ──────────────────────────────────────────
+/** Crypto-safe random float in [0, 1) */
+function cryptoRandom() {
+  const buf = new Uint32Array(1);
+  crypto.getRandomValues(buf);
+  return buf[0] / 4294967296;
+}
+
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const buf = new Uint32Array(1);
+    crypto.getRandomValues(buf);
+    const j = buf[0] % (i + 1);
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
@@ -217,7 +178,7 @@ function refreshSavedSelect() {
   const prev = sel.value;
   sel.innerHTML = '<option value="">— select a list —</option>';
   getSavedLists().forEach(({ name }) => {
-    sel.insertAdjacentHTML('beforeend', `<option value="${name}">${name}</option>`);
+    sel.insertAdjacentHTML('beforeend', `<option value="${escHtml(name)}">${escHtml(name)}</option>`);
   });
   sel.value = prev || '';
 }
@@ -298,7 +259,7 @@ function pickPerson() {
     if (exclLast && personHistory.length && personPool.length > 1) {
       const last = personHistory[personHistory.length - 1];
       const nonLast = personPool.filter(n => n !== last);
-      idx = personPool.indexOf(nonLast[Math.floor(Math.random() * nonLast.length)]);
+      idx = personPool.indexOf(nonLast[Math.floor(cryptoRandom() * nonLast.length)]);
     }
     const picked = personPool.splice(idx, 1)[0];
     personPickedSet.add(picked);
@@ -312,7 +273,7 @@ function pickPerson() {
       const last = personHistory[personHistory.length - 1];
       pool = pool.filter(n => n !== last);
     }
-    const picked = pool[Math.floor(Math.random() * pool.length)];
+    const picked = pool[Math.floor(cryptoRandom() * pool.length)];
     personHistory.push(picked);
     animateSlot('person-slot', picked);
     renderPersonHistory();
@@ -370,7 +331,7 @@ function animateSlot(slotId, finalName) {
   let frames = 18;
   const interval = setInterval(() => {
     el.classList.add('spinning-text');
-    el.textContent = allNames[Math.floor(Math.random() * allNames.length)] || '…';
+    el.textContent = allNames[Math.floor(cryptoRandom() * allNames.length)] || '…';
     frames--;
     if (frames <= 0) {
       clearInterval(interval);
@@ -425,7 +386,7 @@ function renderHostRR(names) {
   grid.innerHTML = names.map(n => {
     let cls = hosted.has(n) ? 'done' : '';
     if (n === current) cls = 'current';
-    return `<span class="rr-chip ${cls}">${n}</span>`;
+    return `<span class="rr-chip ${cls}">${escHtml(n)}</span>`;
   }).join('');
   const label = document.getElementById('host-round-label');
   if (label) label.textContent = `Round ${hostRound} • ${hostPool.length} left`;
@@ -436,7 +397,7 @@ function renderHostHistory() {
   if (!list) return;
   list.innerHTML = hostHistory.slice().reverse().map((n, i) => {
     const num = hostHistory.length - i;
-    return `<div class="history-item"><span class="h-num">#${num}</span>${n}</div>`;
+    return `<div class="history-item"><span class="h-num">#${num}</span>${escHtml(n)}</div>`;
   }).join('');
 }
 
@@ -551,7 +512,7 @@ function renderSpkRR(names) {
   grid.innerHTML = names.map(n => {
     let cls = spkDone.has(n) ? 'done' : '';
     if (n === current) cls = 'current';
-    return `<span class="rr-chip ${cls}">${n}</span>`;
+    return `<span class="rr-chip ${cls}">${escHtml(n)}</span>`;
   }).join('');
 }
 
@@ -560,7 +521,7 @@ function renderSpkHistory() {
   if (!list) return;
   list.innerHTML = spkHistory.slice().reverse().map((n, i) => {
     const num = spkHistory.length - i;
-    return `<div class="history-item"><span class="h-num">#${num}</span>${n}</div>`;
+    return `<div class="history-item"><span class="h-num">#${num}</span>${escHtml(n)}</div>`;
   }).join('');
 }
 
@@ -579,7 +540,7 @@ function pickWinners() {
   const usable  = Math.min(count, allowDup ? count : pool.length);
 
   for (let i = 0; i < usable; i++) {
-    const idx  = Math.floor(Math.random() * pool.length);
+    const idx  = Math.floor(cryptoRandom() * pool.length);
     const name = pool[idx];
     winners.push(name);
     if (!allowDup) pool.splice(idx, 1);
@@ -590,7 +551,7 @@ function pickWinners() {
   div.innerHTML = winners.map((name, i) => {
     const rank  = medals[i] || `#${i + 1}`;
     const first = i === 0 ? ' first' : '';
-    return `<div class="winner-row${first}"><span class="w-rank">${rank}</span><span class="w-name">${name}</span></div>`;
+    return `<div class="winner-row${first}"><span class="w-rank">${rank}</span><span class="w-name">${escHtml(name)}</span></div>`;
   }).join('');
 }
 
@@ -622,8 +583,8 @@ function generateTeams() {
     const color = colors[i % colors.length];
     return `
       <div class="team-card team-${i % 8}">
-        <input class="team-name-input" value="${tName}" style="color:${color};border-color:${color}" />
-        <div class="team-members">${members.map(m => `<span class="member-chip">${m}</span>`).join('')}</div>
+        <input class="team-name-input" value="${escHtml(tName)}" style="color:${color};border-color:${color}" />
+        <div class="team-members">${members.map(m => `<span class="member-chip">${escHtml(m)}</span>`).join('')}</div>
       </div>`;
   }).join('');
 }
@@ -661,7 +622,7 @@ function generatePairs() {
   const div = document.getElementById('pg-results');
   if (!div) return;
   div.innerHTML = pairs.map((p, i) => {
-    const names = p.map(n => `<span class="pair-name">${n}</span>`).join('<span class="pair-arrow"> ↔ </span>');
+    const names = p.map(n => `<span class="pair-name">${escHtml(n)}</span>`).join('<span class="pair-arrow"> ↔ </span>');
     return `<div class="pair-row"><span class="pair-num">${i + 1}.</span>${names}</div>`;
   }).join('');
 }
@@ -711,7 +672,7 @@ function createGroups() {
   div.innerHTML = groups.map((members, i) => `
     <div class="team-card team-${i % 8}">
       <div class="team-name">Group ${i + 1} <span style="font-size:11px;font-weight:400;color:var(--text2)">(${members.length})</span></div>
-      <div class="team-members">${members.map(m => `<span class="member-chip">${m}</span>`).join('')}</div>
+      <div class="team-members">${members.map(m => `<span class="member-chip">${escHtml(m)}</span>`).join('')}</div>
     </div>`).join('');
 }
 
@@ -740,7 +701,7 @@ function generateSeating() {
     for (let c = 0; c < cols; c++) {
       const idx = r * cols + c;
       if (idx < names.length) {
-        cells.push(`<div class="seat"><span class="seat-num">S${idx + 1}</span>${names[idx]}</div>`);
+        cells.push(`<div class="seat"><span class="seat-num">S${idx + 1}</span>${escHtml(names[idx])}</div>`);
       } else if (showEmpty) {
         cells.push(`<div class="seat empty">Empty</div>`);
       } else {
@@ -765,7 +726,7 @@ function shuffleNames() {
   if (display) {
     display.innerHTML = shuffled.map((name, i) => `
       <div class="ordered-item" style="animation-delay:${i * 0.04}s">
-        <span class="order-num">${i + 1}</span>${name}
+        <span class="order-num">${i + 1}</span>${escHtml(name)}
       </div>`).join('');
   }
 }
@@ -819,7 +780,7 @@ function generateSanta() {
   if (!div) return;
   div.innerHTML = assignment.givers.map((g, i) => `
     <div class="santa-row">
-      <span class="santa-giver">${g}</span>
+      <span class="santa-giver">${escHtml(g)}</span>
       <span class="santa-arrow">→ <i class="bi bi-gift" aria-hidden="true"></i> →</span>
       <span class="santa-receiver" id="santa-rec-${i}" style="filter:blur(8px)">❓</span>
       <button class="santa-reveal" onclick="revealSanta(${i})">Reveal</button>

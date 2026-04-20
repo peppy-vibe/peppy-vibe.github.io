@@ -527,31 +527,9 @@ function renderPreview() {
   document.getElementById('preview-pane').innerHTML = html;
 }
 
-/* ── Theme ─────────────────────────────────── */
-function toggleTheme() {
-  const cur  = document.documentElement.getAttribute('data-theme');
-  const next = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('stp-theme', next);
-  updateThemeBtn();
-}
+/* toggleTheme, updateThemeBtn, toggleFullscreen → ../lib/shared-ui.js */
 
-function updateThemeBtn() {
-  const btn = document.getElementById('theme-btn');
-  if (!btn) return;
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  btn.innerHTML = isDark ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
-}
-
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
-  } else {
-    document.exitFullscreen().catch(() => {});
-  }
-}
-
-updateThemeBtn();
+initTheme();
 
 /* ── Split preview ─────────────────────────── */
 function toggleSplit() {

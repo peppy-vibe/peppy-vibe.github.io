@@ -10,9 +10,9 @@
   <link rel="stylesheet" href="../lib/bootstrap-icons/bootstrap-icons.min.css">
   <link rel="stylesheet" href="style.css">
   <!-- @cantoo/pdf-lib v2.6.2 — drop-in pdf-lib fork with AES-256 encryption support (cached by SW for offline) -->
-  <script src="https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.6.2/dist/pdf-lib.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.6.2/dist/pdf-lib.min.js" integrity="sha384-y/eCapxHqWDsRq6KE1dnReKWDhr522LvPcIQEwpatFbOmJYBTaeWiguzs3b9JTnc" crossorigin="anonymous"></script>
   <!-- PDF.js v3.11.174 — PDF rendering to canvas (cached by SW for offline) -->
-  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js" integrity="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -437,9 +437,9 @@
             <label class="io-label">Page size</label>
             <select id="img2pdf-size">
               <option value="fit">Fit image (image dimensions)</option>
-              <option value="a4">A4 (595 × 842 pt)</option>
-              <option value="letter">Letter (612 × 792 pt)</option>
-              <option value="a3">A3 (842 × 1191 pt)</option>
+              <option value="A4">A4 (595 × 842 pt)</option>
+              <option value="Letter">Letter (612 × 792 pt)</option>
+              <option value="A3">A3 (842 × 1191 pt)</option>
             </select>
           </div>
           <div class="form-group">
@@ -565,11 +565,11 @@
           <div class="form-group">
             <label class="io-label">Target size</label>
             <select id="resize-preset" onchange="resizePresetChange()">
-              <option value="a4">A4 (595 × 842 pt)</option>
-              <option value="letter">Letter (612 × 792 pt)</option>
-              <option value="legal">Legal (612 × 1008 pt)</option>
-              <option value="a3">A3 (842 × 1191 pt)</option>
-              <option value="a5">A5 (420 × 595 pt)</option>
+              <option value="A4">A4 (595 × 842 pt)</option>
+              <option value="Letter">Letter (612 × 792 pt)</option>
+              <option value="Legal">Legal (612 × 1008 pt)</option>
+              <option value="A3">A3 (842 × 1191 pt)</option>
+              <option value="A5">A5 (420 × 595 pt)</option>
               <option value="custom">Custom</option>
             </select>
           </div>
@@ -768,6 +768,7 @@
   <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../lib/pdf-utils.js"></script>
   <script src="../lib/error-handler.js"></script>
+  <script src="../lib/shared-ui.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

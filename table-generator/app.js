@@ -486,9 +486,7 @@ function switchTab(btn, tabId) {
 }
 
 /* ── Export ────────────────────────────────── */
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+/* escHtml() is loaded from ../lib/shared-utils.js */
 
 function buildHTMLTable() {
   const ts  = S.ts;
@@ -612,11 +610,22 @@ function copyHTMLToClipboard() {
 }
 
 function fallbackCopy(text) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(
+      () => alert('Copied to clipboard!'),
+      () => _legacyCopy(text)
+    );
+  } else {
+    _legacyCopy(text);
+  }
+}
+function _legacyCopy(text) {
   const ta = document.createElement('textarea');
   ta.value = text;
+  ta.style.cssText = 'position:fixed;top:-9999px;opacity:0';
   document.body.appendChild(ta);
   ta.select();
-  document.execCommand('copy');
+  try { document.execCommand('copy'); } catch {}
   document.body.removeChild(ta);
   alert('Copied to clipboard!');
 }
@@ -946,31 +955,10 @@ function _pasteTextToCells(text) {
   renderTable();
 }
 
-/* ── Theme ─────────────────────────────────── */
-function toggleTheme() {
-  const cur  = document.documentElement.getAttribute('data-theme');
-  const next = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('stp-theme', next);
-  updateThemeBtn();
-}
 
-function updateThemeBtn() {
-  const btn = document.getElementById('theme-btn');
-  if (!btn) return;
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  btn.innerHTML = isDark ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
-}
+/* Theme, fullscreen loaded from shared-ui.js */
+initTheme();
 
-updateThemeBtn();
-
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
-  } else {
-    document.exitFullscreen().catch(() => {});
-  }
-}
 
 /** Toggle settings panel drawer on mobile */
 function toggleSettingsPanel() {

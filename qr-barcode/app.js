@@ -4,46 +4,8 @@
 'use strict';
 
 // ──────────────────────────────────────────
-// Theme
-// ──────────────────────────────────────────
-function toggleTheme() {
-  const html = document.documentElement;
-  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  html.setAttribute('data-theme', next);
-  localStorage.setItem('stp-theme', next);
-  document.getElementById('theme-btn').innerHTML = next === 'dark' ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
-}
-(function initTheme() {
-  const t = localStorage.getItem('stp-theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', t);
-  const btn = document.getElementById('theme-btn');
-  if (btn) btn.innerHTML = t === 'dark' ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
-})();
-
-/** Toggle fullscreen mode */
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
-  } else {
-    document.exitFullscreen().catch(() => {});
-  }
-}
-
-/** Toggle mobile sidebar drawer */
-function toggleMobileMenu() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  if (sidebar) sidebar.classList.toggle('open');
-  if (overlay) overlay.classList.toggle('active');
-}
-/** Close mobile sidebar drawer */
-function closeMobileMenu() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  if (sidebar) sidebar.classList.remove('open');
-  if (overlay) overlay.classList.remove('active');
-}
-
+/* Theme, fullscreen, mobile menu loaded from shared-ui.js */
+initTheme();
 // ──────────────────────────────────────────
 // Navigation
 // ──────────────────────────────────────────
@@ -321,9 +283,7 @@ function renderQrGenHistory() {
     return `<div class="history-item"><span class="h-num">#${num}</span><span class="h-type">${h.type}</span> ${escapeHtml(preview)} <span class="h-time">${h.time}</span></div>`;
   }).join('');
 }
-function escapeHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
+/* escapeHtml() is loaded from ../lib/shared-utils.js */
 
 // ══════════════════════════════════════════════════════════
 // BATCH QR GENERATOR

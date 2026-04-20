@@ -4,47 +4,7 @@
 
 'use strict';
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-   THEME
-â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-function toggleTheme() {
-  const cur = document.documentElement.getAttribute('data-theme');
-  const next = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('stp-theme', next);
-  updateThemeBtn();
-  // Redraw wheel with new theme colors if visible
-  if (wheelOptions.length) buildWheel();
-}
-function updateThemeBtn() {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  const btn = document.getElementById('theme-btn');
-  if (btn) btn.innerHTML = isDark ? '<i class="bi bi-sun" aria-hidden="true"></i>' : '<i class="bi bi-moon-stars" aria-hidden="true"></i>';
-}
-
-/** Toggle fullscreen mode for casting on large screens */
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
-  } else {
-    document.exitFullscreen().catch(() => {});
-  }
-}
-
-/** Toggle mobile sidebar drawer */
-function toggleMobileMenu() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  if (sidebar) sidebar.classList.toggle('open');
-  if (overlay) overlay.classList.toggle('active');
-}
-/** Close mobile sidebar drawer */
-function closeMobileMenu() {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  if (sidebar) sidebar.classList.remove('open');
-  if (overlay) overlay.classList.remove('active');
-}
+/* updateThemeBtn, toggleFullscreen, mobile menu loaded from shared-ui.js */
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    SIDEBAR NAVIGATION
@@ -102,13 +62,25 @@ function clearEl(id) {
 }
 
 function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  const range = max - min + 1;
+  const buf = new Uint32Array(1);
+  crypto.getRandomValues(buf);
+  return min + (buf[0] % range);
+}
+
+/** Crypto-safe random float in [0, 1) */
+function cryptoRandom() {
+  const buf = new Uint32Array(1);
+  crypto.getRandomValues(buf);
+  return buf[0] / 4294967296;
 }
 
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const buf = new Uint32Array(1);
+    crypto.getRandomValues(buf);
+    const j = buf[0] % (i + 1);
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
@@ -215,10 +187,10 @@ function spinWheel() {
   document.getElementById('spin-btn').disabled = true;
   document.getElementById('wheel-result').textContent = '';
 
-  const totalRotation = (5 + Math.random() * 5) * 2 * Math.PI; // 5-10 full rotations
+  const totalRotation = (5 + cryptoRandom() * 5) * 2 * Math.PI; // 5-10 full rotations
   const startAngle = wheelAngle;
   const endAngle = startAngle + totalRotation;
-  const duration = 4000 + Math.random() * 1500;
+  const duration = 4000 + cryptoRandom() * 1500;
   const startTime = performance.now();
 
   function easeOut(t) {
@@ -278,7 +250,9 @@ function shuffleWheelOptions() {
   const lines = ta.value.split('\n').map(s => s.trim()).filter(s => s.length > 0);
   if (lines.length < 2) return;
   for (let i = lines.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const buf = new Uint32Array(1);
+    crypto.getRandomValues(buf);
+    const j = buf[0] % (i + 1);
     [lines[i], lines[j]] = [lines[j], lines[i]];
   }
   ta.value = lines.join('\n');
@@ -307,7 +281,7 @@ const noMessages = [
 ];
 
 function decideYesNo() {
-  const isYes = Math.random() < 0.5;
+  const isYes = cryptoRandom() < 0.5;
   const display = document.getElementById('yesno-display');
   const msg = document.getElementById('yesno-msg');
   display.className = 'yesno-display';
@@ -316,7 +290,7 @@ function decideYesNo() {
     display.textContent = isYes ? 'YES' : 'NO';
     display.classList.add(isYes ? 'yes' : 'no');
     const msgs = isYes ? yesMessages : noMessages;
-    msg.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+    msg.textContent = msgs[Math.floor(cryptoRandom() * msgs.length)];
   }, 80);
 }
 
@@ -332,7 +306,7 @@ function pickOption() {
   const listResult = document.getElementById('option-list-result');
   const listDisplay = document.getElementById('option-list-display');
 
-  const picked = options[Math.floor(Math.random() * options.length)];
+  const picked = options[Math.floor(cryptoRandom() * options.length)];
   resultVal.textContent = picked;
   resultBox.style.display = 'block';
 
@@ -352,9 +326,10 @@ function clearOptionPicker() {
   if (listResult) { listResult.style.display = 'none'; document.getElementById('option-list-display').innerHTML = ''; }
 }
 
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+/* escHtml() is loaded from ../lib/shared-utils.js */
+
+
+
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    4. WINNER PICKER
@@ -375,7 +350,7 @@ function pickWinners() {
   let pool = [...names];
   const winners = [];
   for (let i = 0; i < count; i++) {
-    const idx = Math.floor(Math.random() * pool.length);
+    const idx = Math.floor(cryptoRandom() * pool.length);
     winners.push(pool[idx]);
     if (unique) pool.splice(idx, 1);
   }
@@ -416,7 +391,7 @@ function generateNumbers() {
   if (unique) {
     const pool = Array.from({ length: rangeSize }, (_, i) => i + min);
     for (let i = 0; i < count; i++) {
-      const idx = Math.floor(Math.random() * pool.length);
+      const idx = Math.floor(cryptoRandom() * pool.length);
       numbers.push(pool[idx]);
       pool.splice(idx, 1);
     }
@@ -479,10 +454,10 @@ let coinFlipping = false;
 function flipCoin() {
   if (coinFlipping) return;
   coinFlipping = true;
-  const isHeads = Math.random() < 0.5;
+  const isHeads = cryptoRandom() < 0.5;
   const coin = document.getElementById('coin');
   const label = document.getElementById('coin-label');
-  const rotations = 4 + Math.floor(Math.random() * 4); // 4-7 full rotations
+  const rotations = 4 + Math.floor(cryptoRandom() * 4); // 4-7 full rotations
   const endRot = rotations * 360 + (isHeads ? 0 : 180);
   coin.style.setProperty('--coin-rot', endRot + 'deg');
   coin.classList.remove('flipping');
@@ -637,7 +612,7 @@ function generateTimes() {
   for (let i = 0; i < count; i++) {
     let mins;
     if (unique && pool) {
-      const idx = Math.floor(Math.random() * pool.length);
+      const idx = Math.floor(cryptoRandom() * pool.length);
       mins = pool[idx];
       pool.splice(idx, 1);
     } else {
@@ -663,7 +638,7 @@ function fmt2(n) { return String(n).padStart(2, '0'); }
    INIT
 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 document.addEventListener('DOMContentLoaded', () => {
-  updateThemeBtn();
+  initTheme();
   // Init wheel with default options
   setTimeout(() => {
     buildWheel();

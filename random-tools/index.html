@@ -22,7 +22,7 @@
     </div>
     <div class="top-bar-right">
       <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
-      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
+      <button class="top-btn" id="theme-btn" onclick="toggleTheme(() => { if (wheelOptions.length) buildWheel(); })" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
     </div>
   </div>
 
@@ -312,6 +312,8 @@ Option F</textarea>
 
   <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../lib/error-handler.js"></script>
+  <script src="../lib/shared-utils.js"></script>
+  <script src="../lib/shared-ui.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
