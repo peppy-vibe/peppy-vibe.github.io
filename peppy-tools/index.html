@@ -20,8 +20,24 @@
 
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://cdn.jsdelivr.net; worker-src 'self' blob: https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Peppy Tools — Free Browser Utilities</title>
-  <meta name="description" content="Nine free, fully client-side browser tools: notepad, table generator, dev tools, PDF tools, PDF editor, random tools, people tools, QR &amp; barcode, and clock tools. No uploads. Works offline.">
+
+  <!-- Primary SEO -->
+  <title>Peppy Tools — Free Browser Utilities (PDF, Dev, QR, Clock &amp; More)</title>
+  <meta name="description" content="Nine free, fully client-side browser tools: PDF tools, PDF editor, notepad, table generator, dev tools, random tools, people &amp; group tools, QR &amp; barcode, and clock tools. No sign-up, no uploads, works offline.">
+  <meta name="keywords" content="peppy tools, free browser tools, pdf tools, dev tools, qr code generator, notepad, table generator, offline tools, client-side">
+  <link rel="canonical" href="https://peppy-vibe.github.io/peppy-tools/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://peppy-vibe.github.io/peppy-tools/">
+  <meta property="og:title" content="Peppy Tools — Free Browser Utilities">
+  <meta property="og:description" content="Nine free, fully client-side browser tools: PDF tools, notepad, dev tools, QR &amp; barcode, clock tools, and more. No sign-up, no uploads, works offline.">
+  <meta property="og:site_name" content="Peppy Vibe">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Peppy Tools — Free Browser Utilities">
+  <meta name="twitter:description" content="Nine free, fully client-side browser tools including PDF tools, dev utilities, QR codes, and clock tools. No uploads. Works offline.">
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#5646F5">
   <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
@@ -129,7 +145,7 @@
       display: flex; align-items: center;
     }
     .nav-home-link:hover { color: #fff; }
-    .nav-title { color: #fff; font-weight: 700; font-size: 1rem; letter-spacing: 0.2px; }
+    .nav-title { color: #fff; font-weight: 700; font-size: 1rem; letter-spacing: 0.2px; line-height: 1; }
     .nav-actions { display: flex; align-items: center; gap: 0.6rem; }
     .nav-btn {
       background: rgba(255,255,255,0.18);
@@ -344,7 +360,7 @@
       <a href="../" class="nav-home-link" aria-label="Back to Peppy Vibe home" title="Peppy Vibe Home">
         <i class="bi bi-lightning-charge-fill" aria-hidden="true"></i>
       </a>
-      <p class="nav-title">Peppy Tools</p>
+      <span class="nav-title">Peppy Tools</span>
     </div>
     <div class="nav-actions">
       <button id="install-btn" class="nav-btn" onclick="installPWA()" aria-label="Install app"><i class="bi bi-download" aria-hidden="true"></i> Install App</button>
