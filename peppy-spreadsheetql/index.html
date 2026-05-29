@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YLTG419QN5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YLTG419QN5');
+  </script>
+
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; object-src 'none'; base-uri 'self'">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary SEO -->
+  <title>Peppy SpreadsheetQL — SQL Queries for Excel, CSV &amp; Parquet Files</title>
+  <meta name="description" content="Query Excel, CSV &amp; Parquet files with SQL — no database setup required. Join multiple spreadsheets, run GROUP BY &amp; aggregations, create working tables. DuckDB-powered desktop app.">
+  <meta name="keywords" content="SQL for Excel, query CSV with SQL, spreadsheet SQL tool, Excel SQL analysis, DuckDB spreadsheet, no database SQL, query multiple spreadsheets, Excel data analysis, CSV SQL query, join Excel files SQL, spreadsheet analytics">
+  <link rel="canonical" href="https://peppy-vibe.github.io/peppy-spreadsheetql/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://peppy-vibe.github.io/peppy-spreadsheetql/">
+  <meta property="og:title" content="Peppy SpreadsheetQL — SQL Queries for Excel, CSV &amp; Parquet Files">
+  <meta property="og:description" content="Query Excel, CSV &amp; Parquet with SQL. JOIN multiple spreadsheets, GROUP BY, aggregate — no database install. DuckDB-powered desktop app by Peppy Vibe.">
+  <meta property="og:site_name" content="Peppy Vibe">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Peppy SpreadsheetQL — SQL Queries for Excel, CSV &amp; Parquet Files">
+  <meta name="twitter:description" content="Turn your spreadsheets into a relational database. JOIN, GROUP BY, aggregate across Excel, CSV &amp; Parquet files. No database install needed.">
+
+  <meta name="theme-color" content="#5646F5">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Peppy SpreadsheetQL",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Windows, macOS, Linux",
+        "description": "A standalone desktop application that lets you query Excel spreadsheets, CSV files, and Parquet files using standard SQL — without installing a database. Powered by DuckDB. Supports cross-file JOINs, GROUP BY, aggregations, working tables, and exports to Excel, CSV, JSON and Markdown.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Peppy Vibe",
+          "url": "https://peppy-vibe.github.io/"
+        },
+        "featureList": [
+          "SQL queries on Excel, CSV and Parquet files",
+          "Cross-file JOINs — query multiple spreadsheets together",
+          "DuckDB-powered in-memory analytics engine",
+          "Working tables — derived tables from SQL queries",
+          "Schema configuration with column type overrides",
+          "Preprocessing rules — trim whitespace, date formats, null replacement",
+          "Export to Excel, CSV, JSON and Markdown",
+          "Workspace-based project management",
+          "SHA-256 file change detection"
+        ],
+        "url": "https://peppy-vibe.github.io/peppy-spreadsheetql/"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Peppy Vibe",
+            "item": "https://peppy-vibe.github.io/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Peppy SpreadsheetQL",
+            "item": "https://peppy-vibe.github.io/peppy-spreadsheetql/"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="../peppy-tools/lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../peppy-tools/lib/bootstrap-icons/bootstrap-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-grad-1: #0c0a1e;
+      --bg-grad-2: #1e1860;
+      --bg-grad-3: #18133a;
+      --card-bg: rgba(255,255,255,0.07);
+      --card-border: rgba(255,255,255,0.15);
+      --card-hover-bg: rgba(255,255,255,0.13);
+      --text: #ffffff;
+      --text-muted: rgba(255,255,255,0.72);
+      --btn-bg: #5646F5;
+      --btn-hover: #4535e0;
+      --accent: #5646F5;
+      --accent-light: #8b83f7;
+      --tag-bg: rgba(86,70,245,0.22);
+      --tag-text: #a89ff9;
+      --hero-glow: rgba(86,70,245,0.18);
+      --section-bg: rgba(255,255,255,0.03);
+      --highlight-bg: rgba(86,70,245,0.12);
+      --sql-accent: #38bdf8;
+      --sql-bg: rgba(56,189,248,0.10);
+      --sql-border: rgba(56,189,248,0.28);
+      --green-accent: #4ade80;
+      --green-bg: rgba(74,222,128,0.10);
+      --green-border: rgba(74,222,128,0.28);
+    }
+
+    [data-theme="light"] {
+      --bg-grad-1: #eceaff;
+      --bg-grad-2: #e0ddfb;
+      --bg-grad-3: #d0ccf8;
+      --card-bg: rgba(255,255,255,0.82);
+      --card-border: rgba(86,70,245,0.15);
+      --card-hover-bg: rgba(255,255,255,0.97);
+      --text: #0e0b2e;
+      --text-muted: rgba(14,11,46,0.60);
+      --btn-bg: #5646F5;
+      --btn-hover: #4535e0;
+      --accent: #5646F5;
+      --accent-light: #4535e0;
+      --tag-bg: rgba(86,70,245,0.10);
+      --tag-text: #4535e0;
+      --hero-glow: rgba(86,70,245,0.08);
+      --section-bg: rgba(86,70,245,0.03);
+      --highlight-bg: rgba(86,70,245,0.06);
+      --sql-accent: #0284c7;
+      --sql-bg: rgba(56,189,248,0.07);
+      --sql-border: rgba(56,189,248,0.22);
+      --green-accent: #16a34a;
+      --green-bg: rgba(74,222,128,0.07);
+      --green-border: rgba(74,222,128,0.22);
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 50%, var(--bg-grad-3) 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute; top: -100px; left: 0;
+      background: var(--accent); color: #fff;
+      padding: 0.5rem 1rem; border-radius: 0 0 8px 0;
+      text-decoration: none; font-weight: 700; z-index: 9999;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* Nav */
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.55rem 1.25rem;
+      background: var(--accent);
+      border-bottom: 1px solid rgba(0,0,0,0.10);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 0.5rem; }
+    .nav-home-link {
+      color: rgba(255,255,255,0.75); font-size: 1.2rem; line-height: 1;
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-home-link:hover { color: #fff; }
+    .nav-sep { color: rgba(255,255,255,0.35); font-size: 0.85rem; }
+    .nav-title { color: #fff; font-weight: 700; font-size: 1rem; letter-spacing: 0.2px; }
+    .nav-actions { display: flex; align-items: center; gap: 0.6rem; }
+    .nav-btn {
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.28);
+      color: #fff; padding: 0.3rem 0.85rem;
+      border-radius: 20px; cursor: pointer;
+      font-size: 0.85rem; font-family: inherit;
+      transition: background 0.2s;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,0.30); }
+
+    /* Hero */
+    header {
+      padding: 5rem 2rem 3.5rem; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 0%, var(--hero-glow), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--tag-bg); color: var(--accent-light);
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 1.2px;
+      text-transform: uppercase; padding: 0.3rem 0.9rem;
+      border-radius: 20px; margin-bottom: 1.4rem;
+      border: 1px solid rgba(86,70,245,0.2);
+    }
+    .hero-badges {
+      display: flex; justify-content: center; flex-wrap: wrap;
+      gap: 0.6rem; margin-bottom: 1.6rem;
+    }
+    .hero-badge-sql {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--sql-bg); color: var(--sql-accent);
+      border: 1px solid var(--sql-border);
+      font-size: 0.82rem; font-weight: 700; padding: 0.35rem 1rem;
+      border-radius: 20px;
+    }
+    .hero-badge-no-db {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--green-bg); color: var(--green-accent);
+      border: 1px solid var(--green-border);
+      font-size: 0.82rem; font-weight: 700; padding: 0.35rem 1rem;
+      border-radius: 20px;
+    }
+    header h1 {
+      font-size: 3.6rem; font-weight: 900; letter-spacing: -2px;
+      margin-bottom: 1rem; line-height: 1.05;
+    }
+    header h1 span {
+      background: linear-gradient(90deg, var(--accent-light), #c4b5fd);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 1.15rem; color: var(--text-muted);
+      max-width: 640px; margin: 0 auto 2rem; line-height: 1.65;
+    }
+    .hero-ctas {
+      display: flex; justify-content: center; flex-wrap: wrap;
+      gap: 0.75rem; margin-bottom: 2.5rem;
+    }
+    .btn-primary-lg {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      background: var(--btn-bg); color: #fff;
+      border-radius: 10px; font-size: 1rem; font-weight: 700;
+      letter-spacing: 0.3px; text-decoration: none;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(86,70,245,0.35);
+    }
+    .btn-primary-lg:hover {
+      background: var(--btn-hover); color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(86,70,245,0.45);
+    }
+    .btn-ghost-lg {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      background: transparent; color: var(--accent-light);
+      border: 1.5px solid rgba(86,70,245,0.4);
+      border-radius: 10px; font-size: 1rem; font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    }
+    .btn-ghost-lg:hover {
+      background: var(--tag-bg); color: var(--accent-light);
+      border-color: rgba(86,70,245,0.6);
+      transform: translateY(-2px);
+    }
+    /* Proprietary notice */
+    .proprietary-notice {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(86,70,245,0.12); border: 1px solid rgba(86,70,245,0.3);
+      color: var(--text-muted); font-size: 0.8rem; font-weight: 600;
+      padding: 0.35rem 0.9rem; border-radius: 20px; margin-bottom: 1rem;
+      letter-spacing: 0.3px;
+    }
+    .proprietary-notice a { color: var(--accent-light); text-decoration: underline; }
+    .proprietary-cta-badge {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.7); font-size: 0.78rem; font-weight: 700;
+      padding: 0.3rem 0.85rem; border-radius: 20px; margin-bottom: 1rem;
+      letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .stats-strip {
+      display: flex; justify-content: center; flex-wrap: wrap;
+      gap: 0.5rem 2.5rem;
+      padding: 1.5rem 2rem;
+      border-top: 1px solid var(--card-border);
+      max-width: 900px; margin: 0 auto;
+    }
+    .stat-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); }
+    .stat-item i { color: var(--accent-light); font-size: 1.1rem; }
+    .stat-item strong { color: var(--text); }
+
+    /* Screenshots grid */
+    .screenshots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .screenshot-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 14px; overflow: hidden;
+      backdrop-filter: blur(14px);
+    }
+    .screenshot-card img {
+      width: 100%; display: block;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .screenshot-card figcaption {
+      padding: 0.75rem 1rem;
+      font-size: 0.82rem; color: var(--text-muted); line-height: 1.4;
+    }
+
+    /* SQL code block */
+    .sql-demo {
+      background: rgba(0,0,0,0.35); border: 1px solid rgba(56,189,248,0.2);
+      border-radius: 12px; padding: 1.5rem 1.75rem;
+      font-family: 'Courier New', Courier, monospace; font-size: 0.88rem;
+      line-height: 1.7; overflow-x: auto; max-width: 680px; margin: 0 auto;
+      text-align: left;
+    }
+    [data-theme="light"] .sql-demo {
+      background: rgba(255,255,255,0.7); border-color: rgba(56,189,248,0.3);
+    }
+    .sql-kw { color: #7dd3fc; font-weight: 700; }
+    .sql-fn { color: #a78bfa; }
+    .sql-str { color: #86efac; }
+    .sql-com { color: rgba(255,255,255,0.35); }
+    [data-theme="light"] .sql-kw { color: #0369a1; }
+    [data-theme="light"] .sql-fn { color: #7c3aed; }
+    [data-theme="light"] .sql-str { color: #16a34a; }
+    [data-theme="light"] .sql-com { color: rgba(0,0,0,0.35); }
+
+    /* Main content */
+    main { flex: 1; }
+
+    /* Section */
+    .section { padding: 4rem 2rem; }
+    .section-alt { background: var(--section-bg); }
+    .section-inner { max-width: 1060px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--accent-light);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: 2.2rem; font-weight: 800; letter-spacing: -0.8px;
+      line-height: 1.2; margin-bottom: 1rem;
+    }
+    .section-sub {
+      font-size: 1rem; color: var(--text-muted); line-height: 1.65;
+      max-width: 640px; margin-bottom: 2.5rem;
+    }
+
+    /* Feature grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 1.75rem;
+      backdrop-filter: blur(14px);
+    }
+    .feature-icon {
+      font-size: 2rem; margin-bottom: 1rem;
+      background: var(--tag-bg); color: var(--accent-light);
+      width: 3rem; height: 3rem; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .feature-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* How it works steps */
+    .steps-list {
+      display: flex; flex-direction: column; gap: 1.5rem;
+      counter-reset: steps;
+    }
+    .step {
+      display: flex; gap: 1.25rem; align-items: flex-start;
+    }
+    .step-num {
+      background: var(--tag-bg); color: var(--accent-light);
+      width: 2.2rem; height: 2.2rem; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; font-weight: 800; flex-shrink: 0;
+    }
+    .step-body h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .step-body p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* Two-column layout */
+    .two-col {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;
+    }
+
+    /* Format badges */
+    .format-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem;
+    }
+    .format-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 1.25rem; text-align: center;
+      backdrop-filter: blur(14px);
+    }
+    .format-card .fmt-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .format-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .format-card p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* Use cases */
+    .usecase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+    .usecase-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 1.5rem;
+      backdrop-filter: blur(14px);
+    }
+    .usecase-card .uc-icon { font-size: 1.8rem; margin-bottom: 0.75rem; }
+    .usecase-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .usecase-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.55; }
+
+    /* Tag */
+    .tag {
+      background: var(--tag-bg); color: var(--tag-text);
+      font-size: 0.72rem; font-weight: 600;
+      padding: 0.18rem 0.55rem; border-radius: 12px;
+      display: inline-block;
+    }
+
+    /* Highlight box */
+    .highlight-box {
+      background: var(--sql-bg); border: 1px solid var(--sql-border);
+      border-radius: 16px; padding: 2rem;
+    }
+    .highlight-box h3 { font-size: 1.15rem; font-weight: 800; margin-bottom: 0.6rem; color: var(--sql-accent); }
+    .highlight-box p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 0.75rem; }
+    .highlight-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+    .highlight-list li {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      font-size: 0.9rem; color: var(--text-muted);
+    }
+    .highlight-list li::before {
+      content: '✓'; color: var(--sql-accent);
+      font-weight: 700; flex-shrink: 0; margin-top: 0.05rem;
+    }
+
+    /* CTA section */
+    .cta-section {
+      text-align: center; padding: 5rem 2rem;
+      background: var(--highlight-bg);
+    }
+    .cta-section h2 { font-size: 2rem; font-weight: 800; margin-bottom: 0.75rem; }
+    .cta-section p { font-size: 1rem; color: var(--text-muted); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+
+    /* Footer */
+    footer {
+      padding: 1.75rem 2rem; border-top: 1px solid var(--card-border);
+      background: rgba(0,0,0,0.12);
+    }
+    .footer-inner {
+      max-width: 1060px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-brand strong { font-size: 0.95rem; display: block; margin-bottom: 0.15rem; }
+    .footer-brand span { font-size: 0.8rem; color: var(--text-muted); }
+    .footer-links {
+      display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: 0.8rem;
+    }
+    .footer-links a {
+      color: var(--text-muted); text-decoration: none; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--accent-light); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .two-col { grid-template-columns: 1fr; gap: 2rem; }
+      .format-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      header h1 { font-size: 2.4rem; letter-spacing: -1px; }
+      header { padding: 3.5rem 1rem 2.5rem; }
+      .section { padding: 3rem 1rem; }
+      .section-title { font-size: 1.75rem; }
+      .format-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    (function() {
+      var t = localStorage.getItem('stp-theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <nav aria-label="Site navigation">
+    <div class="nav-brand">
+      <a href="../index.html" class="nav-home-link" aria-label="Back to Peppy Vibe home" title="Peppy Vibe Home">
+        <i class="bi bi-lightning-charge-fill" aria-hidden="true"></i>
+      </a>
+      <span class="nav-sep" aria-hidden="true">/</span>
+      <span class="nav-title">Peppy SpreadsheetQL</span>
+    </div>
+    <div class="nav-actions">
+      <button id="theme-btn" class="nav-btn" onclick="toggleTheme()" aria-label="Toggle colour theme">
+        <i class="bi bi-sun" aria-hidden="true"></i> Light
+      </button>
+    </div>
+  </nav>
+
+  <header>
+    <div aria-label="Peppy Vibe product">
+      <span class="hero-eyebrow"><i class="bi bi-lightning-charge-fill" aria-hidden="true"></i> Peppy Vibe</span>
+    </div>
+    <div class="hero-badges" aria-label="Key product highlights">
+      <span class="hero-badge-sql">
+        <i class="bi bi-code-slash" aria-hidden="true"></i> Standard SQL — SELECT, JOIN, GROUP BY
+      </span>
+      <span class="hero-badge-no-db">
+        <i class="bi bi-check-circle-fill" aria-hidden="true"></i> No Database Installation Required
+      </span>
+    </div>
+    <h1>SQL for Your <span>Spreadsheets</span></h1>
+    <p class="hero-sub">
+      Query Excel, CSV, and Parquet files using standard SQL — JOIN across files, GROUP BY, aggregate, and export results. No database setup. Powered by DuckDB. Everything stays on your desktop.
+    </p>
+    <div class="proprietary-notice" role="note">
+      <i class="bi bi-lock-fill" aria-hidden="true"></i> Proprietary Software &mdash; <a href="../contact.html">Contact us for details</a>
+    </div>
+    <div class="hero-ctas">
+      <a href="../contact.html" class="btn-primary-lg">
+        <i class="bi bi-envelope" aria-hidden="true"></i> Contact Us for Details
+      </a>
+      <a href="../index.html" class="btn-ghost-lg">
+        <i class="bi bi-arrow-left" aria-hidden="true"></i> All Projects
+      </a>
+    </div>
+    <div class="stats-strip" role="list" aria-label="Product highlights">
+      <div class="stat-item" role="listitem"><i class="bi bi-file-earmark-spreadsheet" aria-hidden="true"></i> <span><strong>Excel, CSV, Parquet</strong></span></div>
+      <div class="stat-item" role="listitem"><i class="bi bi-lightning-charge" aria-hidden="true"></i> <span>Powered by <strong>DuckDB</strong></span></div>
+      <div class="stat-item" role="listitem"><i class="bi bi-diagram-2" aria-hidden="true"></i> <span>Cross-file <strong>JOINs</strong></span></div>
+      <div class="stat-item" role="listitem"><i class="bi bi-download" aria-hidden="true"></i> <span>Export to <strong>Excel, CSV, JSON</strong></span></div>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+    <!-- ── SQL Demo ── -->
+    <section class="section" aria-labelledby="sql-demo-heading">
+      <div class="section-inner" style="text-align:center">
+        <p class="section-label">The Idea</p>
+        <h2 class="section-title" id="sql-demo-heading" style="margin-bottom:0.75rem">Write SQL. Get Answers.</h2>
+        <p class="section-sub" style="margin-left:auto;margin-right:auto;margin-bottom:2rem">
+          Register your spreadsheet files as tables, write a standard SQL query in the editor, and press <kbd>Ctrl+Enter</kbd>. Results appear instantly — no database, no scripts, no IT department.
+        </p>
+        <pre class="sql-demo" aria-label="Example SQL query across multiple spreadsheets"><span class="sql-com">-- Monthly sales vs. budget — JOIN across two spreadsheet files</span>
+<span class="sql-kw">SELECT</span>
+    s.region,
+    s.department,
+    <span class="sql-fn">SUM</span>(s.actual)   <span class="sql-kw">AS</span> total_actual,
+    <span class="sql-fn">SUM</span>(b.budget)   <span class="sql-kw">AS</span> total_budget,
+    <span class="sql-fn">ROUND</span>(
+        <span class="sql-fn">SUM</span>(s.actual) * 100.0
+        / <span class="sql-fn">NULLIF</span>(<span class="sql-fn">SUM</span>(b.budget), 0), 1
+    ) <span class="sql-kw">AS</span> pct_of_budget
+<span class="sql-kw">FROM</span>   sales_jan   s
+<span class="sql-kw">JOIN</span>   budget_2025 b
+       <span class="sql-kw">ON</span>  s.region     = b.region
+       <span class="sql-kw">AND</span> s.department = b.department
+<span class="sql-kw">GROUP BY</span>
+    s.region,
+    s.department
+<span class="sql-kw">ORDER BY</span> pct_of_budget <span class="sql-kw">DESC</span>;</pre>
+      </div>
+    </section>
+
+    <!-- ── App Screenshots ── -->
+    <section class="section section-alt" aria-labelledby="screenshots-heading">
+      <div class="section-inner">
+        <p class="section-label">App Screenshots</p>
+        <h2 class="section-title" id="screenshots-heading">See It in Action</h2>
+        <p class="section-sub">A clean, focused desktop UI designed for daily analytical work.</p>
+        <div class="screenshots-grid">
+          <figure class="screenshot-card">
+            <img src="images/editor_screen.png" alt="SQL Editor — write and run SQL queries with syntax highlighting and autocomplete" loading="lazy">
+            <figcaption>SQL Editor with syntax highlighting &amp; autocomplete</figcaption>
+          </figure>
+          <figure class="screenshot-card">
+            <img src="images/source_screen.png" alt="Source Files panel — register Excel, CSV and Parquet files as queryable tables" loading="lazy">
+            <figcaption>Source Files panel — register &amp; configure your spreadsheets</figcaption>
+          </figure>
+          <figure class="screenshot-card">
+            <img src="images/table_screen.png" alt="Results grid — scrollable, exportable query results with row and column counts" loading="lazy">
+            <figcaption>Results grid with one-click export to Excel, CSV &amp; JSON</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── How It Works ── -->
+    <section class="section section-alt" aria-labelledby="how-heading">
+      <div class="section-inner">
+        <div class="two-col">
+          <div>
+            <p class="section-label">How It Works</p>
+            <h2 class="section-title" id="how-heading">From Spreadsheet Files to SQL Results in Minutes</h2>
+            <p class="section-sub" style="margin-bottom:0">
+              A guided, five-step workflow that takes you from raw files to queryable tables and exportable results.
+            </p>
+          </div>
+          <div>
+            <ol class="steps-list" aria-label="How Peppy SpreadsheetQL works">
+              <li class="step">
+                <span class="step-num" aria-hidden="true">1</span>
+                <div class="step-body">
+                  <h3>Create or Open a Workspace</h3>
+                  <p>A workspace is a folder on your computer that holds all your config, queries, and derived tables. Open an existing workspace or create a new one in seconds.</p>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-num" aria-hidden="true">2</span>
+                <div class="step-body">
+                  <h3>Register Your Source Files</h3>
+                  <p>Add Excel workbooks, CSV files, or Parquet files. Choose a sheet for multi-sheet Excel files. Import a copy into the workspace or reference the file at its current location.</p>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-num" aria-hidden="true">3</span>
+                <div class="step-body">
+                  <h3>Configure Column Schema</h3>
+                  <p>Use the Schema Configuration panel to rename columns, override data types, set a header row, and add preprocessing rules (trim whitespace, date format, null replacement).</p>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-num" aria-hidden="true">4</span>
+                <div class="step-body">
+                  <h3>Write SQL in the Editor</h3>
+                  <p>The SQL editor has syntax highlighting and autocomplete for your table and column names. Press <kbd>Ctrl+Enter</kbd> to run. Results appear in the grid below.</p>
+                </div>
+              </li>
+              <li class="step">
+                <span class="step-num" aria-hidden="true">5</span>
+                <div class="step-body">
+                  <h3>Save, Reuse &amp; Export</h3>
+                  <p>Save queries to <code>.sql</code> files organised in folders. Promote query output to a Working Table for use in other queries. Export results to Excel, CSV, JSON, or Markdown.</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Supported Formats ── -->
+    <section class="section" aria-labelledby="formats-heading">
+      <div class="section-inner">
+        <p class="section-label">Supported Formats</p>
+        <h2 class="section-title" id="formats-heading">Works With Your Files As-Is</h2>
+        <p class="section-sub">No conversion needed. Register your files directly and start querying.</p>
+        <div class="format-grid">
+          <div class="format-card">
+            <div class="fmt-icon" aria-hidden="true">📊</div>
+            <h3>Excel (.xlsx, .xls)</h3>
+            <p>Multi-sheet workbooks supported. Pick which sheet to load, configure column types, and rename columns.</p>
+          </div>
+          <div class="format-card">
+            <div class="fmt-icon" aria-hidden="true">📄</div>
+            <h3>CSV</h3>
+            <p>Any delimiter variant. Apply preprocessing rules to fix data quality issues before loading into DuckDB.</p>
+          </div>
+          <div class="format-card">
+            <div class="fmt-icon" aria-hidden="true">🗜️</div>
+            <h3>Parquet</h3>
+            <p>Schema is read from the file format directly — no configuration needed. Loads instantly.</p>
+          </div>
+          <div class="format-card">
+            <div class="fmt-icon" aria-hidden="true">📁</div>
+            <h3>Folder Sources</h3>
+            <p>Register an entire folder of CSV or Parquet files as a single concatenated table. Perfect for daily exports.</p>
+          </div>
+          <div class="format-card">
+            <div class="fmt-icon" aria-hidden="true">📤</div>
+            <h3>Export: Excel</h3>
+            <p>Download query results as a formatted <code>.xlsx</code> file ready to open in Microsoft Excel or Google Sheets.</p>
+          </div>
+          <div class="format-card">
+            <div class="fmt-icon" aria-hidden="true">📝</div>
+            <h3>Export: CSV, JSON, MD</h3>
+            <p>Export to CSV, JSON, or Markdown — with configurable NULL display text and header row toggle.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Core Features ── -->
+    <section class="section section-alt" aria-labelledby="features-heading">
+      <div class="section-inner">
+        <p class="section-label">Features</p>
+        <h2 class="section-title" id="features-heading">Built for Spreadsheet-Heavy Workflows</h2>
+        <p class="section-sub">Every feature designed for the analyst who works with multiple spreadsheets every day.</p>
+        <div class="feature-grid">
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-lightning-charge" aria-hidden="true"></i></div>
+            <h3>DuckDB-Powered Analytics</h3>
+            <p>In-memory columnar analytics via DuckDB — handles millions of rows across multiple files without breaking a sweat. Window functions, CTEs, and full SQL standard supported.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-diagram-2" aria-hidden="true"></i></div>
+            <h3>Working Tables</h3>
+            <p>Promote any query result to a Working Table — a derived table stored in DuckDB and rebuilt automatically on workspace open. Chain Working Tables and build complex analytical pipelines.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-folder2-open" aria-hidden="true"></i></div>
+            <h3>Workspace Management</h3>
+            <p>Every workspace is a self-contained folder with <code>workspace.meta.json</code>, saved queries, and working tables. Open recent workspaces from the welcome screen. Human-readable, versionable config.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-sliders" aria-hidden="true"></i></div>
+            <h3>Schema Configuration</h3>
+            <p>Rename columns, override data types (TEXT, INTEGER, REAL, BOOLEAN, DATE, DATETIME), configure a custom header row, and apply preprocessing rules — all from a visual panel with a live 50-row preview.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-gear" aria-hidden="true"></i></div>
+            <h3>Preprocessing Rules</h3>
+            <p>Apply per-column rules before type casting: trim whitespace, parse custom date formats, replace null sentinels, or normalise text case. Global rules drop null rows and duplicates across the whole table.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-shield-check" aria-hidden="true"></i></div>
+            <h3>File Change Detection</h3>
+            <p>SHA-256 hash fingerprinting for every registered source file. An amber "changed" badge appears automatically when the file on disk has been modified since the last load. One-click hash refresh for all sources.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-code-square" aria-hidden="true"></i></div>
+            <h3>SQL Editor with Autocomplete</h3>
+            <p>A professional-grade editor with syntax highlighting and autocomplete for your table names and column names. Save queries as <code>.sql</code> files organised in collapsible folders.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-table" aria-hidden="true"></i></div>
+            <h3>Scrollable Results Grid</h3>
+            <p>Results display in a sortable, filterable grid showing row count, column count, and execution time. Export any result set with a single click.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-clock-history" aria-hidden="true"></i></div>
+            <h3>UTC Timestamps &amp; Timezone Display</h3>
+            <p>All workspace timestamps stored in UTC — your workspace is consistent and correct when moved between machines in different time zones. Displayed in your local timezone in the UI.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-braces-asterisk" aria-hidden="true"></i></div>
+            <h3>Query Parameterization</h3>
+            <p>Define named parameters at the top of any query and reference them throughout with <code>{{ param }}</code> syntax. Swap values — dates, IDs, thresholds — and regenerate reports in seconds without editing SQL.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-arrow-repeat" aria-hidden="true"></i></div>
+            <h3>Incremental File Support</h3>
+            <p>Register an entire folder of CSV or Parquet files as a single growing table. Add new daily or monthly export files to the folder and they are picked up automatically on the next workspace reload — no re-registration needed.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Working Tables Deep Dive ── -->
+    <section class="section" aria-labelledby="working-tables-heading">
+      <div class="section-inner">
+        <div class="two-col">
+          <div class="highlight-box">
+            <h3 id="working-tables-heading">Working Tables</h3>
+            <p>
+              A <strong>Working Table</strong> is a SQL query result promoted to a first-class table in your DuckDB session. Once created, it behaves just like a source table — you can write <code>FROM my_working_table</code> in any other query, or use it as the base for another Working Table.
+            </p>
+            <p>
+              Working tables are rebuilt in dependency order every time you open the workspace. If a working table depends on another, Peppy SpreadsheetQL rebuilds the upstream one first — automatically.
+            </p>
+            <ul class="highlight-list" aria-label="Working table capabilities">
+              <li>Define once, reuse across all queries in the workspace</li>
+              <li>Dependency graph resolved automatically at workspace open</li>
+              <li>Stored in <code>session.duckdb</code> — regenerated from metadata, never stale</li>
+              <li>Perfect for staging transformations and multi-step analytical pipelines</li>
+            </ul>
+          </div>
+          <div>
+            <p class="section-label">Use Case</p>
+            <h2 class="section-title" style="font-size:1.75rem" id="schema-config-heading">Schema Configuration That Saves You Time</h2>
+            <p style="font-size:0.95rem;color:var(--text-muted);line-height:1.65;margin-bottom:1.25rem">
+              The Schema Configuration panel opens automatically after you register a file. A 50-row live preview updates instantly as you make changes — no surprises at load time.
+            </p>
+            <ul class="highlight-list" aria-label="Schema configuration features">
+              <li>Rename columns to clean, SQL-friendly names — source file never touched</li>
+              <li>Override inferred data types for any column</li>
+              <li>Set a custom header row to skip title or subtitle rows</li>
+              <li>Apply per-column preprocessing before type casting</li>
+              <li>Global drop-null-rows and deduplication rules</li>
+              <li>Cast failure warning when ≥ 20% of rows fail to convert — before committing</li>
+              <li>Nullable integer and boolean columns using pandas Int64 and Boolean types</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Use Cases ── -->
+    <section class="section section-alt" aria-labelledby="usecases-heading">
+      <div class="section-inner">
+        <p class="section-label">Use Cases</p>
+        <h2 class="section-title" id="usecases-heading">Who Uses Peppy SpreadsheetQL?</h2>
+        <p class="section-sub">For anyone who works with tabular data and writes SQL — without wanting to manage a database.</p>
+        <div class="usecase-grid">
+
+          <div class="usecase-card">
+            <div class="uc-icon" aria-hidden="true">📊</div>
+            <h3>Finance &amp; Budgeting</h3>
+            <p>JOIN a sales export, a budget file, and a headcount roster in one query. Answer "budget vs actuals by region" in seconds instead of hours of manual VLOOKUP.</p>
+          </div>
+
+          <div class="usecase-card">
+            <div class="uc-icon" aria-hidden="true">📈</div>
+            <h3>Business Analytics</h3>
+            <p>Run GROUP BY aggregations across multiple monthly exports, pivot data with SQL, and export clean results to Excel for stakeholder reports.</p>
+          </div>
+
+          <div class="usecase-card">
+            <div class="uc-icon" aria-hidden="true">🔧</div>
+            <h3>Data Engineers</h3>
+            <p>Explore a CSV dump or Parquet file quickly without firing up a full data stack. Verify column types, check row counts, and inspect join cardinality.</p>
+          </div>
+
+          <div class="usecase-card">
+            <div class="uc-icon" aria-hidden="true">🏢</div>
+            <h3>Operations Teams</h3>
+            <p>Reconcile weekly operational exports, flag discrepancies between systems, and produce summary reports without any IT involvement.</p>
+          </div>
+
+          <div class="usecase-card">
+            <div class="uc-icon" aria-hidden="true">📁</div>
+            <h3>Daily Export Aggregation</h3>
+            <p>Register a folder of daily or monthly exports as a single table. New files added to the folder are picked up automatically on the next reload.</p>
+          </div>
+
+          <div class="usecase-card">
+            <div class="uc-icon" aria-hidden="true">🔒</div>
+            <h3>Privacy-Sensitive Data</h3>
+            <p>Everything runs locally on your desktop. No data is sent to any cloud service. Ideal for payroll, HR, and other sensitive datasets that cannot leave your network.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA ── -->
+    <section class="cta-section" aria-labelledby="cta-heading">
+      <div class="proprietary-cta-badge"><i class="bi bi-lock-fill" aria-hidden="true"></i> Proprietary Software</div>
+      <h2 id="cta-heading">Interested in Peppy SpreadsheetQL?</h2>
+      <p>Peppy SpreadsheetQL is proprietary software. Contact us to learn more, request a demo, or discuss licensing options.</p>
+      <div class="hero-ctas">
+      <a href="../contact.html" class="btn-primary-lg">
+          <i class="bi bi-envelope" aria-hidden="true"></i> Contact Us for Details
+        </a>
+        <a href="../index.html" class="btn-ghost-lg">
+          <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> More Projects
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <strong>Peppy SpreadsheetQL</strong>
+        <span>SQL for Spreadsheets &mdash; by <a href="../index.html" style="color:inherit;opacity:0.7;text-decoration:none;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">Peppy Vibe</a></span>
+      </div>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="../index.html">Peppy Vibe Home</a>
+        <a href="../peppy-tools/index.html">Peppy Tools</a>
+        <a href="../peppy-form-extractor/index.html">Peppy Form Extractor</a>
+        <a href="../contact.html">Contact Us</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    function updateThemeBtn() {
+      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      var btn = document.getElementById('theme-btn');
+      btn.innerHTML = isDark
+        ? '<i class="bi bi-sun" aria-hidden="true"></i> Light'
+        : '<i class="bi bi-moon-stars" aria-hidden="true"></i> Dark';
+    }
+    function toggleTheme() {
+      var cur = document.documentElement.getAttribute('data-theme');
+      var next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('stp-theme', next);
+      updateThemeBtn();
+    }
+    updateThemeBtn();
+  </script>
+  <script src="../peppy-tools/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

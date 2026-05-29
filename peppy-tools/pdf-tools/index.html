@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YLTG419QN5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YLTG419QN5');
+  </script>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://region1.google-analytics.com; worker-src 'self' blob: https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peppy PDF Tools</title>
+  <meta name="description" content="18 free client-side PDF tools: merge, split, rotate, watermark (with position), compress, AES-256 encrypt, redact, sanitize and more — nothing leaves your browser.">
+  <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../lib/bootstrap-icons/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="style.css">
+  <!-- @cantoo/pdf-lib v2.6.2 — drop-in pdf-lib fork with AES-256 encryption support (cached by SW for offline) -->
+  <script src="https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.6.2/dist/pdf-lib.min.js" integrity="sha384-y/eCapxHqWDsRq6KE1dnReKWDhr522LvPcIQEwpatFbOmJYBTaeWiguzs3b9JTnc" crossorigin="anonymous"></script>
+  <!-- PDF.js v3.11.174 — PDF rendering to canvas (cached by SW for offline) -->
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js" integrity="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <script>(function(){var t=localStorage.getItem('stp-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+  <!-- ═══ TOP BAR ═══════════════════════════════════════════════════ -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu"><i class="bi bi-list" aria-hidden="true"></i></button>
+      <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+      <span class="top-bar-title"><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> Peppy PDF Tools</span>
+    </div>
+    <div class="top-bar-right">
+      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
+    </div>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileMenu()"></div>
+
+  <div class="app-body">
+
+    <!-- ══ Sidebar ══════════════════════════════════════════════ -->
+    <div class="sidebar">
+      <div class="sidebar-groups" id="sidebar-groups">
+
+        <!-- Group: Pages -->
+        <div class="sidebar-group" id="grp-pages">
+          <button class="grp-hdr" onclick="toggleGroup('pages')">
+            <span><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> Page Operations</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
+          </button>
+          <div class="grp-tools">
+            <button class="tab-btn active" data-tool="merge"     data-grp="pages" onclick="showTool('merge')">Merge / Combine PDF</button>
+            <button class="tab-btn"        data-tool="split"     data-grp="pages" onclick="showTool('split')">Split PDF</button>
+            <button class="tab-btn"        data-tool="extract"   data-grp="pages" onclick="showTool('extract')">Extract Pages</button>
+            <button class="tab-btn"        data-tool="delete"    data-grp="pages" onclick="showTool('delete')">Delete Pages</button>
+            <button class="tab-btn"        data-tool="rotate"    data-grp="pages" onclick="showTool('rotate')">Rotate PDF Pages</button>
+            <button class="tab-btn"        data-tool="rearrange" data-grp="pages" onclick="showTool('rearrange')">Rearrange Pages</button>
+          </div>
+        </div>
+
+        <!-- Group: Enhance -->
+        <div class="sidebar-group" id="grp-enhance">
+          <button class="grp-hdr" onclick="toggleGroup('enhance')">
+            <span><i class="bi bi-stars" aria-hidden="true"></i> Enhance</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
+          </button>
+          <div class="grp-tools">
+            <button class="tab-btn" data-tool="watermark"   data-grp="enhance" onclick="showTool('watermark')">Add Watermark</button>
+            <button class="tab-btn" data-tool="pagenumbers" data-grp="enhance" onclick="showTool('pagenumbers')">Add Page Numbers</button>
+            <button class="tab-btn" data-tool="img2pdf"     data-grp="enhance" onclick="showTool('img2pdf')">Convert Images to PDF</button>
+          </div>
+        </div>
+
+        <!-- Group: Optimize -->
+        <div class="sidebar-group" id="grp-optimize">
+          <button class="grp-hdr" onclick="toggleGroup('optimize')">
+            <span><i class="bi bi-gear" aria-hidden="true"></i> Optimize &amp; Fix</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
+          </button>
+          <div class="grp-tools">
+            <button class="tab-btn" data-tool="compress" data-grp="optimize" onclick="showTool('compress')">Compress PDF</button>
+            <button class="tab-btn" data-tool="crop"     data-grp="optimize" onclick="showTool('crop')">Crop PDF Pages</button>
+            <button class="tab-btn" data-tool="resize"   data-grp="optimize" onclick="showTool('resize')">Resize PDF Pages</button>
+            <button class="tab-btn" data-tool="flatten"  data-grp="optimize" onclick="showTool('flatten')">Flatten PDF</button>
+          </div>
+        </div>
+
+        <!-- Group: Security & Privacy -->
+        <div class="sidebar-group" id="grp-security">
+          <button class="grp-hdr" onclick="toggleGroup('security')">
+            <span><i class="bi bi-lock" aria-hidden="true"></i> Security &amp; Privacy</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
+          </button>
+          <div class="grp-tools">
+            <button class="tab-btn" data-tool="addpassword"    data-grp="security" onclick="showTool('addpassword')">Add Password</button>
+            <button class="tab-btn" data-tool="removepassword" data-grp="security" onclick="showTool('removepassword')">Remove Password</button>
+            <button class="tab-btn" data-tool="redact"         data-grp="security" onclick="showTool('redact')">Redact PDF</button>
+            <button class="tab-btn" data-tool="hiddendata"     data-grp="security" onclick="showTool('hiddendata')">Sanitize PDF</button>
+          </div>
+        </div>
+
+        <!-- Group: View -->
+        <div class="sidebar-group" id="grp-view">
+          <button class="grp-hdr" onclick="toggleGroup('view')">
+            <span><i class="bi bi-eye" aria-hidden="true"></i> View</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
+          </button>
+          <div class="grp-tools">
+            <button class="tab-btn" data-tool="viewer" data-grp="view" onclick="showTool('viewer')">PDF Viewer / Preview</button>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /sidebar -->
+
+    <!-- ══ Tool Area ══════════════════════════════════════════ -->
+    <div class="tool-area" id="tool-area">
+
+      <!-- ──────────────────────────────────────────────────────
+           1. MERGE / COMBINE PDF
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel active" id="tool-merge">
+        <div class="panel-title"><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> Merge / Combine PDF</div>
+        <div class="info-box">Upload two or more PDF files. They will be combined in the order listed below. Drag handles (&#8801;) to reorder.</div>
+
+        <div class="drop-zone" id="merge-drop" onclick="document.getElementById('merge-input').click()"
+             ondragover="dzOver(event,'merge-drop')" ondragleave="dzLeave('merge-drop')" ondrop="dzDrop(event,'merge-drop',mergeDrop)">
+          <input type="file" id="merge-input" accept=".pdf,application/pdf" multiple onchange="mergeAdd(this.files)">
+          <div class="drop-zone-icon"><i class="bi bi-file-earmark-pdf" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop PDF files here</strong>
+          <span>Multiple files supported</span>
+        </div>
+
+        <div class="file-list" id="merge-file-list"></div>
+
+        <div class="btn-row">
+          <button onclick="mergePDFs()"><i class="bi bi-link-45deg" aria-hidden="true"></i> Merge &amp; Download</button>
+          <button class="btn-secondary" onclick="mergeClear()">Clear</button>
+        </div>
+        <div class="progress-wrap" id="merge-prog-wrap" style="display:none"><div class="progress-bar" id="merge-prog"></div></div>
+        <div class="tool-msg" id="merge-msg"></div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────────────
+           2. SPLIT PDF
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-split">
+        <div class="panel-title"><i class="bi bi-scissors" aria-hidden="true"></i> Split PDF</div>
+        <div class="info-box">Split a PDF into individual pages, or into defined page ranges.</div>
+
+        <div class="drop-zone" id="split-drop" onclick="document.getElementById('split-input').click()"
+             ondragover="dzOver(event,'split-drop')" ondragleave="dzLeave('split-drop')" ondrop="dzDrop(event,'split-drop',splitDrop)">
+          <input type="file" id="split-input" accept=".pdf,application/pdf" onchange="splitLoad(this.files[0])">
+          <div class="drop-zone-icon"><i class="bi bi-scissors" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop a PDF here</strong>
+        </div>
+        <div class="file-list" id="split-file-info"></div>
+
+        <div class="form-group">
+          <label class="io-label">Split mode</label>
+          <div class="form-row">
+            <label class="checkbox-label"><input type="radio" name="split-mode" value="all" checked onchange="splitModeChange()"> Every page (individual files)</label>
+            <label class="checkbox-label"><input type="radio" name="split-mode" value="ranges" onchange="splitModeChange()"> Custom ranges</label>
+          </div>
+        </div>
+
+        <div class="form-group" id="split-ranges-group" style="display:none">
+          <label class="io-label">Ranges (e.g. 1-3, 4, 5-7)</label>
+          <input type="text" id="split-ranges" placeholder="1-3, 4, 5-7" style="width:300px">
+          <div class="tool-msg" id="split-ranges-msg"></div>
+        </div>
+
+        <div class="btn-row">
+          <button onclick="splitPDF()"><i class="bi bi-scissors" aria-hidden="true"></i> Split &amp; Download</button>
+          <button class="btn-secondary" onclick="splitClear()">Clear</button>
+        </div>
+        <div class="progress-wrap" id="split-prog-wrap" style="display:none"><div class="progress-bar" id="split-prog"></div></div>
+        <div class="tool-msg" id="split-msg"></div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────────────
+           3. EXTRACT PAGES
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-extract">
+        <div class="panel-title"><i class="bi bi-clipboard" aria-hidden="true"></i> Extract Pages from PDF</div>
+        <div class="info-box">Upload a PDF and select which pages to extract into a new PDF.</div>
+
+        <div class="drop-zone" id="extract-drop" onclick="document.getElementById('extract-input').click()"
+             ondragover="dzOver(event,'extract-drop')" ondragleave="dzLeave('extract-drop')" ondrop="dzDrop(event,'extract-drop',extractDrop)">
+          <input type="file" id="extract-input" accept=".pdf,application/pdf" onchange="extractLoad(this.files[0])">
+          <div class="drop-zone-icon"><i class="bi bi-clipboard" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop a PDF here</strong>
+        </div>
+        <div class="file-list" id="extract-file-info"></div>
+
+        <div class="form-group">
+          <label class="io-label">Pages to extract (e.g. 1, 3-5, 8)</label>
+          <input type="text" id="extract-pages" placeholder="1, 3-5, 8" style="width:300px">
+        </div>
+        <div class="btn-row">
+          <button onclick="extractPages()"><i class="bi bi-clipboard" aria-hidden="true"></i> Extract &amp; Download</button>
+          <button class="btn-secondary" onclick="extractClear()">Clear</button>
+        </div>
+        <div class="tool-msg" id="extract-msg"></div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────────────
+           4. DELETE PAGES
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-delete">
+        <div class="panel-title"><i class="bi bi-trash" aria-hidden="true"></i> Delete Pages from PDF</div>
+        <div class="info-box">Upload a PDF and specify which pages to remove. The remaining pages will be saved as a new PDF.</div>
+
+        <div class="drop-zone" id="delete-drop" onclick="document.getElementById('delete-input').click()"
+             ondragover="dzOver(event,'delete-drop')" ondragleave="dzLeave('delete-drop')" ondrop="dzDrop(event,'delete-drop',deleteDrop)">
+          <input type="file" id="delete-input" accept=".pdf,application/pdf" onchange="deleteLoad(this.files[0])">
+          <div class="drop-zone-icon"><i class="bi bi-trash" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop a PDF here</strong>
+        </div>
+        <div class="file-list" id="delete-file-info"></div>
+
+        <div class="form-group">
+          <label class="io-label">Pages to delete (e.g. 2, 4-6)</label>
+          <input type="text" id="delete-pages" placeholder="2, 4-6" style="width:300px">
+        </div>
+        <div class="btn-row">
+          <button class="btn-danger" onclick="deletePages()"><i class="bi bi-trash" aria-hidden="true"></i> Delete &amp; Download</button>
+          <button class="btn-secondary" onclick="deleteClear()">Clear</button>
+        </div>
+        <div class="tool-msg" id="delete-msg"></div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────────────
+           5. ROTATE PDF PAGES
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-rotate">
+        <div class="panel-title"><i class="bi bi-arrow-repeat" aria-hidden="true"></i> Rotate PDF Pages</div>
+        <div class="info-box">Rotate all pages or specific pages by 90°, 180°, or 270°.</div>
+
+        <div class="drop-zone" id="rotate-drop" onclick="document.getElementById('rotate-input').click()"
+             ondragover="dzOver(event,'rotate-drop')" ondragleave="dzLeave('rotate-drop')" ondrop="dzDrop(event,'rotate-drop',rotateDrop)">
+          <input type="file" id="rotate-input" accept=".pdf,application/pdf" onchange="rotateLoad(this.files[0])">
+          <div class="drop-zone-icon"><i class="bi bi-arrow-repeat" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop a PDF here</strong>
+        </div>
+        <div class="file-list" id="rotate-file-info"></div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Angle</label>
+            <select id="rotate-angle">
+              <option value="90">90° Clockwise</option>
+              <option value="180">180°</option>
+              <option value="270">90° Counter-clockwise</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="io-label">Apply to</label>
+            <select id="rotate-target">
+              <option value="all">All pages</option>
+              <option value="odd">Odd pages</option>
+              <option value="even">Even pages</option>
+              <option value="custom">Custom pages</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" id="rotate-custom-group" style="display:none">
+          <label class="io-label">Pages (e.g. 1, 3-5)</label>
+          <input type="text" id="rotate-custom" placeholder="1, 3-5" style="width:240px">
+        </div>
+        <div class="btn-row">
+          <button onclick="rotatePDF()"><i class="bi bi-arrow-repeat" aria-hidden="true"></i> Rotate &amp; Download</button>
+          <button class="btn-secondary" onclick="rotateClear()">Clear</button>
+        </div>
+        <div class="tool-msg" id="rotate-msg"></div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────────────
+           6. REARRANGE PAGES
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-rearrange">
+        <div class="panel-title"><i class="bi bi-arrow-down-up" aria-hidden="true"></i> Rearrange PDF Pages</div>
+        <div class="info-box">Upload a PDF, then drag thumbnails (or enter a custom order) to rearrange pages.</div>
+
+        <div class="drop-zone" id="rearrange-drop" onclick="document.getElementById('rearrange-input').click()"
+             ondragover="dzOver(event,'rearrange-drop')" ondragleave="dzLeave('rearrange-drop')" ondrop="dzDrop(event,'rearrange-drop',rearrangeDrop)">
+          <input type="file" id="rearrange-input" accept=".pdf,application/pdf" onchange="rearrangeLoad(this.files[0])">
+          <div class="drop-zone-icon"><i class="bi bi-arrow-down-up" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop a PDF here</strong>
+        </div>
+        <div class="file-list" id="rearrange-file-info"></div>
+
+        <div class="form-group">
+          <label class="io-label">New page order (comma-separated, 1-based, e.g. 3,1,2)</label>
+          <input type="text" id="rearrange-order" placeholder="3,1,2" style="width:300px">
+          <div class="tool-msg" id="rearrange-order-msg" style="font-size:11px;"></div>
+        </div>
+
+        <div class="page-grid" id="rearrange-thumbs"></div>
+
+        <div class="btn-row">
+          <button onclick="rearrangePDF()"><i class="bi bi-arrow-down-up" aria-hidden="true"></i> Reorder &amp; Download</button>
+          <button class="btn-secondary" onclick="rearrangeClear()">Clear</button>
+        </div>
+        <div class="tool-msg" id="rearrange-msg"></div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────────────
+           7. ADD WATERMARK
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-watermark">
+        <div class="panel-title"><i class="bi bi-lock" aria-hidden="true"></i> Add Watermark to PDF</div>
+        <div class="info-box">Add a diagonal text watermark to every page of a PDF.</div>
+
+        <div class="drop-zone" id="watermark-drop" onclick="document.getElementById('watermark-input').click()"
+             ondragover="dzOver(event,'watermark-drop')" ondragleave="dzLeave('watermark-drop')" ondrop="dzDrop(event,'watermark-drop',watermarkDrop)">
+          <input type="file" id="watermark-input" accept=".pdf,application/pdf" onchange="watermarkLoad(this.files[0])">
+          <div class="drop-zone-icon"><i class="bi bi-lock" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop a PDF here</strong>
+        </div>
+        <div class="file-list" id="watermark-file-info"></div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Watermark text</label>
+            <input type="text" id="wm-text" value="CONFIDENTIAL" style="width:200px">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Font size</label>
+            <input type="number" id="wm-size" value="48" min="10" max="200" style="width:80px">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Opacity (0–1)</label>
+            <input type="number" id="wm-opacity" value="0.25" min="0.05" max="1" step="0.05" style="width:80px">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Color</label>
+            <input type="color" id="wm-color" value="#ff0000">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Angle (degrees)</label>
+            <input type="number" id="wm-angle" value="45" min="-180" max="180" style="width:80px">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Position</label>
+            <select id="wm-position">
+              <option value="center">Center (diagonal)</option>
+              <option value="top-left">Top Left</option>
+              <option value="top-right">Top Right</option>
+              <option value="bottom-left">Bottom Left</option>
+              <option value="bottom-right">Bottom Right</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button onclick="addWatermark()"><i class="bi bi-lock" aria-hidden="true"></i> Apply &amp; Download</button>
+          <button class="btn-secondary" onclick="watermarkClear()">Clear</button>
+        </div>
+        <div class="tool-msg" id="watermark-msg"></div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────────────
+           8. ADD PAGE NUMBERS
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-pagenumbers">
+        <div class="panel-title"><i class="bi bi-hash" aria-hidden="true"></i> Add Page Numbers to PDF</div>
+        <div class="info-box">Stamp page numbers onto each page of a PDF.</div>
+
+        <div class="drop-zone" id="pn-drop" onclick="document.getElementById('pn-input').click()"
+             ondragover="dzOver(event,'pn-drop')" ondragleave="dzLeave('pn-drop')" ondrop="dzDrop(event,'pn-drop',pnDrop)">
+          <input type="file" id="pn-input" accept=".pdf,application/pdf" onchange="pnLoad(this.files[0])">
+          <div class="drop-zone-icon"><i class="bi bi-hash" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop a PDF here</strong>
+        </div>
+        <div class="file-list" id="pn-file-info"></div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Position</label>
+            <select id="pn-position">
+              <option value="bottom-center">Bottom Center</option>
+              <option value="bottom-right">Bottom Right</option>
+              <option value="bottom-left">Bottom Left</option>
+              <option value="top-center">Top Center</option>
+              <option value="top-right">Top Right</option>
+              <option value="top-left">Top Left</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="io-label">Start from</label>
+            <input type="number" id="pn-start" value="1" min="0" style="width:70px">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Font size</label>
+            <input type="number" id="pn-size" value="12" min="6" max="72" style="width:70px">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Format</label>
+            <select id="pn-format">
+              <option value="n">1, 2, 3…</option>
+              <option value="page-n">Page 1, Page 2…</option>
+              <option value="n-of-t">1 of 10, 2 of 10…</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="io-label">Color</label>
+            <input type="color" id="pn-color" value="#333333">
+          </div>
+        </div>
+        <div class="btn-row">
+          <button onclick="addPageNumbers()"><i class="bi bi-hash" aria-hidden="true"></i> Apply &amp; Download</button>
+          <button class="btn-secondary" onclick="pnClear()">Clear</button>
+        </div>
+        <div class="tool-msg" id="pn-msg"></div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────────────
+           9. CONVERT IMAGES TO PDF
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-img2pdf">
+        <div class="panel-title"><i class="bi bi-camera" aria-hidden="true"></i> Convert Images to PDF</div>
+        <div class="info-box">Upload JPG, PNG, GIF, BMP, or WEBP images. Each image becomes one page. Reorder files before converting.</div>
+
+        <div class="drop-zone" id="img2pdf-drop" onclick="document.getElementById('img2pdf-input').click()"
+             ondragover="dzOver(event,'img2pdf-drop')" ondragleave="dzLeave('img2pdf-drop')" ondrop="dzDrop(event,'img2pdf-drop',img2pdfDrop)">
+          <input type="file" id="img2pdf-input" accept="image/*" multiple onchange="img2pdfAdd(this.files)">
+          <div class="drop-zone-icon"><i class="bi bi-camera" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop image files here</strong>
+          <span>JPG, PNG, GIF, BMP, WEBP — multiple files supported</span>
+        </div>
+
+        <div class="file-list" id="img2pdf-file-list"></div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Page size</label>
+            <select id="img2pdf-size">
+              <option value="fit">Fit image (image dimensions)</option>
+              <option value="A4">A4 (595 × 842 pt)</option>
+              <option value="Letter">Letter (612 × 792 pt)</option>
+              <option value="A3">A3 (842 × 1191 pt)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="io-label">Orientation</label>
+            <select id="img2pdf-orient">
+              <option value="auto">Auto</option>
+              <option value="portrait">Portrait</option>
+              <option value="landscape">Landscape</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button onclick="convertImg2PDF()"><i class="bi bi-camera" aria-hidden="true"></i> Convert &amp; Download</button>
+          <button class="btn-secondary" onclick="img2pdfClear()">Clear</button>
+        </div>
+        <div class="progress-wrap" id="img2pdf-prog-wrap" style="display:none"><div class="progress-bar" id="img2pdf-prog"></div></div>
+        <div class="tool-msg" id="img2pdf-msg"></div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────────────
+           10. PDF VIEWER
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-viewer" style="padding:0;gap:0;">
+        <div class="viewer-toolbar">
+          <button class="btn-secondary" onclick="document.getElementById('viewer-input').click()"><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> Open PDF</button>
+          <input type="file" id="viewer-input" accept=".pdf,application/pdf" style="display:none" onchange="viewerLoad(this.files[0])">
+          <button class="btn-secondary" onclick="viewerPrev()"><i class="bi bi-arrow-left" aria-hidden="true"></i> Prev</button>
+          <span id="viewer-page-info">— / —</span>
+          <button class="btn-secondary" onclick="viewerNext()">Next <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+          <span>Zoom:</span>
+          <input type="range" id="viewer-zoom" min="0.5" max="3" step="0.1" value="1.0" oninput="viewerRender()" style="width:100px">
+          <span id="viewer-zoom-label">100%</span>
+          <span id="viewer-filename" style="margin-left:auto;font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;"></span>
+        </div>
+        <div id="viewer-canvas-wrap">
+          <div id="viewer-placeholder" style="color:var(--text2);font-size:14px;padding:40px;text-align:center;">Open a PDF file to preview it here.</div>
+        </div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────────────
+           11. COMPRESS PDF
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-compress">
+        <div class="panel-title"><i class="bi bi-save" aria-hidden="true"></i> Compress PDF</div>
+        <div class="info-box"><strong>Note:</strong> This tool strips embedded metadata, XMP streams, and re-serializes the PDF. Deep image compression requires server-side tools, but this often reduces file size by removing redundant overhead.</div>
+
+        <div class="drop-zone" id="compress-drop" onclick="document.getElementById('compress-input').click()"
+             ondragover="dzOver(event,'compress-drop')" ondragleave="dzLeave('compress-drop')" ondrop="dzDrop(event,'compress-drop',compressDrop)">
+          <input type="file" id="compress-input" accept=".pdf,application/pdf" onchange="compressLoad(this.files[0])">
+          <div class="drop-zone-icon"><i class="bi bi-save" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop a PDF here</strong>
+        </div>
+        <div class="file-list" id="compress-file-info"></div>
+
+        <div class="form-row">
+          <label class="checkbox-label"><input type="checkbox" id="compress-meta" checked> Remove metadata</label>
+          <label class="checkbox-label"><input type="checkbox" id="compress-xmp" checked> Remove XMP stream</label>
+          <label class="checkbox-label"><input type="checkbox" id="compress-unused" checked> Remove unused objects</label>
+        </div>
+        <div class="btn-row">
+          <button onclick="compressPDF()"><i class="bi bi-save" aria-hidden="true"></i> Compress &amp; Download</button>
+          <button class="btn-secondary" onclick="compressClear()">Clear</button>
+        </div>
+        <div class="tool-msg" id="compress-msg"></div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────────────
+           12. CROP PDF PAGES
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-crop">
+        <div class="panel-title"><i class="bi bi-scissors" aria-hidden="true"></i> Crop PDF Pages</div>
+        <div class="info-box">Set the crop box (in points, 1 pt = 1/72 inch) to trim white space or restrict the visible area. One point = 1/72 of an inch.</div>
+
+        <div class="drop-zone" id="crop-drop" onclick="document.getElementById('crop-input').click()"
+             ondragover="dzOver(event,'crop-drop')" ondragleave="dzLeave('crop-drop')" ondrop="dzDrop(event,'crop-drop',cropDrop)">
+          <input type="file" id="crop-input" accept=".pdf,application/pdf" onchange="cropLoad(this.files[0])">
+          <div class="drop-zone-icon"><i class="bi bi-scissors" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop a PDF here</strong>
+        </div>
+        <div class="file-list" id="crop-file-info"></div>
+        <div class="tool-msg" id="crop-dims" style="font-size:12px;"></div>
+
+        <div class="form-row">
+          <div class="form-group"><label class="io-label">Left margin (pt)</label><input type="number" id="crop-left"   value="0"  min="0" style="width:80px"></div>
+          <div class="form-group"><label class="io-label">Right margin (pt)</label><input type="number" id="crop-right"  value="0"  min="0" style="width:80px"></div>
+          <div class="form-group"><label class="io-label">Top margin (pt)</label><input type="number" id="crop-top"    value="0"  min="0" style="width:80px"></div>
+          <div class="form-group"><label class="io-label">Bottom margin (pt)</label><input type="number" id="crop-bottom" value="0"  min="0" style="width:80px"></div>
+        </div>
+        <div class="form-group">
+          <label class="io-label">Apply to</label>
+          <select id="crop-target" style="width:200px">
+            <option value="all">All pages</option>
+            <option value="custom">Custom pages</option>
+          </select>
+        </div>
+        <div class="form-group" id="crop-custom-group" style="display:none">
+          <label class="io-label">Pages (e.g. 1, 3-5)</label>
+          <input type="text" id="crop-custom" placeholder="1, 3-5" style="width:240px">
+        </div>
+        <div class="btn-row">
+          <button onclick="cropPDF()"><i class="bi bi-scissors" aria-hidden="true"></i> Crop &amp; Download</button>
+          <button class="btn-secondary" onclick="cropClear()">Clear</button>
+        </div>
+        <div class="tool-msg" id="crop-msg"></div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────────────
+           13. RESIZE PDF PAGES
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-resize">
+        <div class="panel-title"><i class="bi bi-aspect-ratio" aria-hidden="true"></i> Resize PDF Pages</div>
+        <div class="info-box">Rescale all pages to a target paper size. Content is scaled to fit within the new dimensions.</div>
+
+        <div class="drop-zone" id="resize-drop" onclick="document.getElementById('resize-input').click()"
+             ondragover="dzOver(event,'resize-drop')" ondragleave="dzLeave('resize-drop')" ondrop="dzDrop(event,'resize-drop',resizeDrop)">
+          <input type="file" id="resize-input" accept=".pdf,application/pdf" onchange="resizeLoad(this.files[0])">
+          <div class="drop-zone-icon"><i class="bi bi-aspect-ratio" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop a PDF here</strong>
+        </div>
+        <div class="file-list" id="resize-file-info"></div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Target size</label>
+            <select id="resize-preset" onchange="resizePresetChange()">
+              <option value="A4">A4 (595 × 842 pt)</option>
+              <option value="Letter">Letter (612 × 792 pt)</option>
+              <option value="Legal">Legal (612 × 1008 pt)</option>
+              <option value="A3">A3 (842 × 1191 pt)</option>
+              <option value="A5">A5 (420 × 595 pt)</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="io-label">Orientation</label>
+            <select id="resize-orient">
+              <option value="portrait">Portrait</option>
+              <option value="landscape">Landscape</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row" id="resize-custom-group" style="display:none">
+          <div class="form-group"><label class="io-label">Width (pt)</label><input type="number" id="resize-w" value="595" min="1" style="width:90px"></div>
+          <div class="form-group"><label class="io-label">Height (pt)</label><input type="number" id="resize-h" value="842" min="1" style="width:90px"></div>
+        </div>
+        <div class="btn-row">
+          <button onclick="resizePDF()"><i class="bi bi-aspect-ratio" aria-hidden="true"></i> Resize &amp; Download</button>
+          <button class="btn-secondary" onclick="resizeClear()">Clear</button>
+        </div>
+        <div class="tool-msg" id="resize-msg"></div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────────────
+           14. FLATTEN PDF
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-flatten">
+        <div class="panel-title"><i class="bi bi-layers" aria-hidden="true"></i> Flatten PDF</div>
+        <div class="info-box">Flatten embeds interactive form fields and widget annotations into the page content so they can no longer be edited.</div>
+
+        <div class="drop-zone" id="flatten-drop" onclick="document.getElementById('flatten-input').click()"
+             ondragover="dzOver(event,'flatten-drop')" ondragleave="dzLeave('flatten-drop')" ondrop="dzDrop(event,'flatten-drop',flattenDrop)">
+          <input type="file" id="flatten-input" accept=".pdf,application/pdf" onchange="flattenLoad(this.files[0])">
+          <div class="drop-zone-icon"><i class="bi bi-layers" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop a PDF here</strong>
+        </div>
+        <div class="file-list" id="flatten-file-info"></div>
+
+        <div class="btn-row">
+          <button onclick="flattenPDF()"><i class="bi bi-layers" aria-hidden="true"></i> Flatten &amp; Download</button>
+          <button class="btn-secondary" onclick="flattenClear()">Clear</button>
+        </div>
+        <div class="tool-msg" id="flatten-msg"></div>
+      </div>
+
+
+
+      <!-- ──────────────────────────────────────────────────────
+           16. ADD PASSWORD (& Lock Permissions)
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-addpassword">
+        <div class="panel-title"><i class="bi bi-shield-lock" aria-hidden="true"></i> Add Password to PDF</div>
+        <div class="info-box">Encrypt the PDF with AES-256. The <strong>user password</strong> is required to open the file. The <strong>owner password</strong> controls permissions (optional — defaults to user password). You can also restrict specific operations using the permission checkboxes below. Leave the user password blank and set only an owner password to restrict operations without requiring a password to open.</div>
+
+        <div class="drop-zone" id="addpw-drop" onclick="document.getElementById('addpw-input').click()"
+             ondragover="dzOver(event,'addpw-drop')" ondragleave="dzLeave('addpw-drop')" ondrop="dzDrop(event,'addpw-drop',addpwDrop)">
+          <input type="file" id="addpw-input" accept=".pdf,application/pdf" onchange="addpwLoad(this.files[0])">
+          <div class="drop-zone-icon"><i class="bi bi-shield-lock" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop a PDF here</strong>
+        </div>
+        <div class="file-list" id="addpw-file-info"></div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">User password (to open)</label>
+            <input type="password" id="addpw-user" placeholder="Required to open" autocomplete="new-password" style="width:220px">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Owner password (optional)</label>
+            <input type="password" id="addpw-owner" placeholder="Optional — defaults to user password" autocomplete="new-password" style="width:260px">
+          </div>
+        </div>
+        <div class="pw-strength-bar"><div class="pw-strength-fill" id="addpw-strength-fill" style="width:0%;background:var(--danger)"></div></div>
+        <div class="tool-msg" id="addpw-strength-label" style="font-size:11px;"></div>
+
+        <div class="form-group" style="margin-top:10px">
+          <div class="io-label">Permissions — restrict actions (optional)</div>
+          <label class="checkbox-label"><input type="checkbox" id="addpw-no-print"> Disallow printing</label>
+          <label class="checkbox-label"><input type="checkbox" id="addpw-no-copy">  Disallow copying text &amp; images</label>
+          <label class="checkbox-label"><input type="checkbox" id="addpw-no-edit">  Disallow editing &amp; form filling</label>
+          <label class="checkbox-label"><input type="checkbox" id="addpw-no-annot"> Disallow adding annotations</label>
+        </div>
+
+        <div class="btn-row">
+          <button onclick="addPassword()"><i class="bi bi-shield-lock" aria-hidden="true"></i> Encrypt &amp; Download</button>
+          <button class="btn-secondary" onclick="addpwClear()">Clear</button>
+        </div>
+        <div class="tool-msg" id="addpw-msg"></div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────────────
+           17. REMOVE PASSWORD
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-removepassword">
+        <div class="panel-title"><i class="bi bi-unlock" aria-hidden="true"></i> Remove Password from PDF</div>
+        <div class="info-box">Upload an encrypted PDF and provide its password to produce an unencrypted copy.</div>
+
+        <div class="drop-zone" id="rmpw-drop" onclick="document.getElementById('rmpw-input').click()"
+             ondragover="dzOver(event,'rmpw-drop')" ondragleave="dzLeave('rmpw-drop')" ondrop="dzDrop(event,'rmpw-drop',rmpwDrop)">
+          <input type="file" id="rmpw-input" accept=".pdf,application/pdf" onchange="rmpwLoad(this.files[0])">
+          <div class="drop-zone-icon"><i class="bi bi-unlock" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop an encrypted PDF here</strong>
+        </div>
+        <div class="file-list" id="rmpw-file-info"></div>
+
+        <div class="form-group">
+          <label class="io-label">Password</label>
+          <input type="password" id="rmpw-pw" placeholder="Enter the PDF password" autocomplete="current-password" style="width:260px">
+        </div>
+        <div class="btn-row">
+          <button onclick="removePassword()"><i class="bi bi-unlock" aria-hidden="true"></i> Decrypt &amp; Download</button>
+          <button class="btn-secondary" onclick="rmpwClear()">Clear</button>
+        </div>
+        <div class="tool-msg" id="rmpw-msg"></div>
+      </div>
+
+
+
+      <!-- ──────────────────────────────────────────────────────
+           19. REDACT PDF
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-redact">
+        <div class="panel-title"><i class="bi bi-eraser" aria-hidden="true"></i> Redact PDF (Hide Sensitive Content)</div>
+        <div class="info-box"><strong>How to use:</strong> Load a PDF, navigate to the page, then draw redaction boxes by clicking and dragging over the text/area you want to hide. Click <em>Apply Redactions</em> when done. Each redaction box is permanently filled with an opaque rectangle.</div>
+
+        <div class="drop-zone" id="redact-drop" onclick="document.getElementById('redact-input').click()"
+             ondragover="dzOver(event,'redact-drop')" ondragleave="dzLeave('redact-drop')" ondrop="dzDrop(event,'redact-drop',redactDrop)">
+          <input type="file" id="redact-input" accept=".pdf,application/pdf" onchange="redactLoad(this.files[0])">
+          <div class="drop-zone-icon"><i class="bi bi-eraser" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop a PDF here</strong>
+        </div>
+
+        <div id="redact-controls" style="display:none">
+          <div class="form-row">
+            <button class="btn-secondary" onclick="redactPrevPage()"><i class="bi bi-arrow-left" aria-hidden="true"></i> Prev</button>
+            <span id="redact-page-info" style="font-size:13px;color:var(--text2);">Page 1 / 1</span>
+            <button class="btn-secondary" onclick="redactNextPage()">Next <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+            <div class="form-group" style="margin-left:8px">
+              <label class="io-label" style="display:inline">Redaction color:</label>
+              <input type="color" id="redact-color" value="#000000">
+            </div>
+            <button onclick="redactClearBoxes()">Clear boxes</button>
+          </div>
+          <div style="overflow:auto;border:1px solid var(--border);border-radius:4px;background:var(--bg3);padding:8px;display:inline-block;max-width:100%;">
+            <div id="redact-wrap">
+              <canvas id="redact-canvas-bg"></canvas>
+              <canvas id="redact-canvas-overlay"></canvas>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button onclick="applyRedactions()"><i class="bi bi-eraser" aria-hidden="true"></i> Apply Redactions &amp; Download</button>
+            <button class="btn-secondary" onclick="redactClear()">Start over</button>
+          </div>
+          <div class="tool-msg" id="redact-msg"></div>
+        </div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────────────
+           15/20. SANITIZE PDF (Metadata + Hidden Data combined)
+      ────────────────────────────────────────────────────── -->
+      <div class="tool-panel" id="tool-hiddendata">
+        <div class="panel-title"><i class="bi bi-shield-check" aria-hidden="true"></i> Sanitize PDF</div>
+        <div class="info-box">Load a PDF to review its embedded metadata and hidden data before cleaning. Select the items you want to strip, then download the sanitized copy.</div>
+
+        <div class="drop-zone" id="hidden-drop" onclick="document.getElementById('hidden-input').click()"
+             ondragover="dzOver(event,'hidden-drop')" ondragleave="dzLeave('hidden-drop')" ondrop="dzDrop(event,'hidden-drop',hiddenDrop)">
+          <input type="file" id="hidden-input" accept=".pdf,application/pdf" onchange="hiddenLoad(this.files[0])">
+          <div class="drop-zone-icon"><i class="bi bi-shield-check" aria-hidden="true" style="font-size:2rem"></i></div>
+          <strong>Click or drop a PDF here</strong>
+        </div>
+        <div class="file-list" id="hidden-file-info"></div>
+
+        <div id="hidden-review" style="display:none">
+          <div class="io-label" style="margin-bottom:4px;">Detected metadata:</div>
+          <pre id="hidden-meta-pre" style="font-size:12px;background:var(--bg2);padding:10px;border-radius:4px;border:1px solid var(--border);overflow:auto;max-height:120px;margin-bottom:6px;"></pre>
+          <div class="tool-msg" id="hidden-detected"></div>
+        </div>
+
+        <div class="form-group" style="margin-top:10px">
+          <div class="io-label">Items to remove</div>
+          <label class="checkbox-label"><input type="checkbox" id="hidden-meta"    checked> Document metadata (title, author, etc.)</label>
+          <label class="checkbox-label"><input type="checkbox" id="hidden-xmp"     checked> XMP metadata stream</label>
+          <label class="checkbox-label"><input type="checkbox" id="hidden-js"      checked> Embedded JavaScript</label>
+          <label class="checkbox-label"><input type="checkbox" id="hidden-annots"  checked> Annotation hidden data</label>
+          <label class="checkbox-label"><input type="checkbox" id="hidden-embeds"  checked> Embedded files / attachments</label>
+        </div>
+        <div class="btn-row">
+          <button onclick="removeHiddenData()"><i class="bi bi-shield-check" aria-hidden="true"></i> Sanitize &amp; Download</button>
+          <button class="btn-secondary" onclick="hiddenClear()">Clear</button>
+        </div>
+        <div class="tool-msg" id="hidden-msg"></div>
+      </div>
+
+    </div><!-- /tool-area -->
+  </div><!-- /app-body -->
+
+  <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../lib/pdf-utils.js"></script>
+  <script src="../lib/error-handler.js"></script>
+  <script src="../lib/shared-ui.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YLTG419QN5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YLTG419QN5');
+  </script>
+
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; object-src 'none'; base-uri 'self'">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary SEO -->
+  <title>Peppy Form Extractor — AI-Powered Document Data Extraction</title>
+  <meta name="description" content="Offline AI document data extraction from invoices, receipts &amp; forms. Best-in-class Thai language OCR support. Use OpenAI, Ollama, Anthropic or any AI provider. Private by design.">
+  <meta name="keywords" content="AI document extraction, OCR document processing, Thai language OCR, Typhoon OCR, DeepseekOCR, PaddleOCR, EasyOCR, invoice data extraction, receipt extraction, form data extraction, BYOM AI, offline document AI, structured data extraction, Peppy Server API, schema configuration, peppy form extractor">
+  <link rel="canonical" href="https://peppy-vibe.github.io/peppy-form-extractor/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://peppy-vibe.github.io/peppy-form-extractor/">
+  <meta property="og:title" content="Peppy Form Extractor — AI-Powered Document Data Extraction">
+  <meta property="og:description" content="Extract structured data from invoices, receipts &amp; forms using AI. Exceptional Thai language OCR. Use any AI model — OpenAI, Ollama, Anthropic &amp; more. Runs offline.">
+  <meta property="og:site_name" content="Peppy Vibe">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Peppy Form Extractor — AI-Powered Document Data Extraction">
+  <meta name="twitter:description" content="Offline AI document extraction with best-in-class Thai language support. Bring your own AI model. No cloud, no subscriptions.">
+
+  <meta name="theme-color" content="#5646F5">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Peppy Form Extractor",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Windows, macOS, Linux",
+        "description": "Offline AI-powered document data extraction tool that pulls structured data from images of business documents — invoices, receipts, tax forms, ID cards and contracts. Features exceptional Thai language OCR support and BYOM (Bring Your Own Model) for any AI provider.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Peppy Vibe",
+          "url": "https://peppy-vibe.github.io/"
+        },
+        "featureList": [
+          "Thai language OCR — PaddleOCR, EasyOCR, Typhoon OCR, and DeepseekOCR engines",
+          "Bring Your Own AI Model (BYOM)",
+          "Offline processing — no data sent to cloud",
+          "Two-stage OCR + extraction pipeline",
+          "Schema Configuration — create your own document schemas via GUI",
+          "Peppy Server REST API for programmatic access",
+          "Export to JSON, CSV and Excel",
+          "Review and edit extracted fields"
+        ],
+        "url": "https://peppy-vibe.github.io/peppy-form-extractor/"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Peppy Vibe",
+            "item": "https://peppy-vibe.github.io/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Peppy Form Extractor",
+            "item": "https://peppy-vibe.github.io/peppy-form-extractor/"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="../peppy-tools/lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../peppy-tools/lib/bootstrap-icons/bootstrap-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-grad-1: #0c0a1e;
+      --bg-grad-2: #1e1860;
+      --bg-grad-3: #18133a;
+      --card-bg: rgba(255,255,255,0.07);
+      --card-border: rgba(255,255,255,0.15);
+      --card-hover-bg: rgba(255,255,255,0.13);
+      --text: #ffffff;
+      --text-muted: rgba(255,255,255,0.72);
+      --btn-bg: #5646F5;
+      --btn-hover: #4535e0;
+      --accent: #5646F5;
+      --accent-light: #8b83f7;
+      --tag-bg: rgba(86,70,245,0.22);
+      --tag-text: #a89ff9;
+      --hero-glow: rgba(86,70,245,0.18);
+      --section-bg: rgba(255,255,255,0.03);
+      --highlight-bg: rgba(86,70,245,0.12);
+      --thai-accent: #f59e0b;
+      --thai-bg: rgba(245,158,11,0.12);
+      --thai-border: rgba(245,158,11,0.3);
+      --byom-accent: #22c55e;
+      --byom-bg: rgba(34,197,94,0.10);
+      --byom-border: rgba(34,197,94,0.3);
+    }
+
+    [data-theme="light"] {
+      --bg-grad-1: #eceaff;
+      --bg-grad-2: #e0ddfb;
+      --bg-grad-3: #d0ccf8;
+      --card-bg: rgba(255,255,255,0.82);
+      --card-border: rgba(86,70,245,0.15);
+      --card-hover-bg: rgba(255,255,255,0.97);
+      --text: #0e0b2e;
+      --text-muted: rgba(14,11,46,0.60);
+      --btn-bg: #5646F5;
+      --btn-hover: #4535e0;
+      --accent: #5646F5;
+      --accent-light: #4535e0;
+      --tag-bg: rgba(86,70,245,0.10);
+      --tag-text: #4535e0;
+      --hero-glow: rgba(86,70,245,0.08);
+      --section-bg: rgba(86,70,245,0.03);
+      --highlight-bg: rgba(86,70,245,0.06);
+      --thai-accent: #d97706;
+      --thai-bg: rgba(245,158,11,0.07);
+      --thai-border: rgba(245,158,11,0.25);
+      --byom-accent: #16a34a;
+      --byom-bg: rgba(34,197,94,0.07);
+      --byom-border: rgba(34,197,94,0.25);
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 50%, var(--bg-grad-3) 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute; top: -100px; left: 0;
+      background: var(--accent); color: #fff;
+      padding: 0.5rem 1rem; border-radius: 0 0 8px 0;
+      text-decoration: none; font-weight: 700; z-index: 9999;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* Nav */
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.55rem 1.25rem;
+      background: var(--accent);
+      border-bottom: 1px solid rgba(0,0,0,0.10);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 0.5rem; }
+    .nav-home-link {
+      color: rgba(255,255,255,0.75); font-size: 1.2rem; line-height: 1;
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-home-link:hover { color: #fff; }
+    .nav-sep { color: rgba(255,255,255,0.35); font-size: 0.85rem; }
+    .nav-title { color: #fff; font-weight: 700; font-size: 1rem; letter-spacing: 0.2px; }
+    .nav-actions { display: flex; align-items: center; gap: 0.6rem; }
+    .nav-btn {
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.28);
+      color: #fff; padding: 0.3rem 0.85rem;
+      border-radius: 20px; cursor: pointer;
+      font-size: 0.85rem; font-family: inherit;
+      transition: background 0.2s;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,0.30); }
+
+    /* Hero */
+    header {
+      padding: 5rem 2rem 3.5rem; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 0%, var(--hero-glow), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--tag-bg); color: var(--accent-light);
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 1.2px;
+      text-transform: uppercase; padding: 0.3rem 0.9rem;
+      border-radius: 20px; margin-bottom: 1.4rem;
+      text-decoration: none; border: 1px solid rgba(86,70,245,0.2);
+    }
+    .hero-badges {
+      display: flex; justify-content: center; flex-wrap: wrap;
+      gap: 0.6rem; margin-bottom: 1.6rem;
+    }
+    .hero-badge-thai {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--thai-bg); color: var(--thai-accent);
+      border: 1px solid var(--thai-border);
+      font-size: 0.82rem; font-weight: 700; padding: 0.35rem 1rem;
+      border-radius: 20px;
+    }
+    .hero-badge-byom {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--byom-bg); color: var(--byom-accent);
+      border: 1px solid var(--byom-border);
+      font-size: 0.82rem; font-weight: 700; padding: 0.35rem 1rem;
+      border-radius: 20px;
+    }
+    header h1 {
+      font-size: 3.6rem; font-weight: 900; letter-spacing: -2px;
+      margin-bottom: 1rem; line-height: 1.05;
+    }
+    header h1 span {
+      background: linear-gradient(90deg, var(--accent-light), #c4b5fd);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 1.15rem; color: var(--text-muted);
+      max-width: 620px; margin: 0 auto 2rem; line-height: 1.65;
+    }
+    .hero-ctas {
+      display: flex; justify-content: center; flex-wrap: wrap;
+      gap: 0.75rem; margin-bottom: 2.5rem;
+    }
+    .btn-primary-lg {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      background: var(--btn-bg); color: #fff;
+      border-radius: 10px; font-size: 1rem; font-weight: 700;
+      letter-spacing: 0.3px; text-decoration: none;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(86,70,245,0.35);
+    }
+    .btn-primary-lg:hover {
+      background: var(--btn-hover); color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(86,70,245,0.45);
+    }
+    .btn-ghost-lg {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      background: transparent; color: var(--accent-light);
+      border: 1.5px solid rgba(86,70,245,0.4);
+      border-radius: 10px; font-size: 1rem; font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    }
+    .btn-ghost-lg:hover {
+      background: var(--tag-bg); color: var(--accent-light);
+      border-color: rgba(86,70,245,0.6);
+      transform: translateY(-2px);
+    }
+
+    /* Proprietary notice */
+    .proprietary-notice {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(86,70,245,0.12); border: 1px solid rgba(86,70,245,0.3);
+      color: var(--text-muted); font-size: 0.8rem; font-weight: 600;
+      padding: 0.35rem 0.9rem; border-radius: 20px; margin-bottom: 1rem;
+      letter-spacing: 0.3px;
+    }
+    .proprietary-notice a { color: var(--accent-light); text-decoration: underline; }
+    .proprietary-cta-badge {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.7); font-size: 0.78rem; font-weight: 700;
+      padding: 0.3rem 0.85rem; border-radius: 20px; margin-bottom: 1rem;
+      letter-spacing: 0.5px; text-transform: uppercase;
+    }
+
+    /* Stats strip */
+    .stats-strip {
+      display: flex; justify-content: center; flex-wrap: wrap;
+      gap: 0.5rem 2.5rem;
+      padding: 1.5rem 2rem;
+      border-top: 1px solid var(--card-border);
+      max-width: 860px; margin: 0 auto;
+    }
+    .stat-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-muted); }
+    .stat-item i { color: var(--accent-light); font-size: 1.1rem; }
+    .stat-item strong { color: var(--text); }
+
+    /* Main content */
+    main { flex: 1; }
+
+    /* Section */
+    .section { padding: 4rem 2rem; }
+    .section-alt { background: var(--section-bg); }
+    .section-inner { max-width: 1060px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--accent-light);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: 2.2rem; font-weight: 800; letter-spacing: -0.8px;
+      line-height: 1.2; margin-bottom: 1rem;
+    }
+    .section-sub {
+      font-size: 1rem; color: var(--text-muted); line-height: 1.65;
+      max-width: 640px; margin-bottom: 2.5rem;
+    }
+
+    /* Feature grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 1.75rem;
+      backdrop-filter: blur(14px);
+    }
+    .feature-icon {
+      font-size: 2rem; margin-bottom: 1rem;
+      background: var(--tag-bg); color: var(--accent-light);
+      width: 3rem; height: 3rem; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .feature-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* Screenshots grid */
+    .screenshots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .screenshot-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 14px; overflow: hidden;
+      backdrop-filter: blur(14px);
+    }
+    .screenshot-card img {
+      width: 100%; display: block;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .screenshot-card figcaption {
+      padding: 0.75rem 1rem;
+      font-size: 0.82rem; color: var(--text-muted); line-height: 1.4;
+    }
+
+    /* Thai spotlight */
+    .spotlight {
+      background: var(--thai-bg);
+      border: 1px solid var(--thai-border);
+      border-radius: 20px; padding: 2.5rem;
+      display: flex; gap: 2rem; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .spotlight::before {
+      content: '';
+      position: absolute; inset: 0; border-radius: 20px;
+      background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .spotlight-icon { font-size: 4rem; flex-shrink: 0; line-height: 1; }
+    .spotlight-body h2 { font-size: 1.7rem; font-weight: 800; margin-bottom: 0.6rem; }
+    .spotlight-body p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 1rem; }
+    .spotlight-list {
+      list-style: none; display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .spotlight-list li {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      font-size: 0.9rem; color: var(--text-muted);
+    }
+    .spotlight-list li::before {
+      content: '✓'; color: var(--thai-accent);
+      font-weight: 700; flex-shrink: 0; margin-top: 0.05rem;
+    }
+
+    /* BYOM spotlight */
+    .spotlight-byom {
+      background: var(--byom-bg);
+      border: 1px solid var(--byom-border);
+      border-radius: 20px; padding: 2.5rem;
+      display: flex; gap: 2rem; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .spotlight-byom::before {
+      content: '';
+      position: absolute; inset: 0; border-radius: 20px;
+      background: linear-gradient(135deg, rgba(34,197,94,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .spotlight-byom .spotlight-list li::before { color: var(--byom-accent); }
+
+    /* Provider pills */
+    .provider-pills {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;
+    }
+    .provider-pill {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 10px; padding: 0.3rem 0.8rem;
+      font-size: 0.82rem; font-weight: 600; color: var(--text-muted);
+    }
+
+    /* Pipeline section */
+    .pipeline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+      gap: 1.5rem;
+    }
+    .pipeline-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 18px; padding: 2rem;
+      backdrop-filter: blur(14px);
+    }
+    .pipeline-card h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .pipeline-card .pipeline-sub { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.25rem; }
+    .pipeline-steps {
+      display: flex; flex-direction: column; gap: 0.75rem;
+    }
+    .pipeline-step {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+    }
+    .step-num {
+      background: var(--tag-bg); color: var(--accent-light);
+      width: 1.75rem; height: 1.75rem; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 800; flex-shrink: 0;
+    }
+    .step-body strong { display: block; font-size: 0.9rem; font-weight: 700; }
+    .step-body span { font-size: 0.83rem; color: var(--text-muted); }
+
+    /* Use cases */
+    .usecase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+    .usecase-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 1.5rem;
+      backdrop-filter: blur(14px);
+    }
+    .usecase-card .uc-icon { font-size: 1.8rem; margin-bottom: 0.75rem; }
+    .usecase-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .usecase-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.55; }
+
+    /* Tag */
+    .tag {
+      background: var(--tag-bg); color: var(--tag-text);
+      font-size: 0.72rem; font-weight: 600;
+      padding: 0.18rem 0.55rem; border-radius: 12px;
+      display: inline-block;
+    }
+    .tag-thai {
+      background: var(--thai-bg); color: var(--thai-accent);
+      border: 1px solid var(--thai-border);
+    }
+    .tag-byom {
+      background: var(--byom-bg); color: var(--byom-accent);
+      border: 1px solid var(--byom-border);
+    }
+
+    /* CTA section */
+    .cta-section {
+      text-align: center; padding: 5rem 2rem;
+      background: var(--highlight-bg);
+    }
+    .cta-section h2 { font-size: 2rem; font-weight: 800; margin-bottom: 0.75rem; }
+    .cta-section p { font-size: 1rem; color: var(--text-muted); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+
+    /* Footer */
+    footer {
+      padding: 1.75rem 2rem; border-top: 1px solid var(--card-border);
+      background: rgba(0,0,0,0.12);
+    }
+    .footer-inner {
+      max-width: 1060px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-brand strong { font-size: 0.95rem; display: block; margin-bottom: 0.15rem; }
+    .footer-brand span { font-size: 0.8rem; color: var(--text-muted); }
+    .footer-links {
+      display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: 0.8rem;
+    }
+    .footer-links a {
+      color: var(--text-muted); text-decoration: none; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--accent-light); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .spotlight, .spotlight-byom { flex-direction: column; }
+      .spotlight-icon { font-size: 2.8rem; }
+      .pipeline-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      header h1 { font-size: 2.4rem; letter-spacing: -1px; }
+      header { padding: 3.5rem 1rem 2.5rem; }
+      .section { padding: 3rem 1rem; }
+      .section-title { font-size: 1.75rem; }
+      .spotlight, .spotlight-byom { padding: 1.5rem; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    (function() {
+      var t = localStorage.getItem('stp-theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <nav aria-label="Site navigation">
+    <div class="nav-brand">
+      <a href="../index.html" class="nav-home-link" aria-label="Back to Peppy Vibe home" title="Peppy Vibe Home">
+        <i class="bi bi-lightning-charge-fill" aria-hidden="true"></i>
+      </a>
+      <span class="nav-sep" aria-hidden="true">/</span>
+      <span class="nav-title">Peppy Form Extractor</span>
+    </div>
+    <div class="nav-actions">
+      <button id="theme-btn" class="nav-btn" onclick="toggleTheme()" aria-label="Toggle colour theme">
+        <i class="bi bi-sun" aria-hidden="true"></i> Light
+      </button>
+    </div>
+  </nav>
+
+  <header>
+    <div aria-label="Peppy Vibe product">
+      <span class="hero-eyebrow"><i class="bi bi-lightning-charge-fill" aria-hidden="true"></i> Peppy Vibe</span>
+    </div>
+    <div class="hero-badges" aria-label="Key product highlights">
+      <span class="hero-badge-thai">
+        <i class="bi bi-star-fill" aria-hidden="true"></i> Best-in-Class Thai Language Support
+      </span>
+      <span class="hero-badge-byom">
+        <i class="bi bi-cpu" aria-hidden="true"></i> Bring Your Own AI Model
+      </span>
+    </div>
+    <h1>AI Document <span>Data Extraction</span></h1>
+    <p class="hero-sub">
+      Pull structured data from invoices, receipts, tax forms, ID cards, and contracts using AI. Runs entirely on your device — no cloud, no subscriptions, no data ever leaves your machine.
+    </p>
+    <div class="proprietary-notice" role="note">
+      <i class="bi bi-lock-fill" aria-hidden="true"></i> Proprietary Software &mdash; <a href="../contact.html">Contact us for details</a>
+    </div>
+    <div class="hero-ctas">
+      <a href="../contact.html" class="btn-primary-lg">
+        <i class="bi bi-envelope" aria-hidden="true"></i> Contact Us for Details
+      </a>
+      <a href="../index.html" class="btn-ghost-lg">
+        <i class="bi bi-arrow-left" aria-hidden="true"></i> All Projects
+      </a>
+    </div>
+    <div class="stats-strip" role="list" aria-label="Product highlights">
+      <div class="stat-item" role="listitem"><i class="bi bi-shield-lock-fill" aria-hidden="true"></i> <span><strong>100%</strong> Offline &amp; Private</span></div>
+      <div class="stat-item" role="listitem"><i class="bi bi-translate" aria-hidden="true"></i> <span>Excellent <strong>Thai</strong> OCR</span></div>
+      <div class="stat-item" role="listitem"><i class="bi bi-cpu" aria-hidden="true"></i> <span><strong>6+</strong> AI Providers</span></div>
+      <div class="stat-item" role="listitem"><i class="bi bi-file-earmark-spreadsheet" aria-hidden="true"></i> <span>Export to <strong>Excel, CSV, JSON</strong></span></div>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+    <!-- ── App Screenshots ── -->
+    <section class="section" aria-labelledby="screenshots-heading">
+      <div class="section-inner">
+        <p class="section-label">App Screenshots</p>
+        <h2 class="section-title" id="screenshots-heading">See It in Action</h2>
+        <p class="section-sub">A clean, desktop-first interface designed for high-volume document extraction workflows.</p>
+        <div class="screenshots-grid">
+          <figure class="screenshot-card">
+            <img src="images/home_screen.png" alt="Home screen — batch document list with status badges for each file" loading="lazy">
+            <figcaption>Batch document view with real-time status badges</figcaption>
+          </figure>
+          <figure class="screenshot-card">
+            <img src="images/preview_screen.png" alt="Document preview — OCR bounding boxes overlay with confidence colour-coding and review form" loading="lazy">
+            <figcaption>OCR preview with bounding boxes &amp; confidence scores</figcaption>
+          </figure>
+          <figure class="screenshot-card">
+            <img src="images/schema_management_screen.png" alt="Schema management — create and edit document schemas for any document type" loading="lazy">
+            <figcaption>Schema management — define fields, types &amp; validation rules</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Thai Language Spotlight ── -->
+    <section class="section" aria-labelledby="thai-heading">
+      <div class="section-inner">
+        <div class="spotlight">
+          <div class="spotlight-icon" aria-hidden="true">🇹🇭</div>
+          <div class="spotlight-body">
+            <h2 id="thai-heading">Outstanding Thai Language OCR</h2>
+            <p>
+              The Two-Stage Pipeline powered by <strong>PaddleOCR, EasyOCR, Typhoon OCR, and DeepseekOCR</strong> delivers <strong>exceptional accuracy on Thai-language documents</strong> — our strongest capability. Whether you are processing Thai invoices, government forms, receipts, or ID cards, Peppy Form Extractor handles complex Thai script with confidence scores and per-word bounding box precision.
+            </p>
+            <ul class="spotlight-list" aria-label="Thai language OCR capabilities">
+              <li>Accurate recognition of Thai script, mixed Thai–English documents, and numeric content</li>
+              <li>Per-word bounding boxes with visual confidence colour-coding (green / yellow / red)</li>
+              <li>Drag OCR words directly onto form fields for quick manual correction</li>
+              <li>Works with invoices, tax documents (ใบกำกับภาษี), receipts (ใบเสร็จ), ID cards and contracts</li>
+              <li><strong>PaddleOCR</strong> and <strong>EasyOCR</strong> — battle-tested open-source engines with strong Thai recognition</li>
+              <li><strong>Typhoon OCR</strong> and <strong>DeepseekOCR</strong> — next-generation models, both proven leaders for Thai text recognition</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── BYOM Spotlight ── -->
+    <section class="section section-alt" aria-labelledby="byom-heading">
+      <div class="section-inner">
+        <div class="spotlight-byom">
+          <div class="spotlight-icon" aria-hidden="true">🤖</div>
+          <div class="spotlight-body">
+            <h2 id="byom-heading">Use Any AI Model You Want — BYOM</h2>
+            <p>
+              The <strong>Bring Your Own Model (BYOM)</strong> pipeline lets you connect Peppy Form Extractor to any OpenAI-compatible AI provider. Run a private local LLM with Ollama for maximum privacy, or connect to powerful cloud models via OpenAI, Anthropic, or Google. You are never locked in — switch providers at any time with no data loss.
+            </p>
+            <ul class="spotlight-list" aria-label="BYOM capabilities">
+              <li>Single-shot vision pipeline: image + schema → extracted fields in one API call</li>
+              <li>No Peppy Server required — works entirely from your browser or desktop</li>
+              <li>Configure base URL, API key, model name, temperature and token limits</li>
+              <li>Supports any OpenAI-compatible endpoint — including self-hosted models</li>
+              <li>Custom system instructions and extraction rules for fine-tuned results</li>
+            </ul>
+            <div class="provider-pills" role="list" aria-label="Supported AI providers">
+              <span class="provider-pill" role="listitem">OpenAI</span>
+              <span class="provider-pill" role="listitem">Anthropic</span>
+              <span class="provider-pill" role="listitem">Google</span>
+              <span class="provider-pill" role="listitem">Groq</span>
+              <span class="provider-pill" role="listitem">Mistral</span>
+              <span class="provider-pill" role="listitem">Ollama</span>
+              <span class="provider-pill" role="listitem">OpenRouter</span>
+              <span class="provider-pill" role="listitem">Custom Endpoint</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── How It Works ── -->
+    <section class="section" aria-labelledby="how-it-works-heading">
+      <div class="section-inner">
+        <p class="section-label">How It Works</p>
+        <h2 class="section-title" id="how-it-works-heading">Two Extraction Pipelines</h2>
+        <p class="section-sub">
+          Choose between the high-accuracy two-stage server pipeline or the flexible single-shot BYOM pipeline — configurable per document.
+        </p>
+        <div class="pipeline-grid">
+
+          <article class="pipeline-card" aria-label="Two-Stage Pipeline">
+            <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;margin-bottom:0.5rem">
+              <span class="tag tag-thai">Recommended for Thai</span>
+              <span class="tag">Peppy Server</span>
+              <span class="tag">PaddleOCR &bull; EasyOCR &bull; Typhoon OCR &bull; DeepseekOCR</span>
+            </div>
+            <h3>Two-Stage Pipeline</h3>
+            <p class="pipeline-sub">Dedicated OCR engine + LLM extraction. Best accuracy, per-word bounding boxes, and ideal for Thai-language documents.</p>
+            <div class="pipeline-steps">
+              <div class="pipeline-step">
+                <span class="step-num">1</span>
+                <div class="step-body">
+                  <strong>OCR</strong>
+                  <span>Image → text with per-word bounding boxes and confidence scores</span>
+                </div>
+              </div>
+              <div class="pipeline-step">
+                <span class="step-num">2</span>
+                <div class="step-body">
+                  <strong>Classify (optional)</strong>
+                  <span>Auto-detect document type when set to Auto-detect</span>
+                </div>
+              </div>
+              <div class="pipeline-step">
+                <span class="step-num">3</span>
+                <div class="step-body">
+                  <strong>Extract</strong>
+                  <span>LLM fills schema fields from OCR text using your custom schema</span>
+                </div>
+              </div>
+              <div class="pipeline-step">
+                <span class="step-num">4</span>
+                <div class="step-body">
+                  <strong>Validate</strong>
+                  <span>Schema validation rules applied; errors highlighted in the review form</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="pipeline-card" aria-label="BYOM Single-Shot Pipeline">
+            <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem">
+              <span class="tag tag-byom">BYOM</span>
+              <span class="tag">Any AI Provider</span>
+            </div>
+            <h3>Single-Shot Pipeline ⚡</h3>
+            <p class="pipeline-sub">Vision LLM receives the image and schema in one call — OCR and extraction happen simultaneously, no dedicated server needed.</p>
+            <div class="pipeline-steps">
+              <div class="pipeline-step">
+                <span class="step-num">1</span>
+                <div class="step-body">
+                  <strong>Configure</strong>
+                  <span>Select document type and set up your AI provider (OpenAI, Ollama, etc.)</span>
+                </div>
+              </div>
+              <div class="pipeline-step">
+                <span class="step-num">2</span>
+                <div class="step-body">
+                  <strong>Single API Call</strong>
+                  <span>Image + schema sent to your chosen vision LLM — no Peppy Server needed</span>
+                </div>
+              </div>
+              <div class="pipeline-step">
+                <span class="step-num">3</span>
+                <div class="step-body">
+                  <strong>Results</strong>
+                  <span>Fields populated instantly; optional OCR transcript returned for review</span>
+                </div>
+              </div>
+              <div class="pipeline-step">
+                <span class="step-num">4</span>
+                <div class="step-body">
+                  <strong>Review &amp; Export</strong>
+                  <span>Edit any field, approve the document, export to Excel / CSV / JSON</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Core Features ── -->
+    <section class="section section-alt" aria-labelledby="features-heading">
+      <div class="section-inner">
+        <p class="section-label">Features</p>
+        <h2 class="section-title" id="features-heading">Everything You Need for Document Extraction</h2>
+        <p class="section-sub">A complete end-to-end workflow from raw scanned images to structured, validated, exported data.</p>
+        <div class="feature-grid">
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-folder2-open" aria-hidden="true"></i></div>
+            <h3>Batch Processing</h3>
+            <p>Open a folder of scanned images, configure all files at once using the bulk change area, then run OCR and extraction on the entire batch with a single click.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-sliders" aria-hidden="true"></i></div>
+            <h3>Configurable Schemas</h3>
+            <p>Define custom document schemas (YAML) with typed fields, validation rules, and LLM hints. Supports invoices, receipts, tax forms, ID cards, contracts — any document format you can describe.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-pencil-square" aria-hidden="true"></i></div>
+            <h3>Human-in-the-Loop Review</h3>
+            <p>Every extracted document opens in a review form. Edit any field, see validation errors highlighted in red, drag OCR words onto fields, and approve when satisfied.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-shield-lock" aria-hidden="true"></i></div>
+            <h3>Private by Design</h3>
+            <p>All results stored in a <code>session.pfe/</code> folder next to your images. API keys kept in the system keyring, never in plain text. No cloud storage, no third-party data sharing.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-bounding-box" aria-hidden="true"></i></div>
+            <h3>Visual BBox Canvas</h3>
+            <p>When using the Two-Stage Pipeline, OCR words are displayed on a canvas overlay with confidence colour-coding. Focus a field to highlight its corresponding words in blue.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-file-earmark-spreadsheet" aria-hidden="true"></i></div>
+            <h3>Flexible Export</h3>
+            <p>Export results as JSON, CSV (by document type), or Excel (by document type). Each Excel export flattens line-item tables into rows with scalar fields duplicated across them.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-arrow-repeat" aria-hidden="true"></i></div>
+            <h3>Live SSE Streaming</h3>
+            <p>Real-time job status via Server-Sent Events. Status badges animate as each file moves through OCR, classification, extraction, and validation — no page refresh needed.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-gear" aria-hidden="true"></i></div>
+            <h3>Schema Configuration</h3>
+            <p>Create your own document schemas using the built-in Schema Configuration panel — no YAML editing required. Define field names, types, validation rules, and LLM hints. Schemas update all Document Type dropdowns instantly.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-hdd-network" aria-hidden="true"></i></div>
+            <h3>Peppy Server API</h3>
+            <p>Integrate document extraction into your own applications via the Peppy Server REST API. Submit jobs programmatically, stream results over SSE, and retrieve structured JSON — ideal for automated pipelines and back-office workflows.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-keyboard" aria-hidden="true"></i></div>
+            <h3>Keyboard Navigation</h3>
+            <p>Press <kbd>T</kbd> to toggle between Preview and OCR tabs. Use <kbd>←</kbd> / <kbd>→</kbd> to navigate between documents without touching the mouse.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Use Cases ── -->
+    <section class="section" aria-labelledby="usecases-heading">
+      <div class="section-inner">
+        <p class="section-label">Use Cases</p>
+        <h2 class="section-title" id="usecases-heading">Who Uses Peppy Form Extractor?</h2>
+        <p class="section-sub">Built for teams and individuals who process high volumes of paper or scanned documents every day.</p>
+        <div class="usecase-grid">
+
+          <div class="usecase-card">
+            <div class="uc-icon" aria-hidden="true">🧾</div>
+            <h3>Finance &amp; Accounting</h3>
+            <p>Extract invoice numbers, dates, supplier names, and line items from stacks of scanned invoices and export directly to Excel for accounting uploads.</p>
+          </div>
+
+          <div class="usecase-card">
+            <div class="uc-icon" aria-hidden="true">🏢</div>
+            <h3>Operations &amp; Back-Office</h3>
+            <p>Automate the manual transcription step for receipts, delivery notes, purchase orders, and any recurring paper document your team processes.</p>
+          </div>
+
+          <div class="usecase-card">
+            <div class="uc-icon" aria-hidden="true">🇹🇭</div>
+            <h3>Thai Language Documents</h3>
+            <p>Process Thai tax invoices (ใบกำกับภาษี), official receipts (ใบเสร็จรับเงิน), and government forms with industry-leading Thai OCR accuracy.</p>
+          </div>
+
+          <div class="usecase-card">
+            <div class="uc-icon" aria-hidden="true">🏥</div>
+            <h3>Healthcare &amp; Insurance</h3>
+            <p>Extract patient data, claim fields, and coverage details from medical forms, insurance documents, and ID cards — all locally, with no data ever leaving your network.</p>
+          </div>
+
+          <div class="usecase-card">
+            <div class="uc-icon" aria-hidden="true">⚙️</div>
+            <h3>Developers &amp; Data Engineers</h3>
+            <p>Configure custom schemas, connect your private LLM deployment (Ollama, vLLM), and integrate the extraction pipeline into your internal workflows.</p>
+          </div>
+
+          <div class="usecase-card">
+            <div class="uc-icon" aria-hidden="true">🏛️</div>
+            <h3>Regulated Industries</h3>
+            <p>For industries where data cannot leave the building — Peppy Form Extractor runs entirely offline, stores data locally, and supports air-gapped deployments with Ollama.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA ── -->
+    <section class="cta-section" aria-labelledby="cta-heading">
+      <div class="proprietary-cta-badge"><i class="bi bi-lock-fill" aria-hidden="true"></i> Proprietary Software</div>
+      <h2 id="cta-heading">Interested in Peppy Form Extractor?</h2>
+      <p>Peppy Form Extractor is proprietary software. Contact us to learn more, request a demo, or discuss licensing options.</p>
+      <div class="hero-ctas">
+        <a href="../contact.html" class="btn-primary-lg">
+          <i class="bi bi-envelope" aria-hidden="true"></i> Contact Us for Details
+        </a>
+        <a href="../index.html" class="btn-ghost-lg">
+          <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> More Projects
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <strong>Peppy Form Extractor</strong>
+        <span>AI Document Data Extraction &mdash; by <a href="../index.html" style="color:inherit;opacity:0.7;text-decoration:none;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">Peppy Vibe</a></span>
+      </div>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="../index.html">Peppy Vibe Home</a>
+        <a href="../peppy-tools/index.html">Peppy Tools</a>
+        <a href="../peppy-spreadsheetql/index.html">Peppy SpreadsheetQL</a>
+        <a href="../contact.html">Contact Us</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    function updateThemeBtn() {
+      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      var btn = document.getElementById('theme-btn');
+      btn.innerHTML = isDark
+        ? '<i class="bi bi-sun" aria-hidden="true"></i> Light'
+        : '<i class="bi bi-moon-stars" aria-hidden="true"></i> Dark';
+    }
+    function toggleTheme() {
+      var cur = document.documentElement.getAttribute('data-theme');
+      var next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('stp-theme', next);
+      updateThemeBtn();
+    }
+    updateThemeBtn();
+  </script>
+  <script src="../peppy-tools/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

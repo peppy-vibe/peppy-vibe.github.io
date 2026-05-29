@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YLTG419QN5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YLTG419QN5');
+  </script>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://region1.google-analytics.com; worker-src 'self' blob: https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peppy Dev Tools</title>
+  <meta name="description" content="33 developer utilities in one app: Base64, URL, hashing, password, UUID, JWT, JSON, YAML, XML, colours, timestamps, regex and more — all client-side.">
+  <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../lib/bootstrap-icons/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Apply theme before paint -->
+  <script>(function(){var t=localStorage.getItem('stp-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+  <!-- App header -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu"><i class="bi bi-list" aria-hidden="true"></i></button>
+      <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+      <span class="top-bar-title"><i class="bi bi-tools" aria-hidden="true"></i> Peppy Dev Tools</span>
+    </div>
+    <div class="top-bar-right">
+      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
+    </div>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileMenu()"></div>
+
+  <div class="app-body">
+
+    <!-- â•â• Sidebar â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <div class="sidebar">
+      <div class="sidebar-groups" id="sidebar-groups">
+
+        <div class="sidebar-group" id="grp-encoding">
+          <button class="grp-hdr" onclick="toggleGroup('encoding')">
+            <span><i class="bi bi-lock" aria-hidden="true"></i> Encoding &amp; Security</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
+          </button>
+          <div class="grp-tools">
+            <button class="tab-btn active" data-tool="base64"   data-grp="encoding" onclick="showTool('base64')">Base64</button>
+            <button class="tab-btn"        data-tool="url"      data-grp="encoding" onclick="showTool('url')">URL Encoder</button>
+            <button class="tab-btn"        data-tool="hash"     data-grp="encoding" onclick="showTool('hash')">Hash Generator</button>
+            <button class="tab-btn"        data-tool="password" data-grp="encoding" onclick="showTool('password')">Password Generator</button>
+            <button class="tab-btn"        data-tool="uuid"     data-grp="encoding" onclick="showTool('uuid')">UUID Generator</button>
+            <button class="tab-btn"        data-tool="jwt"      data-grp="encoding" onclick="showTool('jwt')">JWT Decoder</button>
+            <button class="tab-btn"        data-tool="html-ent" data-grp="encoding" onclick="showTool('html-ent')">HTML Entities</button>
+          </div>
+        </div>
+
+        <div class="sidebar-group" id="grp-text">
+          <button class="grp-hdr" onclick="toggleGroup('text')">
+            <span><i class="bi bi-file-text" aria-hidden="true"></i> Text Tools</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
+          </button>
+          <div class="grp-tools">
+            <button class="tab-btn" data-tool="diff"  data-grp="text" onclick="showTool('diff')">Text Diff</button>
+            <button class="tab-btn" data-tool="sort"  data-grp="text" onclick="showTool('sort')">Sorter</button>
+            <button class="tab-btn" data-tool="dedup" data-grp="text" onclick="showTool('dedup')">Dedup Lines</button>
+            <button class="tab-btn" data-tool="rand"  data-grp="text" onclick="showTool('rand')">Random String</button>
+            <button class="tab-btn" data-tool="lorem" data-grp="text" onclick="showTool('lorem')">Lorem Ipsum</button>
+            <button class="tab-btn" data-tool="stats" data-grp="text" onclick="showTool('stats')">Text Statistics</button>
+          </div>
+        </div>
+
+        <div class="sidebar-group" id="grp-json">
+          <button class="grp-hdr" onclick="toggleGroup('json')">
+            <span><i class="bi bi-braces" aria-hidden="true"></i> JSON / Data</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
+          </button>
+          <div class="grp-tools">
+            <button class="tab-btn" data-tool="jf"   data-grp="json" onclick="showTool('jf')">JSON Formatter</button>
+            <button class="tab-btn" data-tool="jv"   data-grp="json" onclick="showTool('jv')">JSON Viewer</button>
+            <button class="tab-btn" data-tool="jval" data-grp="json" onclick="showTool('jval')">JSON Validator</button>
+            <button class="tab-btn" data-tool="jcsv" data-grp="json" onclick="showTool('jcsv')">JSON <i class="bi bi-arrow-right" aria-hidden="true"></i> CSV</button>
+            <button class="tab-btn" data-tool="jy"   data-grp="json" onclick="showTool('jy')">JSON <i class="bi bi-arrow-right" aria-hidden="true"></i> YAML</button>
+            <button class="tab-btn" data-tool="yj"   data-grp="json" onclick="showTool('yj')">YAML <i class="bi bi-arrow-right" aria-hidden="true"></i> JSON</button>
+            <button class="tab-btn" data-tool="xf"   data-grp="json" onclick="showTool('xf')">XML Formatter</button>
+            <button class="tab-btn" data-tool="xj"   data-grp="json" onclick="showTool('xj')">XML <i class="bi bi-arrow-right" aria-hidden="true"></i> JSON</button>
+          </div>
+        </div>
+
+        <div class="sidebar-group" id="grp-colors">
+          <button class="grp-hdr" onclick="toggleGroup('colors')">
+            <span><i class="bi bi-palette" aria-hidden="true"></i> Colors</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
+          </button>
+          <div class="grp-tools">
+            <button class="tab-btn" data-tool="convert"  data-grp="colors" onclick="showTool('convert')">Color Converter</button>
+            <button class="tab-btn" data-tool="picker"   data-grp="colors" onclick="showTool('picker')">Color Picker</button>
+            <button class="tab-btn" data-tool="contrast" data-grp="colors" onclick="showTool('contrast')">Contrast Checker</button>
+            <button class="tab-btn" data-tool="palette"  data-grp="colors" onclick="showTool('palette')">Palette Generator</button>
+          </div>
+        </div>
+
+        <div class="sidebar-group" id="grp-time">
+          <button class="grp-hdr" onclick="toggleGroup('time')">
+            <span><i class="bi bi-clock" aria-hidden="true"></i> Timestamps</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
+          </button>
+          <div class="grp-tools">
+            <button class="tab-btn" data-tool="unix"      data-grp="time" onclick="showTool('unix')">Unix Converter</button>
+            <button class="tab-btn" data-tool="calc"      data-grp="time" onclick="showTool('calc')">Date Calculator</button>
+            <button class="tab-btn" data-tool="format"    data-grp="time" onclick="showTool('format')">Date Formatter</button>
+          </div>
+        </div>
+
+        <div class="sidebar-group" id="grp-regex">
+          <button class="grp-hdr" onclick="toggleGroup('regex')">
+            <span><i class="bi bi-search" aria-hidden="true"></i> Regex</span>
+            <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
+          </button>
+          <div class="grp-tools">
+            <button class="tab-btn" data-tool="tester"  data-grp="regex" onclick="showTool('tester')">Pattern Tester</button>
+            <button class="tab-btn" data-tool="replace" data-grp="regex" onclick="showTool('replace')">Find &amp; Replace</button>
+            <button class="tab-btn" data-tool="ref"     data-grp="regex" onclick="showTool('ref')">Reference</button>
+          </div>
+        </div>
+
+      </div><!-- /sidebar-groups -->
+
+    </div><!-- /sidebar -->
+
+    <!-- â•â• Tool Area â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <div class="tool-area">
+
+      <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+           ENCODING & SECURITY
+      â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+
+      <!-- Base64 -->
+      <div class="tool-panel active" id="panel-base64">
+        <div class="panel-title">Base64 Encoder / Decoder</div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input</label>
+            <textarea id="b64-in" class="io-area" placeholder="Enter plain text or Base64 string&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="b64Encode()">Encode <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+            <button onclick="b64Decode()"><i class="bi bi-arrow-left" aria-hidden="true"></i> Decode</button>
+            <button class="btn-secondary" onclick="b64Swap()"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Swap</button>
+            <button class="btn-secondary" onclick="clearTool('b64-in','b64-out','b64-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output</label>
+            <textarea id="b64-out" class="io-area" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="b64-msg"></span>
+              <button class="copy-btn" onclick="copyOutput('b64-out','b64-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-base64 -->
+
+      <!-- URL Encoder -->
+      <div class="tool-panel" id="panel-url">
+        <div class="panel-title">URL Encoder / Decoder</div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input</label>
+            <textarea id="url-in" class="io-area" placeholder="Enter URL or URL-encoded string&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="urlEncode()">Encode <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+            <button onclick="urlDecode()"><i class="bi bi-arrow-left" aria-hidden="true"></i> Decode</button>
+            <button class="btn-secondary" onclick="urlSwap()"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Swap</button>
+            <button class="btn-secondary" onclick="clearTool('url-in','url-out','url-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output</label>
+            <textarea id="url-out" class="io-area" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="url-msg"></span>
+              <button class="copy-btn" onclick="copyOutput('url-out','url-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-url -->
+
+      <!-- Hash Generator -->
+      <div class="tool-panel" id="panel-hash">
+        <div class="panel-title">Hash Generator</div>
+        <div class="form-group">
+          <label>Input Text</label>
+          <textarea id="hash-in" class="io-area single" placeholder="Enter text to hash&#8230;" spellcheck="false"></textarea>
+        </div>
+        <div class="form-row">
+          <label>Algorithm</label>
+          <div class="radio-group">
+            <label><input type="radio" name="hash-algo" value="MD5" checked> MD5</label>
+            <label><input type="radio" name="hash-algo" value="SHA-256"> SHA-256</label>
+            <label><input type="radio" name="hash-algo" value="SHA-1"> SHA-1</label>
+            <label><input type="radio" name="hash-algo" value="SHA-384"> SHA-384</label>
+            <label><input type="radio" name="hash-algo" value="SHA-512"> SHA-512</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <button onclick="computeHash()"><i class="bi bi-key" aria-hidden="true"></i> Generate Hash</button>
+        </div>
+        <div class="result-box">
+          <label class="io-label">Hash Output</label>
+          <div class="hash-result-row">
+            <input type="text" id="hash-out" class="result-input" readonly>
+            <button class="copy-btn" onclick="copyResult('hash-out','hash-msg')">Copy</button>
+          </div>
+          <span class="tool-msg" id="hash-msg"></span>
+        </div>
+      </div><!-- /panel-hash -->
+
+      <!-- Password Generator -->
+      <div class="tool-panel" id="panel-password">
+        <div class="panel-title">Password Generator</div>
+        <div class="form-group">
+          <label>Length: <span id="pwd-len-display">16</span></label>
+          <input type="range" id="pwd-len" min="4" max="128" value="16" oninput="document.getElementById('pwd-len-display').textContent=this.value">
+        </div>
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="pwd-upper" checked> Uppercase (A&ndash;Z)</label>
+          <label><input type="checkbox" id="pwd-lower" checked> Lowercase (a&ndash;z)</label>
+          <label><input type="checkbox" id="pwd-digits" checked> Digits (0&ndash;9)</label>
+          <label><input type="checkbox" id="pwd-symbols" checked> Symbols (!@#$&hellip;)</label>
+          <label><input type="checkbox" id="pwd-noambig"> Exclude ambiguous (0, O, l, I)</label>
+        </div>
+        <div class="form-row">
+          <button onclick="generatePassword()"><i class="bi bi-shield-lock" aria-hidden="true"></i> Generate Password</button>
+          <button class="btn-secondary" onclick="generatePassword()"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Regenerate</button>
+        </div>
+        <div class="result-box">
+          <label class="io-label">Generated Password</label>
+          <div class="hash-result-row">
+            <input type="text" id="pwd-out" class="result-input" readonly>
+            <button class="copy-btn" onclick="copyResult('pwd-out','pwd-msg')">Copy</button>
+          </div>
+          <div class="pwd-strength">
+            <div class="strength-bar"><div id="strength-fill"></div></div>
+            <span id="strength-label">&mdash;</span>
+          </div>
+          <span class="tool-msg" id="pwd-msg"></span>
+        </div>
+      </div><!-- /panel-password -->
+
+      <!-- UUID Generator -->
+      <div class="tool-panel" id="panel-uuid">
+        <div class="panel-title">UUID Generator</div>
+        <div class="form-row">
+          <label>Version</label>
+          <div class="radio-group">
+            <label><input type="radio" name="uuid-ver" value="4" checked> v4 (random)</label>
+            <label><input type="radio" name="uuid-ver" value="nil"> Nil UUID</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Count</label>
+          <input type="number" id="uuid-count" min="1" max="100" value="1" class="short-input">
+        </div>
+        <div class="form-row">
+          <button onclick="generateUUIDs()"><i class="bi bi-upc" aria-hidden="true"></i> Generate</button>
+          <button class="btn-secondary" onclick="clearUUIDs()">Clear</button>
+        </div>
+        <div class="result-box">
+          <label class="io-label">UUIDs</label>
+          <div class="io-footer">
+            <span class="tool-msg" id="uuid-msg"></span>
+            <button class="copy-btn" onclick="copyOutput('uuid-out','uuid-msg')">Copy All</button>
+          </div>
+          <textarea id="uuid-out" class="io-area" readonly spellcheck="false"></textarea>
+        </div>
+      </div><!-- /panel-uuid -->
+
+      <!-- JWT Decoder -->
+      <div class="tool-panel" id="panel-jwt">
+        <div class="panel-title">JWT Decoder</div>
+        <p class="tool-description">Paste a JSON Web Token to inspect its header and payload. No signature verification is performed &mdash; this tool is for inspection only.</p>
+        <div class="form-group">
+          <label class="io-label">JWT Input</label>
+          <textarea id="jwt-in" class="io-area single" placeholder="Paste your JWT here&#8230;" spellcheck="false" oninput="decodeJWT()"></textarea>
+        </div>
+        <div id="jwt-result" class="jwt-parts" style="display:none">
+          <div class="jwt-section">
+            <div class="jwt-section-hdr header-hdr">Header</div>
+            <pre id="jwt-header" class="jwt-pre"></pre>
+          </div>
+          <div class="jwt-section">
+            <div class="jwt-section-hdr payload-hdr">Payload</div>
+            <pre id="jwt-payload" class="jwt-pre"></pre>
+          </div>
+          <div class="jwt-section">
+            <div class="jwt-section-hdr sig-hdr">Signature</div>
+            <div id="jwt-sig" class="jwt-sig-note">Signature is present but not verified by this tool.</div>
+          </div>
+        </div>
+        <span class="tool-msg err" id="jwt-msg"></span>
+      </div><!-- /panel-jwt -->
+
+      <!-- HTML Entities -->
+      <div class="tool-panel" id="panel-html-ent">
+        <div class="panel-title">HTML Entity Encoder / Decoder</div>
+        <p class="tool-description">Encode special characters to HTML entities (&amp;amp;, &amp;lt;, &amp;gt;&hellip;) and decode them back to plain text.</p>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input</label>
+            <textarea id="hent-in" class="io-area" placeholder="Enter plain HTML or entity-encoded text&hellip;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="hentEncode()">Encode <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+            <button onclick="hentDecode()"><i class="bi bi-arrow-left" aria-hidden="true"></i> Decode</button>
+            <button class="btn-secondary" onclick="hentSwap()"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Swap</button>
+            <button class="btn-secondary" onclick="clearTool('hent-in','hent-out','hent-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output</label>
+            <textarea id="hent-out" class="io-area" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="hent-msg"></span>
+              <button class="copy-btn" onclick="copyOutput('hent-out','hent-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-html-ent -->
+
+      <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+           TEXT TOOLS
+      â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+
+      <!-- Text Diff -->
+      <div class="tool-panel" id="panel-diff">
+        <div class="panel-title">Text Diff Checker</div>
+        <div class="diff-inputs">
+          <div class="io-col">
+            <label class="io-label">Original</label>
+            <textarea id="diff-a" class="io-area" placeholder="Paste original text&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Modified</label>
+            <textarea id="diff-b" class="io-area" placeholder="Paste modified text&#8230;" spellcheck="false"></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <button onclick="runDiff()"><i class="bi bi-search" aria-hidden="true"></i> Compare</button>
+          <button class="btn-secondary" onclick="clearDiff()">Clear</button>
+          <span class="diff-stats" id="diff-stats"></span>
+        </div>
+        <div class="diff-output" id="diff-output" style="display:none">
+          <div class="diff-panel">
+            <div class="diff-panel-hdr">Original</div>
+            <div class="diff-content" id="diff-left" onscroll="syncDiffScroll('left')"></div>
+          </div>
+          <div class="diff-panel">
+            <div class="diff-panel-hdr">Modified</div>
+            <div class="diff-content" id="diff-right" onscroll="syncDiffScroll('right')"></div>
+          </div>
+        </div>
+      </div><!-- /panel-diff -->
+
+      <!-- Text Sorter -->
+      <div class="tool-panel" id="panel-sort">
+        <div class="panel-title">Text Sorter</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Sort Mode</label>
+            <select id="sort-mode">
+              <option value="alpha-asc">Alphabetical A<i class="bi bi-arrow-right" aria-hidden="true"></i>Z</option>
+              <option value="alpha-desc">Alphabetical Z<i class="bi bi-arrow-right" aria-hidden="true"></i>A</option>
+              <option value="length-asc">Length (shortest first)</option>
+              <option value="length-desc">Length (longest first)</option>
+              <option value="numeric">Numeric</option>
+              <option value="random">Shuffle (random)</option>
+            </select>
+          </div>
+          <label class="checkbox-label"><input type="checkbox" id="sort-case"> Case-sensitive</label>
+          <label class="checkbox-label"><input type="checkbox" id="sort-rm-empty" checked> Remove empty lines</label>
+          <label class="checkbox-label"><input type="checkbox" id="sort-unique"> Remove duplicates</label>
+        </div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input (one item per line)</label>
+            <textarea id="sort-input" class="io-area large" placeholder="Paste lines to sort&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="sortLines()">Sort <i class="bi bi-sort-alpha-down" aria-hidden="true"></i></button>
+            <button class="btn-secondary" onclick="swapIO('sort-input','sort-output')"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Swap</button>
+            <button class="btn-secondary" onclick="clearPair('sort-input','sort-output','sort-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output</label>
+            <textarea id="sort-output" class="io-area large" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="sort-msg"></span>
+              <button class="copy-btn" onclick="copyTA('sort-output','sort-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-sort -->
+
+      <!-- Duplicate Line Remover -->
+      <div class="tool-panel" id="panel-dedup">
+        <div class="panel-title">Duplicate Line Remover</div>
+        <div class="form-row">
+          <label class="checkbox-label"><input type="checkbox" id="dedup-case"> Case-sensitive</label>
+          <label class="checkbox-label"><input type="checkbox" id="dedup-trim" checked> Trim whitespace before comparing</label>
+          <label class="checkbox-label"><input type="checkbox" id="dedup-rm-blank"> Remove blank lines</label>
+        </div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input</label>
+            <textarea id="dedup-input" class="io-area large" placeholder="Paste text with duplicate lines&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="removeDuplicates()">Remove Dupes <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+            <button class="btn-secondary" onclick="swapIO('dedup-input','dedup-output')"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Swap</button>
+            <button class="btn-secondary" onclick="clearPair('dedup-input','dedup-output','dedup-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output</label>
+            <textarea id="dedup-output" class="io-area large" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="dedup-msg"></span>
+              <button class="copy-btn" onclick="copyTA('dedup-output','dedup-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-dedup -->
+
+      <!-- Random String Generator -->
+      <div class="tool-panel" id="panel-rand">
+        <div class="panel-title">Random String Generator</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Length</label>
+            <input type="number" id="rand-length" class="short-num" min="1" max="4096" value="16">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Count</label>
+            <input type="number" id="rand-count" class="short-num" min="1" max="1000" value="1">
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="checkbox-label"><input type="checkbox" id="rand-upper"  checked> A&ndash;Z (uppercase)</label>
+          <label class="checkbox-label"><input type="checkbox" id="rand-lower"  checked> a&ndash;z (lowercase)</label>
+          <label class="checkbox-label"><input type="checkbox" id="rand-digits" checked> 0&ndash;9 (digits)</label>
+          <label class="checkbox-label"><input type="checkbox" id="rand-symbols"> Symbols (!@#$&hellip;)</label>
+        </div>
+        <div class="form-group">
+          <label class="io-label">Custom characters (optional)</label>
+          <input type="text" id="rand-custom" class="io-area"
+            style="height:36px;padding:6px 10px;font-family:Consolas,monospace;font-size:13px;resize:none"
+            placeholder="Add extra characters e.g. &#9618;&#9619;&#9620;" spellcheck="false">
+        </div>
+        <div class="btn-row">
+          <button onclick="generateRandom()"><i class="bi bi-dice-5" aria-hidden="true"></i> Generate</button>
+          <button class="btn-secondary" onclick="document.getElementById('rand-output').value='';setMsg('rand-msg','','')">Clear</button>
+        </div>
+        <div class="rand-result">
+          <div class="io-footer">
+            <label class="io-label">Output</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="tool-msg" id="rand-msg"></span>
+              <button class="copy-btn" onclick="copyTA('rand-output','rand-msg')">Copy</button>
+            </div>
+          </div>
+          <textarea id="rand-output" class="io-area large" readonly spellcheck="false"></textarea>
+        </div>
+      </div><!-- /panel-rand -->
+
+      <!-- Lorem Ipsum Generator -->
+      <div class="tool-panel" id="panel-lorem">
+        <div class="panel-title">Lorem Ipsum Generator</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Type</label>
+            <select id="lorem-type">
+              <option value="words">Words</option>
+              <option value="sentences">Sentences</option>
+              <option value="paragraphs" selected>Paragraphs</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="io-label">Count</label>
+            <input type="number" id="lorem-count" class="short-num" min="1" max="500" value="3">
+          </div>
+          <label class="checkbox-label">
+            <input type="checkbox" id="lorem-start" checked>
+            Start with &ldquo;Lorem ipsum&hellip;&rdquo;
+          </label>
+        </div>
+        <div class="btn-row">
+          <button onclick="generateLorem()"><i class="bi bi-book" aria-hidden="true"></i> Generate</button>
+          <button class="btn-secondary" onclick="document.getElementById('lorem-output').value='';setMsg('lorem-msg','','')">Clear</button>
+        </div>
+        <div class="rand-result">
+          <div class="io-footer">
+            <label class="io-label">Output</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="tool-msg" id="lorem-msg"></span>
+              <button class="copy-btn" onclick="copyTA('lorem-output','lorem-msg')">Copy</button>
+            </div>
+          </div>
+          <textarea id="lorem-output" class="io-area large" readonly spellcheck="false"></textarea>
+        </div>
+      </div><!-- /panel-lorem -->
+
+      <!-- Text Statistics -->
+      <div class="tool-panel" id="panel-stats">
+        <div class="panel-title">Text Statistics</div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input Text</label>
+            <textarea id="stats-in" class="io-area large" placeholder="Paste or type text here&#8230;" spellcheck="false" oninput="analyzeText()"></textarea>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button onclick="analyzeText()"><i class="bi bi-bar-chart" aria-hidden="true"></i> Analyze</button>
+          <button class="btn-secondary" onclick="document.getElementById('stats-in').value='';analyzeText()">Clear</button>
+        </div>
+        <div id="stats-out" class="stats-grid" style="display:none">
+          <div class="stat-card"><span class="stat-val" id="st-chars"></span><span class="stat-lbl">Characters</span></div>
+          <div class="stat-card"><span class="stat-val" id="st-nospace"></span><span class="stat-lbl">Chars (no spaces)</span></div>
+          <div class="stat-card"><span class="stat-val" id="st-words"></span><span class="stat-lbl">Words</span></div>
+          <div class="stat-card"><span class="stat-val" id="st-sents"></span><span class="stat-lbl">Sentences</span></div>
+          <div class="stat-card"><span class="stat-val" id="st-paras"></span><span class="stat-lbl">Paragraphs</span></div>
+          <div class="stat-card"><span class="stat-val" id="st-lines"></span><span class="stat-lbl">Lines</span></div>
+          <div class="stat-card"><span class="stat-val" id="st-read"></span><span class="stat-lbl">Reading Time</span></div>
+          <div class="stat-card"><span class="stat-val" id="st-avgw"></span><span class="stat-lbl">Avg Word Length</span></div>
+        </div>
+        <div id="stats-freq" style="display:none">
+          <div class="io-label" style="margin-bottom:6px">Top 10 Most Frequent Words</div>
+          <div id="stats-freq-list" class="freq-list"></div>
+        </div>
+      </div><!-- /panel-stats -->
+
+      <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+           JSON / YAML / XML
+      â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+
+      <!-- JSON Formatter -->
+      <div class="tool-panel" id="panel-jf">
+        <div class="panel-title">JSON Formatter</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Indent</label>
+            <select id="jf-indent">
+              <option value="2" selected>2 spaces</option>
+              <option value="4">4 spaces</option>
+              <option value="tab">Tab</option>
+            </select>
+          </div>
+          <button onclick="jsonFormat()"><i class="bi bi-upc" aria-hidden="true"></i> Format</button>
+          <button class="btn-secondary" onclick="jsonMinify()"><i class="bi bi-code-slash" aria-hidden="true"></i> Minify</button>
+          <button class="btn-secondary" onclick="swapIO('jf-input','jf-output')"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Swap</button>
+          <button class="btn-secondary" onclick="clearPair('jf-input','jf-output','jf-msg')">Clear</button>
+        </div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input JSON</label>
+            <textarea id="jf-input" class="io-area" style="flex:1;resize:none"
+              placeholder="Paste JSON here&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns" style="justify-content:flex-start;padding-top:20px">
+            <button style="padding:6px 10px" onclick="jsonFormat()"><i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output</label>
+            <textarea id="jf-output" class="io-area" style="flex:1;resize:none" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="jf-msg"></span>
+              <button class="copy-btn" onclick="copyTA('jf-output','jf-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-jf -->
+
+      <!-- JSON Viewer (Tree) -->
+      <div class="tool-panel" id="panel-jv">
+        <div class="panel-title">JSON Viewer (Tree)</div>
+        <div class="form-group" style="flex-shrink:0">
+          <label class="io-label">Input JSON</label>
+          <textarea id="jv-input" class="io-area" style="height:120px;resize:vertical"
+            placeholder="Paste JSON here&#8230;" spellcheck="false"></textarea>
+        </div>
+        <div class="btn-row">
+          <button onclick="jsonViewTree()"><i class="bi bi-eye" aria-hidden="true"></i> View Tree</button>
+          <button class="btn-secondary" onclick="jsonExpandAll()"><i class="bi bi-chevron-down" aria-hidden="true"></i> Expand All</button>
+          <button class="btn-secondary" onclick="jsonCollapseAll()"><i class="bi bi-chevron-right" aria-hidden="true"></i> Collapse All</button>
+          <button class="btn-secondary" onclick="clearTree()">Clear</button>
+          <span class="tool-msg" id="jv-msg"></span>
+        </div>
+        <div class="tree-container" id="jv-tree"></div>
+      </div><!-- /panel-jv -->
+
+      <!-- JSON Validator -->
+      <div class="tool-panel" id="panel-jval">
+        <div class="panel-title">JSON Validator</div>
+        <div class="full-io">
+          <label class="io-label">Input JSON</label>
+          <textarea id="jval-input" class="io-area" placeholder="Paste JSON here&#8230;"
+            spellcheck="false" oninput="jsonValidateLive()"></textarea>
+        </div>
+        <div id="jval-result" class="validator-result" style="display:none"></div>
+        <div class="btn-row">
+          <button onclick="jsonValidate()"><i class="bi bi-check-lg" aria-hidden="true"></i> Validate</button>
+          <button class="btn-secondary" onclick="document.getElementById('jval-input').value='';document.getElementById('jval-result').style.display='none'">Clear</button>
+        </div>
+      </div><!-- /panel-jval -->
+
+      <!-- JSON â†’ CSV -->
+      <div class="tool-panel" id="panel-jcsv">
+        <div class="panel-title">JSON &rarr; CSV Converter</div>
+        <p style="font-size:13px;color:var(--text2);flex-shrink:0">Input must be a JSON array of objects. Nested values are JSON-stringified.</p>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input JSON Array</label>
+            <textarea id="jcsv-input" class="io-area" style="flex:1;resize:none"
+              placeholder='[{"name":"Alice","age":30},{"name":"Bob","age":25}]'
+              spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="jsonToCSV()">Convert <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+            <button class="btn-secondary" onclick="clearPair('jcsv-input','jcsv-output','jcsv-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output CSV</label>
+            <textarea id="jcsv-output" class="io-area" style="flex:1;resize:none" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="jcsv-msg"></span>
+              <button class="copy-btn" onclick="copyTA('jcsv-output','jcsv-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-jcsv -->
+
+      <!-- JSON â†’ YAML -->
+      <div class="tool-panel" id="panel-jy">
+        <div class="panel-title">JSON &rarr; YAML Converter</div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input JSON</label>
+            <textarea id="jy-input" class="io-area" style="flex:1;resize:none"
+              placeholder="Paste JSON here&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="jsonToYAML()">Convert <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+            <button class="btn-secondary" onclick="clearPair('jy-input','jy-output','jy-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output YAML</label>
+            <textarea id="jy-output" class="io-area" style="flex:1;resize:none" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="jy-msg"></span>
+              <button class="copy-btn" onclick="copyTA('jy-output','jy-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-jy -->
+
+      <!-- YAML â†’ JSON -->
+      <div class="tool-panel" id="panel-yj">
+        <div class="panel-title">YAML &rarr; JSON Converter</div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input YAML</label>
+            <textarea id="yj-input" class="io-area" style="flex:1;resize:none"
+              placeholder="Paste YAML here&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="yamlToJSON()">Convert <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+            <button class="btn-secondary" onclick="clearPair('yj-input','yj-output','yj-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output JSON</label>
+            <textarea id="yj-output" class="io-area" style="flex:1;resize:none" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="yj-msg"></span>
+              <button class="copy-btn" onclick="copyTA('yj-output','yj-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-yj -->
+
+      <!-- XML Formatter -->
+      <div class="tool-panel" id="panel-xf">
+        <div class="panel-title">XML Formatter</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="io-label">Indent</label>
+            <select id="xf-indent">
+              <option value="2" selected>2 spaces</option>
+              <option value="4">4 spaces</option>
+              <option value="tab">Tab</option>
+            </select>
+          </div>
+          <button onclick="xmlFormat()"><i class="bi bi-upc" aria-hidden="true"></i> Format</button>
+          <button class="btn-secondary" onclick="xmlMinify()"><i class="bi bi-code-slash" aria-hidden="true"></i> Minify</button>
+          <button class="btn-secondary" onclick="swapIO('xf-input','xf-output')"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Swap</button>
+          <button class="btn-secondary" onclick="clearPair('xf-input','xf-output','xf-msg')">Clear</button>
+        </div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input XML</label>
+            <textarea id="xf-input" class="io-area" style="flex:1;resize:none"
+              placeholder="Paste XML here&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns" style="justify-content:flex-start;padding-top:20px">
+            <button style="padding:6px 10px" onclick="xmlFormat()"><i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output</label>
+            <textarea id="xf-output" class="io-area" style="flex:1;resize:none" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="xf-msg"></span>
+              <button class="copy-btn" onclick="copyTA('xf-output','xf-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-xf -->
+
+      <!-- XML â†’ JSON -->
+      <div class="tool-panel" id="panel-xj">
+        <div class="panel-title">XML &rarr; JSON Converter</div>
+        <p style="font-size:13px;color:var(--text2);flex-shrink:0">Attributes are prefixed with <code>@</code>. Repeated tags become arrays. Text content becomes <code>#text</code>.</p>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input XML</label>
+            <textarea id="xj-input" class="io-area" style="flex:1;resize:none"
+              placeholder="Paste XML here&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns">
+            <button onclick="xmlToJSON()">Convert <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+            <button class="btn-secondary" onclick="clearPair('xj-input','xj-output','xj-msg')">Clear</button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output JSON</label>
+            <textarea id="xj-output" class="io-area" style="flex:1;resize:none" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="xj-msg"></span>
+              <button class="copy-btn" onclick="copyTA('xj-output','xj-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-xj -->
+
+      <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+           COLOR TOOLS
+      â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+
+      <!-- Color Converter -->
+      <div class="tool-panel" id="panel-convert">
+        <div class="panel-title">Color Converter</div>
+        <p class="tool-desc">Enter a color in any format to convert to all other formats.</p>
+        <div class="convert-grid">
+          <div class="convert-row">
+            <label class="fmt-label">HEX</label>
+            <input type="text" id="c-hex" class="fmt-input" placeholder="#5646F5" maxlength="9" oninput="convertFrom('hex')">
+            <div class="color-swatch" id="swatch-hex"></div>
+          </div>
+          <div class="convert-row">
+            <label class="fmt-label">RGB</label>
+            <input type="text" id="c-rgb" class="fmt-input" placeholder="rgb(86, 70, 245)" oninput="convertFrom('rgb')">
+          </div>
+          <div class="convert-row">
+            <label class="fmt-label">HSL</label>
+            <input type="text" id="c-hsl" class="fmt-input" placeholder="hsl(244, 90%, 62%)" oninput="convertFrom('hsl')">
+          </div>
+          <div class="convert-row">
+            <label class="fmt-label">CMYK</label>
+            <input type="text" id="c-cmyk" class="fmt-input" placeholder="cmyk(65%, 71%, 0%, 4%)" oninput="convertFrom('cmyk')">
+          </div>
+          <div class="convert-row">
+            <label class="fmt-label">HSV</label>
+            <input type="text" id="c-hsv" class="fmt-input" placeholder="hsv(244, 71%, 96%)" oninput="convertFrom('hsv')">
+          </div>
+        </div>
+        <div class="btn-row" style="margin-top:12px">
+          <button onclick="clearConverter()">Clear</button>
+          <button class="btn-secondary" onclick="copyAllFormats()">Copy All</button>
+        </div>
+        <span class="tool-msg" id="conv-msg"></span>
+        <div class="color-preview-bar" id="conv-preview"></div>
+      </div><!-- /panel-convert -->
+
+      <!-- Color Picker -->
+      <div class="tool-panel" id="panel-picker">
+        <div class="panel-title">Color Picker</div>
+        <p class="tool-desc">Pick a color visually and get its values in all formats.</p>
+        <div class="picker-wrap">
+          <input type="color" id="color-picker" value="#5646F5" oninput="onPickerChange()">
+          <div class="picked-preview" id="picked-preview"></div>
+        </div>
+        <div class="picked-vals" id="picked-vals">
+          <div class="pv-row"><span class="pv-lbl">HEX</span><span class="pv-val" id="pv-hex">#5646F5</span><button class="copy-btn" onclick="copyVal('pv-hex','cp-msg')">Copy</button></div>
+          <div class="pv-row"><span class="pv-lbl">RGB</span><span class="pv-val" id="pv-rgb">rgb(86, 70, 245)</span><button class="copy-btn" onclick="copyVal('pv-rgb','cp-msg')">Copy</button></div>
+          <div class="pv-row"><span class="pv-lbl">HSL</span><span class="pv-val" id="pv-hsl">hsl(244, 90%, 62%)</span><button class="copy-btn" onclick="copyVal('pv-hsl','cp-msg')">Copy</button></div>
+          <div class="pv-row"><span class="pv-lbl">CMYK</span><span class="pv-val" id="pv-cmyk">cmyk(65%, 71%, 0%, 4%)</span><button class="copy-btn" onclick="copyVal('pv-cmyk','cp-msg')">Copy</button></div>
+          <div class="pv-row"><span class="pv-lbl">CSS Name</span><span class="pv-val" id="pv-name">&mdash;</span></div>
+        </div>
+        <span class="tool-msg" id="cp-msg"></span>
+      </div><!-- /panel-picker -->
+
+      <!-- Contrast Checker -->
+      <div class="tool-panel" id="panel-contrast">
+        <div class="panel-title">Contrast Checker (WCAG 2.1)</div>
+        <p class="tool-desc">Check if two colors meet WCAG accessibility standards.</p>
+        <div class="contrast-inputs">
+          <div class="ci-group">
+            <label class="io-label">Foreground Color</label>
+            <div class="ci-row">
+              <input type="color" id="fg-color" value="#ffffff" oninput="checkContrast()">
+              <input type="text" id="fg-hex" class="fmt-input" value="#ffffff" oninput="syncColorInput('fg')" placeholder="#ffffff">
+            </div>
+          </div>
+          <div class="ci-group">
+            <label class="io-label">Background Color</label>
+            <div class="ci-row">
+              <input type="color" id="bg-color" value="#5646F5" oninput="checkContrast()">
+              <input type="text" id="bg-hex" class="fmt-input" value="#5646F5" oninput="syncColorInput('bg')" placeholder="#5646F5">
+            </div>
+          </div>
+        </div>
+        <div class="contrast-preview" id="contrast-preview">
+          <span id="contrast-preview-text">Sample Text &mdash; The quick brown fox</span>
+        </div>
+        <div class="contrast-results" id="contrast-results">
+          <div class="cr-ratio">
+            <span class="cr-ratio-val" id="cr-ratio">&mdash;</span>
+            <span class="cr-ratio-lbl">Contrast Ratio</span>
+          </div>
+          <div class="cr-badges">
+            <div class="cr-badge" id="badge-aa-norm">AA Normal</div>
+            <div class="cr-badge" id="badge-aa-large">AA Large</div>
+            <div class="cr-badge" id="badge-aaa-norm">AAA Normal</div>
+            <div class="cr-badge" id="badge-aaa-large">AAA Large</div>
+          </div>
+        </div>
+      </div><!-- /panel-contrast -->
+
+      <!-- Palette Generator -->
+      <div class="tool-panel" id="panel-palette">
+        <div class="panel-title">Palette Generator</div>
+        <p class="tool-desc">Generate color palettes from a base color.</p>
+        <div class="palette-controls">
+          <div class="form-row">
+            <label class="io-label">Base Color</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input type="color" id="pal-base" value="#5646F5" oninput="syncPalBase()">
+              <input type="text" id="pal-base-hex" class="fmt-input" value="#5646F5" oninput="syncPalBaseHex()" placeholder="#5646F5">
+            </div>
+          </div>
+          <div class="form-row">
+            <label class="io-label">Scheme</label>
+            <select id="pal-scheme" onchange="generatePalette()">
+              <option value="analogous">Analogous</option>
+              <option value="complementary">Complementary</option>
+              <option value="triadic">Triadic</option>
+              <option value="tetradic">Tetradic</option>
+              <option value="monochromatic">Monochromatic</option>
+              <option value="split-complementary">Split-Complementary</option>
+            </select>
+          </div>
+          <div class="btn-row">
+            <button onclick="generatePalette()"><i class="bi bi-palette2" aria-hidden="true"></i> Generate</button>
+            <button class="btn-secondary" onclick="copyPalette()">Copy All HEX</button>
+          </div>
+        </div>
+        <div class="palette-swatches" id="palette-swatches"></div>
+        <span class="tool-msg" id="pal-msg"></span>
+      </div><!-- /panel-palette -->
+
+      <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+           TIMESTAMP TOOLS
+      â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+
+      <!-- Unix Timestamp Converter -->
+      <div class="tool-panel" id="panel-unix">
+        <div class="panel-title">Unix Timestamp Converter</div>
+        <p class="tool-desc">Convert between Unix timestamps (seconds or milliseconds) and human-readable dates.</p>
+        <div class="ts-section">
+          <div class="ts-group-hdr">Timestamp &rarr; Date</div>
+          <div class="form-row">
+            <input type="text" id="ts-in" class="ts-input" placeholder="e.g. 1700000000 or 1700000000000" oninput="tsToDate()">
+            <span class="form-hint">seconds or milliseconds</span>
+          </div>
+          <div id="ts-date-out" class="ts-results" style="display:none">
+            <div class="ts-result-row"><span class="ts-res-lbl">UTC</span><span class="ts-res-val" id="ts-utc"></span><button class="copy-btn" onclick="copyEl('ts-utc','ts-msg')">Copy</button></div>
+            <div class="ts-result-row"><span class="ts-res-lbl">Local</span><span class="ts-res-val" id="ts-local"></span><button class="copy-btn" onclick="copyEl('ts-local','ts-msg')">Copy</button></div>
+            <div class="ts-result-row"><span class="ts-res-lbl">ISO 8601</span><span class="ts-res-val" id="ts-iso"></span><button class="copy-btn" onclick="copyEl('ts-iso','ts-msg')">Copy</button></div>
+            <div class="ts-result-row"><span class="ts-res-lbl">Relative</span><span class="ts-res-val" id="ts-rel"></span></div>
+          </div>
+        </div>
+        <hr class="divider">
+        <div class="ts-section">
+          <div class="ts-group-hdr">Date &rarr; Timestamp</div>
+          <div class="form-row">
+            <input type="datetime-local" id="dt-in" class="ts-input">
+            <button onclick="dateToTs()">Convert</button>
+            <button class="btn-secondary" onclick="setNow()">Now</button>
+          </div>
+          <div id="dt-ts-out" class="ts-results" style="display:none">
+            <div class="ts-result-row"><span class="ts-res-lbl">Seconds</span><span class="ts-res-val" id="dt-secs"></span><button class="copy-btn" onclick="copyEl('dt-secs','ts-msg')">Copy</button></div>
+            <div class="ts-result-row"><span class="ts-res-lbl">Milliseconds</span><span class="ts-res-val" id="dt-ms"></span><button class="copy-btn" onclick="copyEl('dt-ms','ts-msg')">Copy</button></div>
+          </div>
+        </div>
+        <span class="tool-msg" id="ts-msg"></span>
+      </div><!-- /panel-unix -->
+
+      <!-- Date Calculator -->
+      <div class="tool-panel" id="panel-calc">
+        <div class="panel-title">Date Calculator</div>
+        <div class="ts-section">
+          <div class="ts-group-hdr">Difference Between Two Dates</div>
+          <div class="form-row">
+            <label class="io-label">From</label>
+            <input type="date" id="diff-from" class="ts-input-sm">
+            <label class="io-label">To</label>
+            <input type="date" id="diff-to" class="ts-input-sm">
+            <button onclick="calcDiff()">Calculate</button>
+          </div>
+          <div id="diff-out" class="ts-results" style="display:none">
+            <div class="ts-result-row"><span class="ts-res-lbl">Days</span><span class="ts-res-val" id="diff-days"></span></div>
+            <div class="ts-result-row"><span class="ts-res-lbl">Weeks</span><span class="ts-res-val" id="diff-weeks"></span></div>
+            <div class="ts-result-row"><span class="ts-res-lbl">Months (approx.)</span><span class="ts-res-val" id="diff-months"></span></div>
+            <div class="ts-result-row"><span class="ts-res-lbl">Hours</span><span class="ts-res-val" id="diff-hours"></span></div>
+          </div>
+        </div>
+        <hr class="divider">
+        <div class="ts-section">
+          <div class="ts-group-hdr">Add / Subtract Time</div>
+          <div class="form-row">
+            <input type="date" id="adddate-base" class="ts-input-sm">
+          </div>
+          <div class="form-row">
+            <input type="number" id="add-val" class="ts-num" value="7" min="-9999" max="9999">
+            <select id="add-unit" class="ts-select">
+              <option value="days" selected>Days</option>
+              <option value="weeks">Weeks</option>
+              <option value="months">Months</option>
+              <option value="years">Years</option>
+            </select>
+            <button onclick="addSubtract(1)">+ Add</button>
+            <button class="btn-secondary" onclick="addSubtract(-1)">&minus; Subtract</button>
+          </div>
+          <div id="addsub-out" class="ts-results" style="display:none">
+            <div class="ts-result-row"><span class="ts-res-lbl">Result Date</span><span class="ts-res-val" id="addsub-date"></span><button class="copy-btn" onclick="copyEl('addsub-date','calc-msg')">Copy</button></div>
+          </div>
+        </div>
+        <span class="tool-msg" id="calc-msg"></span>
+      </div><!-- /panel-calc -->
+
+      <!-- Date Formatter -->
+      <div class="tool-panel" id="panel-format">
+        <div class="panel-title">Date Formatter</div>
+        <p class="tool-desc">Format a date in multiple styles.</p>
+        <div class="form-row">
+          <input type="datetime-local" id="fmt-dt" class="ts-input" oninput="formatDate()">
+          <button class="btn-secondary" onclick="fmtNow()">Now</button>
+        </div>
+        <div id="fmt-out" class="ts-results" style="display:none">
+          <div class="ts-result-row"><span class="ts-res-lbl">ISO 8601</span><span class="ts-res-val" id="fmt-iso"></span><button class="copy-btn" onclick="copyEl('fmt-iso','fmt-msg')">Copy</button></div>
+          <div class="ts-result-row"><span class="ts-res-lbl">RFC 2822</span><span class="ts-res-val" id="fmt-rfc"></span><button class="copy-btn" onclick="copyEl('fmt-rfc','fmt-msg')">Copy</button></div>
+          <div class="ts-result-row"><span class="ts-res-lbl">Full (US)</span><span class="ts-res-val" id="fmt-full-us"></span><button class="copy-btn" onclick="copyEl('fmt-full-us','fmt-msg')">Copy</button></div>
+          <div class="ts-result-row"><span class="ts-res-lbl">Full (EU)</span><span class="ts-res-val" id="fmt-full-eu"></span><button class="copy-btn" onclick="copyEl('fmt-full-eu','fmt-msg')">Copy</button></div>
+          <div class="ts-result-row"><span class="ts-res-lbl">Short (US)</span><span class="ts-res-val" id="fmt-short-us"></span><button class="copy-btn" onclick="copyEl('fmt-short-us','fmt-msg')">Copy</button></div>
+          <div class="ts-result-row"><span class="ts-res-lbl">YYYY-MM-DD</span><span class="ts-res-val" id="fmt-ymd"></span><button class="copy-btn" onclick="copyEl('fmt-ymd','fmt-msg')">Copy</button></div>
+          <div class="ts-result-row"><span class="ts-res-lbl">Unix (seconds)</span><span class="ts-res-val" id="fmt-unix"></span><button class="copy-btn" onclick="copyEl('fmt-unix','fmt-msg')">Copy</button></div>
+          <div class="ts-result-row"><span class="ts-res-lbl">Day of Week</span><span class="ts-res-val" id="fmt-dow"></span></div>
+          <div class="ts-result-row"><span class="ts-res-lbl">Day of Year</span><span class="ts-res-val" id="fmt-doy"></span></div>
+          <div class="ts-result-row"><span class="ts-res-lbl">Week Number (ISO)</span><span class="ts-res-val" id="fmt-week"></span></div>
+        </div>
+        <span class="tool-msg" id="fmt-msg"></span>
+      </div><!-- /panel-format -->
+
+
+      <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+           REGEX
+      â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+
+      <!-- Pattern Tester -->
+      <div class="tool-panel" id="panel-tester">
+        <div class="panel-title">Pattern Tester</div>
+        <div class="pattern-bar">
+          <span class="pattern-slash">/</span>
+          <input type="text" id="pt-pattern" class="pattern-input" placeholder="regex pattern" oninput="runTester()" spellcheck="false">
+          <span class="pattern-slash">/</span>
+          <label class="flag-box" title="Global"><input type="checkbox" id="fl-g" checked onchange="runTester()">g</label>
+          <label class="flag-box" title="Case-insensitive"><input type="checkbox" id="fl-i" onchange="runTester()">i</label>
+          <label class="flag-box" title="Multiline"><input type="checkbox" id="fl-m" onchange="runTester()">m</label>
+          <label class="flag-box" title="Dotall (. matches newlines)"><input type="checkbox" id="fl-s" onchange="runTester()">s</label>
+        </div>
+        <div id="pt-err" class="pattern-err"></div>
+        <div class="io-grid">
+          <div class="io-col">
+            <div class="io-hdr">Test String</div>
+            <textarea id="pt-test" class="rt-area" placeholder="Enter test string here&hellip;" oninput="runTester()" spellcheck="false"></textarea>
+          </div>
+          <div class="io-col">
+            <div class="io-hdr">Highlighted Matches</div>
+            <div id="pt-highlight" class="hl-box" aria-live="polite"></div>
+          </div>
+        </div>
+        <div class="match-summary" id="pt-summary"></div>
+        <div class="match-info" id="pt-groups">
+          <div class="match-info-hdr">Match Details</div>
+          <div id="pt-groups-content" class="match-groups-content"></div>
+        </div>
+      </div><!-- /panel-tester -->
+
+      <!-- Find & Replace -->
+      <div class="tool-panel" id="panel-replace">
+        <div class="panel-title">Find &amp; Replace</div>
+        <div class="pattern-bar">
+          <span class="pattern-slash">/</span>
+          <input type="text" id="rp-pattern" class="pattern-input" placeholder="find pattern" oninput="runReplace()" spellcheck="false">
+          <span class="pattern-slash">/</span>
+          <label class="flag-box" title="Global"><input type="checkbox" id="rfl-g" checked onchange="runReplace()">g</label>
+          <label class="flag-box" title="Case-insensitive"><input type="checkbox" id="rfl-i" onchange="runReplace()">i</label>
+          <label class="flag-box" title="Multiline"><input type="checkbox" id="rfl-m" onchange="runReplace()">m</label>
+        </div>
+        <div class="form-row" style="margin-top:8px">
+          <label class="io-label">Replace with</label>
+          <input type="text" id="rp-repl" class="ts-input" placeholder='e.g. $1 or &lt;b&gt;$&amp;&lt;/b&gt;' oninput="runReplace()" spellcheck="false">
+        </div>
+        <div id="rp-err" class="pattern-err"></div>
+        <div class="io-grid" style="margin-top:10px">
+          <div class="io-col">
+            <div class="io-hdr">Input</div>
+            <textarea id="rp-input" class="rt-area" placeholder="Enter string to search in&hellip;" oninput="runReplace()" spellcheck="false"></textarea>
+          </div>
+          <div class="io-col">
+            <div class="io-hdr">Result <button class="copy-btn" style="margin-left:6px" onclick="copyReplaceResult()">Copy</button></div>
+            <textarea id="rp-output" class="rt-area" readonly></textarea>
+          </div>
+        </div>
+        <div class="match-summary" id="rp-summary"></div>
+        <span class="tool-msg" id="rp-msg"></span>
+      </div><!-- /panel-replace -->
+
+      <!-- Regex Reference -->
+      <div class="tool-panel" id="panel-ref">
+        <div class="panel-title">Regex Reference</div>
+        <div class="ref-grid">
+
+          <div class="ref-card">
+            <div class="ref-card-hdr">Character Classes</div>
+            <table class="ref-table">
+              <tr><td class="ref-pat">.</td><td>Any character except newline</td></tr>
+              <tr><td class="ref-pat">\w</td><td>Word character [a-zA-Z0-9_]</td></tr>
+              <tr><td class="ref-pat">\W</td><td>Non-word character</td></tr>
+              <tr><td class="ref-pat">\d</td><td>Digit [0-9]</td></tr>
+              <tr><td class="ref-pat">\D</td><td>Non-digit</td></tr>
+              <tr><td class="ref-pat">\s</td><td>Whitespace (space, tab, newline&hellip;)</td></tr>
+              <tr><td class="ref-pat">\S</td><td>Non-whitespace</td></tr>
+              <tr><td class="ref-pat">[abc]</td><td>Character class &mdash; a, b, or c</td></tr>
+              <tr><td class="ref-pat">[^abc]</td><td>Negated class &mdash; not a, b, or c</td></tr>
+              <tr><td class="ref-pat">[a-z]</td><td>Range &mdash; lowercase a to z</td></tr>
+            </table>
+          </div>
+
+          <div class="ref-card">
+            <div class="ref-card-hdr">Anchors</div>
+            <table class="ref-table">
+              <tr><td class="ref-pat">^</td><td>Start of string / line (with m)</td></tr>
+              <tr><td class="ref-pat">$</td><td>End of string / line (with m)</td></tr>
+              <tr><td class="ref-pat">\b</td><td>Word boundary</td></tr>
+              <tr><td class="ref-pat">\B</td><td>Non-word boundary</td></tr>
+              <tr><td class="ref-pat">\A</td><td>Start of string (not in JS)</td></tr>
+              <tr><td class="ref-pat">\Z</td><td>End of string (not in JS)</td></tr>
+            </table>
+          </div>
+
+          <div class="ref-card">
+            <div class="ref-card-hdr">Quantifiers</div>
+            <table class="ref-table">
+              <tr><td class="ref-pat">*</td><td>0 or more (greedy)</td></tr>
+              <tr><td class="ref-pat">+</td><td>1 or more (greedy)</td></tr>
+              <tr><td class="ref-pat">?</td><td>0 or 1 (greedy)</td></tr>
+              <tr><td class="ref-pat">{n}</td><td>Exactly n</td></tr>
+              <tr><td class="ref-pat">{n,}</td><td>n or more</td></tr>
+              <tr><td class="ref-pat">{n,m}</td><td>Between n and m</td></tr>
+              <tr><td class="ref-pat">*?</td><td>0 or more (lazy)</td></tr>
+              <tr><td class="ref-pat">+?</td><td>1 or more (lazy)</td></tr>
+              <tr><td class="ref-pat">??</td><td>0 or 1 (lazy)</td></tr>
+            </table>
+          </div>
+
+          <div class="ref-card">
+            <div class="ref-card-hdr">Groups &amp; Alternation</div>
+            <table class="ref-table">
+              <tr><td class="ref-pat">(abc)</td><td>Capturing group</td></tr>
+              <tr><td class="ref-pat">(?:abc)</td><td>Non-capturing group</td></tr>
+              <tr><td class="ref-pat">(?&lt;name&gt;abc)</td><td>Named capturing group</td></tr>
+              <tr><td class="ref-pat">a|b</td><td>Alternation &mdash; a or b</td></tr>
+              <tr><td class="ref-pat">\1</td><td>Backreference to group 1</td></tr>
+              <tr><td class="ref-pat">\k&lt;name&gt;</td><td>Named backreference</td></tr>
+            </table>
+          </div>
+
+          <div class="ref-card">
+            <div class="ref-card-hdr">Lookahead / Lookbehind</div>
+            <table class="ref-table">
+              <tr><td class="ref-pat">(?=abc)</td><td>Positive lookahead</td></tr>
+              <tr><td class="ref-pat">(?!abc)</td><td>Negative lookahead</td></tr>
+              <tr><td class="ref-pat">(?&lt;=abc)</td><td>Positive lookbehind</td></tr>
+              <tr><td class="ref-pat">(?&lt;!abc)</td><td>Negative lookbehind</td></tr>
+            </table>
+          </div>
+
+          <div class="ref-card">
+            <div class="ref-card-hdr">Flags</div>
+            <table class="ref-table">
+              <tr><td class="ref-pat">g</td><td>Global &mdash; find all matches</td></tr>
+              <tr><td class="ref-pat">i</td><td>Case-insensitive</td></tr>
+              <tr><td class="ref-pat">m</td><td>Multiline (^ and $ per line)</td></tr>
+              <tr><td class="ref-pat">s</td><td>Dotall (. matches \n)</td></tr>
+              <tr><td class="ref-pat">u</td><td>Unicode mode</td></tr>
+              <tr><td class="ref-pat">y</td><td>Sticky (anchor at lastIndex)</td></tr>
+            </table>
+          </div>
+
+          <div class="ref-card">
+            <div class="ref-card-hdr">Replacement Tokens</div>
+            <table class="ref-table">
+              <tr><td class="ref-pat">$&amp;</td><td>Entire matched substring</td></tr>
+              <tr><td class="ref-pat">$`</td><td>Text before match</td></tr>
+              <tr><td class="ref-pat">$'</td><td>Text after match</td></tr>
+              <tr><td class="ref-pat">$1, $2&hellip;</td><td>Nth capturing group</td></tr>
+              <tr><td class="ref-pat">$&lt;name&gt;</td><td>Named capturing group</td></tr>
+              <tr><td class="ref-pat">$$</td><td>Literal $</td></tr>
+            </table>
+          </div>
+
+          <div class="ref-card">
+            <div class="ref-card-hdr">Common Patterns</div>
+            <table class="ref-table">
+              <tr><td class="ref-pat">\d{4}-\d{2}-\d{2}</td><td>YYYY-MM-DD date</td></tr>
+              <tr><td class="ref-pat">[\w.+-]+@[\w-]+\.\w{2,}</td><td>Email address</td></tr>
+              <tr><td class="ref-pat">https?://\S+</td><td>URL</td></tr>
+              <tr><td class="ref-pat">\b\d{1,3}(?:\.\d{1,3}){3}\b</td><td>IPv4 address</td></tr>
+              <tr><td class="ref-pat">^\s*$</td><td>Blank line</td></tr>
+              <tr><td class="ref-pat">\b\w+\b</td><td>Word token</td></tr>
+            </table>
+          </div>
+
+        </div><!-- /ref-grid -->
+      </div><!-- /panel-ref -->
+
+    </div><!-- /tool-area -->
+  </div><!-- /app-body -->
+
+  <!-- Status bar -->
+  <div class="statusbar">
+    <span id="sb-tool">Base64 Encoder / Decoder</span>
+    <span id="sb-matches"></span>
+  </div>
+
+  <!-- js-yaml v4 — YAML parsing (cached by SW for offline) -->
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js" integrity="sha384-ZeqCzuWczURac3RacSufGD7oSbzeaX7xxnnOr3PTcYTLx4Av0qBj0kBq7AeCtHLA" crossorigin="anonymous"></script>
+
+  <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../lib/error-handler.js"></script>
+  <script src="../lib/shared-utils.js"></script>
+  <script src="../lib/shared-ui.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

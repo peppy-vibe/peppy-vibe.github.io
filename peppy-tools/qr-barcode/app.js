@@ -153,6 +153,7 @@ function qrGenerate() {
     if (qrInstance) { qrInstance.clear(); qrInstance = null; }
     document.getElementById('qr-output').innerHTML = '';
     if (hint) hint.textContent = 'Enter content above to generate a QR code.';
+    qrUpdateShareEmbed();
     return;
   }
 
@@ -180,6 +181,7 @@ function qrGenerate() {
     errSpan.textContent = 'Cannot encode: ' + (e.message || 'invalid input');
     outputEl.appendChild(errSpan);
     if (hint) hint.textContent = '';
+    qrUpdateShareEmbed();
     return;
   }
 
@@ -190,6 +192,8 @@ function qrGenerate() {
     // The qrcodejs lib renders asynchronously via a timeout; give it a tick
     setTimeout(() => applyLogoOverlay(outputEl, size), 120);
   }
+
+  qrUpdateShareEmbed();
 }
 
 // ── Logo overlay ──────────────────────────────────────────
@@ -271,6 +275,166 @@ function qrClear() {
   document.getElementById('qr-output').innerHTML = '';
   const hint = document.getElementById('qr-hint');
   if (hint) hint.textContent = 'Enter content above to generate a QR code.';
+  qrUpdateShareEmbed();
+}
+
+// ── Share & Embed ─────────────────────────────────────────
+function qrBuildShareUrl() {
+  const content = qrBuildString();
+  if (!content) return '';
+  const p = {
+    type:  qrCurrentType,
+    size:  document.getElementById('qr-size')?.value  || '256',
+    ecl:   document.getElementById('qr-ecl')?.value   || 'M',
+    dark:  document.getElementById('qr-dark')?.value  || '#000000',
+    light: document.getElementById('qr-light')?.value || '#ffffff'
+  };
+  switch (qrCurrentType) {
+    case 'url':   p.v = document.getElementById('qr-url-val')?.value   || ''; break;
+    case 'text':  p.v = document.getElementById('qr-text-val')?.value  || ''; break;
+    case 'phone': p.v = document.getElementById('qr-phone-val')?.value || ''; break;
+    case 'wifi':
+      p.ssid   = document.getElementById('qr-wifi-ssid')?.value   || '';
+      p.pass   = document.getElementById('qr-wifi-pass')?.value   || '';
+      p.sec    = document.getElementById('qr-wifi-sec')?.value    || 'WPA';
+      p.hidden = document.getElementById('qr-wifi-hidden')?.checked ? '1' : '0';
+      break;
+    case 'vcard':
+      p.fname = document.getElementById('qr-vc-fname')?.value  || '';
+      p.lname = document.getElementById('qr-vc-lname')?.value  || '';
+      p.tel   = document.getElementById('qr-vc-phone')?.value  || '';
+      p.em    = document.getElementById('qr-vc-email')?.value  || '';
+      p.org   = document.getElementById('qr-vc-org')?.value    || '';
+      p.url   = document.getElementById('qr-vc-url')?.value    || '';
+      break;
+    case 'email':
+      p.to   = document.getElementById('qr-em-to')?.value   || '';
+      p.sub  = document.getElementById('qr-em-sub')?.value  || '';
+      p.body = document.getElementById('qr-em-body')?.value || '';
+      break;
+    case 'sms':
+      p.num = document.getElementById('qr-sms-num')?.value || '';
+      p.msg = document.getElementById('qr-sms-msg')?.value || '';
+      break;
+  }
+  const base = window.location.href.split('#')[0];
+  return base + '#qr?' + new URLSearchParams(p).toString();
+}
+
+function qrBuildEmbedHtml() {
+  const content = qrBuildString();
+  if (!content) return '';
+  const size  = parseInt(document.getElementById('qr-size')?.value)   || 256;
+  const ecl   = document.getElementById('qr-ecl')?.value              || 'M';
+  const dark  = document.getElementById('qr-dark')?.value             || '#000000';
+  const light = document.getElementById('qr-light')?.value            || '#ffffff';
+  const safeContent = JSON.stringify(content)
+    .replace(/</g, '\\u003C').replace(/>/g, '\\u003E').replace(/&/g, '\\u0026');
+  return `<div id="qrcode-embed"></div>\n` +
+    `<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></scr` + `ipt>\n` +
+    `<script>\n` +
+    `  new QRCode(document.getElementById("qrcode-embed"), {\n` +
+    `    text:         ${safeContent},\n` +
+    `    width:        ${size},\n` +
+    `    height:       ${size},\n` +
+    `    colorDark:    "${dark}",\n` +
+    `    colorLight:   "${light}",\n` +
+    `    correctLevel: QRCode.CorrectLevel.${ecl}\n` +
+    `  });\n` +
+    `</scr` + `ipt>`;
+}
+
+function qrUpdateShareEmbed() {
+  const section   = document.getElementById('qr-share-embed-section');
+  const urlEl     = document.getElementById('qr-share-url');
+  const embedEl   = document.getElementById('qr-embed-html');
+  const shareUrl  = qrBuildShareUrl();
+  const embedHtml = qrBuildEmbedHtml();
+  if (section) section.style.display = shareUrl ? '' : 'none';
+  if (urlEl)   urlEl.value   = shareUrl;
+  if (embedEl) embedEl.value = embedHtml;
+}
+
+function qrCopyLink() {
+  const url = qrBuildShareUrl();
+  if (!url) { alert('Generate a QR code first.'); return; }
+  navigator.clipboard.writeText(url).then(() => {
+    const hint = document.getElementById('qr-hint');
+    if (hint) { hint.textContent = 'Link copied to clipboard!'; setTimeout(() => hint.textContent = '', 2500); }
+  }).catch(() => {
+    const el = document.getElementById('qr-share-url');
+    if (el) { el.select(); document.execCommand('copy'); }
+  });
+}
+
+function qrCopyEmbed() {
+  const html = qrBuildEmbedHtml();
+  if (!html) { alert('Generate a QR code first.'); return; }
+  navigator.clipboard.writeText(html).then(() => {
+    const hint = document.getElementById('qr-hint');
+    if (hint) { hint.textContent = 'Embed HTML copied to clipboard!'; setTimeout(() => hint.textContent = '', 2500); }
+  }).catch(() => {
+    const el = document.getElementById('qr-embed-html');
+    if (el) { el.select(); document.execCommand('copy'); }
+  });
+}
+
+// ── Restore QR panel from share URL hash ─────────────────
+function qrRestoreFromHash() {
+  const hash = window.location.hash;
+  if (!hash.startsWith('#qr?')) return false;
+  try {
+    const params = new URLSearchParams(hash.slice('#qr?'.length));
+    const type = params.get('type') || 'url';
+    // Set type state without triggering generate
+    qrCurrentType = type;
+    document.querySelectorAll('.qr-types .qr-type-btn').forEach(b => {
+      b.classList.toggle('active', (b.getAttribute('onclick') || '').includes(`'${type}'`));
+    });
+    document.querySelectorAll('.qr-input-block').forEach(b => b.classList.remove('active'));
+    const block = document.getElementById('qri-' + type);
+    if (block) block.classList.add('active');
+
+    const setField = (id, key) => {
+      const el = document.getElementById(id);
+      if (el && params.has(key)) el.value = params.get(key);
+    };
+    switch (type) {
+      case 'url':   setField('qr-url-val',   'v'); break;
+      case 'text':  setField('qr-text-val',  'v'); break;
+      case 'phone': setField('qr-phone-val', 'v'); break;
+      case 'wifi': {
+        setField('qr-wifi-ssid', 'ssid');
+        setField('qr-wifi-pass', 'pass');
+        setField('qr-wifi-sec',  'sec');
+        const hEl = document.getElementById('qr-wifi-hidden');
+        if (hEl && params.has('hidden')) hEl.checked = params.get('hidden') === '1';
+        break;
+      }
+      case 'vcard':
+        setField('qr-vc-fname', 'fname'); setField('qr-vc-lname', 'lname');
+        setField('qr-vc-phone', 'tel');   setField('qr-vc-email', 'em');
+        setField('qr-vc-org',   'org');   setField('qr-vc-url',   'url');
+        break;
+      case 'email':
+        setField('qr-em-to', 'to'); setField('qr-em-sub', 'sub'); setField('qr-em-body', 'body');
+        break;
+      case 'sms':
+        setField('qr-sms-num', 'num'); setField('qr-sms-msg', 'msg');
+        break;
+    }
+    // Restore common settings without triggering generate
+    if (params.has('size')) {
+      const slider = document.getElementById('qr-size');
+      const lbl    = document.getElementById('qr-size-lbl');
+      if (slider) slider.value    = params.get('size');
+      if (lbl)    lbl.textContent = params.get('size') + ' px';
+    }
+    setField('qr-ecl',   'ecl');
+    setField('qr-dark',  'dark');
+    setField('qr-light', 'light');
+    return true;
+  } catch (_) { return false; }
 }
 
 // ── Generation history ───────────────────────────────────
@@ -562,6 +726,7 @@ function bcGenerate() {
     if (svgEl) svgEl.innerHTML = '';
     if (hint)  hint.textContent = 'Enter a value above to generate a barcode.';
     if (msgEl) msgEl.textContent = '';
+    bcUpdateShareEmbed();
     return;
   }
 
@@ -590,6 +755,7 @@ function bcGenerate() {
       margin: 10,
       valid: () => {}
     });
+    bcUpdateShareEmbed();
   } catch (e) {
     if (svgEl) svgEl.innerHTML = '';
     if (hint)  hint.textContent = '';
@@ -597,7 +763,128 @@ function bcGenerate() {
       msgEl.textContent = `Error: ${e.message || 'invalid value for this format'}`;
       msgEl.className   = 'tool-msg err';
     }
+    bcUpdateShareEmbed();
   }
+}
+
+// ── Share & Embed ─────────────────────────────────────────
+function bcBuildShareUrl() {
+  const input = (document.getElementById('bc-input')?.value || '').trim();
+  if (!input) return '';
+  const params = new URLSearchParams({
+    v:    input,
+    fmt:  document.getElementById('bc-format')?.value    || 'CODE128',
+    w:    document.getElementById('bc-width')?.value     || '2',
+    h:    document.getElementById('bc-height')?.value    || '100',
+    c:    document.getElementById('bc-color')?.value     || '#000000',
+    bg:   document.getElementById('bc-bg')?.value        || '#ffffff',
+    dv:   document.getElementById('bc-display-val')?.checked ? '1' : '0',
+    flat: document.getElementById('bc-flat')?.checked    ? '1' : '0',
+    fs:   document.getElementById('bc-font-size')?.value || '16'
+  });
+  const base = window.location.href.split('#')[0];
+  return base + '#barcode?' + params.toString();
+}
+
+function bcBuildEmbedHtml() {
+  const input = (document.getElementById('bc-input')?.value || '').trim();
+  if (!input) return '';
+  const format    = document.getElementById('bc-format')?.value      || 'CODE128';
+  const barWidth  = parseFloat(document.getElementById('bc-width')?.value)    || 2;
+  const barHeight = parseInt(document.getElementById('bc-height')?.value)     || 100;
+  const barColor  = document.getElementById('bc-color')?.value               || '#000000';
+  const bgColor   = document.getElementById('bc-bg')?.value                  || '#ffffff';
+  const displayV  = document.getElementById('bc-display-val')?.checked       ? 'true' : 'false';
+  const flat      = document.getElementById('bc-flat')?.checked              ? 'true' : 'false';
+  const fontSize  = parseInt(document.getElementById('bc-font-size')?.value) || 16;
+  // JSON.stringify handles escaping; additionally replace < > & to be safe inside <script>
+  const safeVal   = JSON.stringify(input)
+    .replace(/</g, '\\u003C').replace(/>/g, '\\u003E').replace(/&/g, '\\u0026');
+  return `<svg id="barcode-embed"></svg>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3/dist/JsBarcode.all.min.js"></scr` + `ipt>
+<script>
+  JsBarcode("#barcode-embed", ${safeVal}, {
+    format:       "${format}",
+    lineColor:    "${barColor}",
+    background:   "${bgColor}",
+    width:        ${barWidth},
+    height:       ${barHeight},
+    displayValue: ${displayV},
+    flat:         ${flat},
+    fontSize:     ${fontSize},
+    margin:       10
+  });
+</scr` + `ipt>`;
+}
+
+function bcUpdateShareEmbed() {
+  const section  = document.getElementById('bc-share-embed-section');
+  const urlEl    = document.getElementById('bc-share-url');
+  const embedEl  = document.getElementById('bc-embed-html');
+  const shareUrl = bcBuildShareUrl();
+  const embedHtml = bcBuildEmbedHtml();
+  if (section) section.style.display = shareUrl ? '' : 'none';
+  if (urlEl)   urlEl.value   = shareUrl;
+  if (embedEl) embedEl.value = embedHtml;
+}
+
+function bcCopyLink() {
+  const url = bcBuildShareUrl();
+  if (!url) { alert('Generate a barcode first.'); return; }
+  navigator.clipboard.writeText(url).then(() => {
+    setMsg('bc-msg', 'Link copied to clipboard!', 'ok');
+    setTimeout(() => setMsg('bc-msg', ''), 2500);
+  }).catch(() => {
+    const el = document.getElementById('bc-share-url');
+    if (el) { el.select(); document.execCommand('copy'); }
+  });
+}
+
+function bcCopyEmbed() {
+  const html = bcBuildEmbedHtml();
+  if (!html) { alert('Generate a barcode first.'); return; }
+  navigator.clipboard.writeText(html).then(() => {
+    setMsg('bc-msg', 'Embed HTML copied to clipboard!', 'ok');
+    setTimeout(() => setMsg('bc-msg', ''), 2500);
+  }).catch(() => {
+    const el = document.getElementById('bc-embed-html');
+    if (el) { el.select(); document.execCommand('copy'); }
+  });
+}
+
+// ── Restore barcode panel from share URL hash ─────────────
+function bcRestoreFromHash() {
+  const hash = window.location.hash;
+  if (!hash.startsWith('#barcode?')) return false;
+  try {
+    const params = new URLSearchParams(hash.slice('#barcode?'.length));
+    const setVal = (id, key) => {
+      const el = document.getElementById(id);
+      if (el && params.has(key)) el.value = params.get(key);
+    };
+    setVal('bc-input',    'v');
+    setVal('bc-format',   'fmt');
+    setVal('bc-color',    'c');
+    setVal('bc-bg',       'bg');
+    setVal('bc-font-size','fs');
+    if (params.has('w')) {
+      const el = document.getElementById('bc-width');
+      if (el) { el.value = params.get('w'); bcUpdateWidth(params.get('w')); }
+    }
+    if (params.has('h')) {
+      const el = document.getElementById('bc-height');
+      if (el) { el.value = params.get('h'); bcUpdateHeight(params.get('h')); }
+    }
+    if (params.has('dv')) {
+      const el = document.getElementById('bc-display-val');
+      if (el) el.checked = params.get('dv') === '1';
+    }
+    if (params.has('flat')) {
+      const el = document.getElementById('bc-flat');
+      if (el) el.checked = params.get('flat') === '1';
+    }
+    return true;
+  } catch (_) { return false; }
 }
 
 function bcUpdateWidth(val) {
@@ -755,10 +1042,14 @@ function toggleBcAutoGen() {
 // Init
 // ──────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  // Pre-generate barcode with default value
+  // Restore from share URL hash if present
+  const qrFromHash = qrRestoreFromHash();
+  const bcFromHash = !qrFromHash && bcRestoreFromHash();
+  if (qrFromHash)      showTool('panel-qr');
+  else if (bcFromHash) showTool('panel-barcode');
+
+  // Pre-generate with default (or restored) values
   bcGenerate();
-  // Show format hint for default
   bcFormatChanged();
-  // Pre-generate QR with default URL
   qrGenerate();
 });

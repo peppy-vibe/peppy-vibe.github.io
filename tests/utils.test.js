@@ -17,7 +17,7 @@ function loadFunctions(relativePath, fnNames) {
 }
 
 /* ───── pdf-utils.js ───── */
-const pdfUtils = loadFunctions('lib/pdf-utils.js', [
+const pdfUtils = loadFunctions('peppy-tools/lib/pdf-utils.js', [
   'fmtBytes', 'parsePageRanges', 'hexToRgb', 'stemName', 'PAGE_SIZES',
 ]);
 
@@ -101,7 +101,7 @@ describe('PAGE_SIZES', () => {
 });
 
 /* ───── shared-utils.js ───── */
-const sharedUtils = loadFunctions('lib/shared-utils.js', ['escHtml', 'escapeHtml']);
+const sharedUtils = loadFunctions('peppy-tools/lib/shared-utils.js', ['escHtml', 'escapeHtml']);
 
 describe('escHtml', () => {
   it('escapes ampersands', () => {
@@ -137,7 +137,7 @@ describe('escapeHtml alias', () => {
 });
 
 /* ───── shared-ui.js ───── */
-const sharedUI = loadFunctions('lib/shared-ui.js', [
+const sharedUI = loadFunctions('peppy-tools/lib/shared-ui.js', [
   'toggleFullscreen', 'updateThemeBtn', 'toggleTheme', 'initTheme',
   'toggleMobileMenu', 'closeMobileMenu',
 ]);

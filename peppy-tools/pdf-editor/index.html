@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YLTG419QN5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YLTG419QN5');
+  </script>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://region1.google-analytics.com; worker-src 'self' blob: https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peppy PDF Mini Editor BETA</title>
+  <meta name="description" content="Interactive PDF editor — import (including encrypted PDFs), edit pages visually, and export with AES-256 encryption. Merge, split, rotate, rearrange, watermark, password protect and more. 100% client-side.">
+  <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../lib/bootstrap-icons/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="style.css">
+  <!-- CDN: @cantoo/pdf-lib@2.6.2 — fork of pdf-lib that adds userPassword/ownerPassword encryption support
+       jsDelivr: https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.6.2/dist/pdf-lib.min.js
+       Fallback:  https://unpkg.com/@cantoo/pdf-lib@2.6.2/dist/pdf-lib.min.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.6.2/dist/pdf-lib.min.js" integrity="sha384-y/eCapxHqWDsRq6KE1dnReKWDhr522LvPcIQEwpatFbOmJYBTaeWiguzs3b9JTnc" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js" integrity="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e" crossorigin="anonymous"></script>
+</head>
+<body>
+  <script>(function(){var t=localStorage.getItem('stp-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+
+  <!-- ═══ TOP BAR ═══ -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+      <span class="top-bar-title"><i class="bi bi-file-earmark-text" aria-hidden="true"></i> Peppy PDF Mini Editor BETA</span>
+    </div>
+    <div class="top-bar-center" id="file-name-display"></div>
+    <div class="top-bar-right">
+      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN LAYOUT ═══ -->
+  <div class="editor-layout">
+
+    <!-- ── LEFT: Action sidebar ── -->
+    <aside class="action-sidebar" id="action-sidebar">
+      <div class="action-section">
+        <div class="action-section-title">Import</div>
+        <button class="action-btn" onclick="openMergeDialog()"><span class="action-icon"><i class="bi bi-folder2-open" aria-hidden="true"></i></span> Open / Merge PDF(s)</button>
+      </div>
+      <div class="action-section">
+        <div class="action-section-title">Edit Pages</div>
+        <button class="action-btn" onclick="openWatermarkDialog()"><span class="action-icon"><i class="bi bi-droplet" aria-hidden="true"></i></span> Watermark</button>
+        <button class="action-btn" onclick="openPageNumbersDialog()"><span class="action-icon">#</span> Page Numbers</button>
+        <button class="action-btn" onclick="openCropDialog()"><span class="action-icon"><i class="bi bi-scissors" aria-hidden="true"></i></span> Crop</button>
+        <button class="action-btn" onclick="openResizeDialog()"><span class="action-icon"><i class="bi bi-arrows-expand" aria-hidden="true"></i></span> Resize</button>
+        <button class="action-btn" onclick="openAnnotationDialog()"><span class="action-icon"><i class="bi bi-pencil" aria-hidden="true"></i></span> Text Annotation</button>
+        <button class="action-btn" onclick="toggleRedactMode()"><span class="action-icon"><i class="bi bi-square-fill" aria-hidden="true"></i></span> Redact</button>
+      </div>
+      <div class="action-section">
+        <div class="action-section-title">Document</div>
+        <button class="action-btn" onclick="openDocInfoDialog()"><span class="action-icon"><i class="bi bi-info-circle" aria-hidden="true"></i></span> Document Info</button>
+      </div>
+      <div class="action-section">
+        <div class="action-section-title">Export</div>
+        <button class="action-btn action-btn-primary" onclick="openExportPanel()"><span class="action-icon"><i class="bi bi-save" aria-hidden="true"></i></span> Export</button>
+      </div>
+    </aside>
+
+    <!-- ── CENTER: Page workspace ── -->
+    <main class="workspace" id="workspace">
+      <!-- Empty state -->
+      <div class="workspace-empty" id="workspace-empty">
+        <div class="empty-icon"><i class="bi bi-file-earmark-text" style="font-size:4rem" aria-hidden="true"></i></div>
+        <h2>Open a PDF to get started</h2>
+        <p>Import a PDF, merge multiple files, or convert images to PDF</p>
+        <div class="empty-actions">
+          <button class="empty-btn primary" onclick="openMergeDialog()"><i class="bi bi-folder2-open" aria-hidden="true"></i> Open / Merge PDF(s)</button>
+        </div>
+        <div class="drop-hint" id="global-drop-zone">
+          <span>or drop PDF / images here</span>
+        </div>
+      </div>
+
+      <!-- Toolbar (shown when doc loaded) -->
+      <div class="workspace-toolbar" id="workspace-toolbar" style="display:none">
+        <div class="toolbar-left">
+          <button class="tb-btn" onclick="undo()" id="btn-undo" disabled title="Undo (Ctrl+Z)"><i class="bi bi-arrow-return-left" aria-hidden="true"></i> Undo</button>
+          <button class="tb-btn" onclick="redo()" id="btn-redo" disabled title="Redo (Ctrl+Y)"><i class="bi bi-arrow-return-right" aria-hidden="true"></i> Redo</button>
+          <span class="tb-sep"></span>
+          <button class="tb-btn" onclick="deletePages()" title="Delete page(s)"><i class="bi bi-trash" aria-hidden="true"></i> Delete</button>
+          <button class="tb-btn" onclick="rotatePages(90)" title="Rotate page(s) clockwise"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i> CW</button>
+          <button class="tb-btn" onclick="rotatePages(-90)" title="Rotate page(s) counter-clockwise"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> CCW</button>
+          <span class="tb-sep"></span>
+          <div class="view-toggle">
+            <button class="vt-btn active" id="vt-grid" onclick="switchView('grid')" title="Grid view"><i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> Grid</button>
+            <button class="vt-btn" id="vt-reader" onclick="switchView('reader')" title="Reader view"><i class="bi bi-file-earmark-text" aria-hidden="true"></i> Reader</button>
+          </div>
+        </div>
+        <div class="toolbar-right">
+          <button class="tb-btn" onclick="zoom(-1)" title="Zoom out"><i class="bi bi-dash" aria-hidden="true"></i></button>
+          <span class="tb-zoom-label" id="zoom-label">100%</span>
+          <button class="tb-btn" onclick="zoom(1)" title="Zoom in"><i class="bi bi-plus" aria-hidden="true"></i></button>
+          <span class="tb-sep"></span>
+          <button class="tb-btn" onclick="addMorePages()" title="Add more PDFs or images"><i class="bi bi-plus" aria-hidden="true"></i> Add PDFs</button>
+        </div>
+      </div>
+      <!-- Grid navigation bar -->
+      <div class="grid-nav" id="grid-nav" style="display:none">
+        <button class="tb-btn" onclick="selectAllPages()" title="Select all"><i class="bi bi-check2-square" aria-hidden="true"></i> All</button>
+        <button class="tb-btn" onclick="deselectAllPages()" title="Deselect all">Deselect</button>
+        <span class="tb-sep"></span>
+        <span class="tb-info" id="page-count-info"></span>
+      </div>
+
+      <!-- Page grid (drag to rearrange) -->
+      <div class="page-grid" id="page-grid"></div>
+
+      <!-- Reader view (single page with zoom and navigation) -->
+      <div class="reader-view" id="reader-view" style="display:none">
+        <div class="reader-nav">
+          <button class="tb-btn" onclick="readerPrev()" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></button>
+          <input type="number" class="reader-page-input" id="reader-page-input" min="1" value="1" title="Go to page">
+          <span class="reader-page-total" id="reader-page-total">/ 1</span>
+          <button class="tb-btn" onclick="readerNext()" title="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+          <span class="tb-sep"></span>
+          <button class="tb-btn redact-toggle" id="redact-toggle" onclick="toggleRedactMode()" title="Toggle redact drawing mode"><i class="bi bi-square-fill" aria-hidden="true"></i> Redact</button>
+          <button class="tb-btn" id="btn-apply-redact" onclick="applyRedactions()" title="Burn drawn redactions into PDF" style="display:none"><i class="bi bi-check-lg" aria-hidden="true"></i> Apply Redact</button>
+        </div>
+        <div class="reader-canvas-wrap" id="reader-canvas-wrap">
+          <canvas id="reader-canvas"></canvas>
+          <svg class="redact-overlay" id="redact-overlay"></svg>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ═══ DIALOGS ═══ -->
+
+  <!-- Watermark dialog -->
+  <div class="dialog-overlay" id="dlg-watermark" style="display:none">
+    <div class="dialog">
+      <div class="dialog-header">
+        <h3><i class="bi bi-droplet" aria-hidden="true"></i> Add Watermark</h3>
+        <button class="dialog-close" onclick="closeDialog('dlg-watermark')">&times;</button>
+      </div>
+      <div class="dialog-body">
+        <label>Text <input type="text" id="wm-text" value="CONFIDENTIAL" maxlength="80"></label>
+        <label>Font Size <input type="number" id="wm-size" value="50" min="10" max="200"></label>
+        <label>Opacity <input type="range" id="wm-opacity" min="0.05" max="1" step="0.05" value="0.3"> <span id="wm-opacity-val">0.3</span></label>
+        <label>Color <input type="color" id="wm-color" value="#888888"></label>
+        <label>Rotation (°) <input type="number" id="wm-angle" value="45" min="-180" max="180"></label>
+        <label>Position
+          <select id="wm-position">
+            <option value="center">Center</option>
+            <option value="top-left">Top Left</option>
+            <option value="top-right">Top Right</option>
+            <option value="bottom-left">Bottom Left</option>
+            <option value="bottom-right">Bottom Right</option>
+          </select>
+        </label>
+        <label>Apply to
+          <select id="wm-apply" onchange="toggleRangesInput('wm-ranges-wrap',this.value)">
+            <option value="all">All pages</option>
+            <option value="selected">Selected pages only</option>
+            <option value="ranges">Page ranges&hellip;</option>
+          </select>
+        </label>
+        <div id="wm-ranges-wrap" style="display:none">
+          <label>Ranges <input type="text" id="wm-ranges" placeholder="e.g. 1-3, 4, 5-7"></label>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="dlg-btn primary" onclick="applyWatermark()">Apply</button>
+        <button class="dlg-btn" onclick="closeDialog('dlg-watermark')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Numbers dialog -->
+  <div class="dialog-overlay" id="dlg-pagenumbers" style="display:none">
+    <div class="dialog">
+      <div class="dialog-header">
+        <h3># Add Page Numbers</h3>
+        <button class="dialog-close" onclick="closeDialog('dlg-pagenumbers')">&times;</button>
+      </div>
+      <div class="dialog-body">
+        <label>Format
+          <select id="pn-format">
+            <option value="num">1, 2, 3…</option>
+            <option value="pn">Page 1, Page 2…</option>
+            <option value="dash">- 1 -, - 2 -…</option>
+            <option value="of">1 of N, 2 of N…</option>
+          </select>
+        </label>
+        <label>Position
+          <select id="pn-position">
+            <option value="bottom-center">Bottom Center</option>
+            <option value="bottom-left">Bottom Left</option>
+            <option value="bottom-right">Bottom Right</option>
+            <option value="top-center">Top Center</option>
+            <option value="top-left">Top Left</option>
+            <option value="top-right">Top Right</option>
+          </select>
+        </label>
+        <label>Font Size <input type="number" id="pn-size" value="12" min="6" max="36"></label>
+        <label>Color <input type="color" id="pn-color" value="#000000"></label>
+        <label>Start Number <input type="number" id="pn-start" value="1" min="1"></label>
+      </div>
+      <div class="dialog-footer">
+        <button class="dlg-btn primary" onclick="applyPageNumbers()">Apply</button>
+        <button class="dlg-btn" onclick="closeDialog('dlg-pagenumbers')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Crop dialog -->
+  <div class="dialog-overlay" id="dlg-crop" style="display:none">
+    <div class="dialog">
+      <div class="dialog-header">
+        <h3><i class="bi bi-scissors" aria-hidden="true"></i> Crop Pages</h3>
+        <button class="dialog-close" onclick="closeDialog('dlg-crop')">&times;</button>
+      </div>
+      <div class="dialog-body">
+        <p class="dlg-info">Set margins to crop (in points, 72 pt = 1 inch).</p>
+        <div class="crop-grid">
+          <label>Top <input type="number" id="crop-top" value="0" min="0"></label>
+          <label>Bottom <input type="number" id="crop-bottom" value="0" min="0"></label>
+          <label>Left <input type="number" id="crop-left" value="0" min="0"></label>
+          <label>Right <input type="number" id="crop-right" value="0" min="0"></label>
+        </div>
+        <label>Apply to
+          <select id="crop-apply" onchange="toggleRangesInput('crop-ranges-wrap',this.value)">
+            <option value="all">All pages</option>
+            <option value="selected">Selected pages only</option>
+            <option value="ranges">Page ranges&hellip;</option>
+          </select>
+        </label>
+        <div id="crop-ranges-wrap" style="display:none">
+          <label>Ranges <input type="text" id="crop-ranges" placeholder="e.g. 1-3, 4, 5-7"></label>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="dlg-btn primary" onclick="applyCrop()">Apply</button>
+        <button class="dlg-btn" onclick="closeDialog('dlg-crop')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resize dialog -->
+  <div class="dialog-overlay" id="dlg-resize" style="display:none">
+    <div class="dialog">
+      <div class="dialog-header">
+        <h3><i class="bi bi-arrows-expand" aria-hidden="true"></i> Resize Pages</h3>
+        <button class="dialog-close" onclick="closeDialog('dlg-resize')">&times;</button>
+      </div>
+      <div class="dialog-body">
+        <label>Page Size
+          <select id="resize-preset">
+            <option value="A4">A4 (210×297 mm)</option>
+            <option value="Letter">Letter (8.5×11 in)</option>
+            <option value="Legal">Legal (8.5×14 in)</option>
+            <option value="A3">A3 (297×420 mm)</option>
+            <option value="A5">A5 (148×210 mm)</option>
+            <option value="custom">Custom…</option>
+          </select>
+        </label>
+        <div id="resize-custom" style="display:none">
+          <label>Width (pt) <input type="number" id="resize-w" value="612" min="72" max="3000"></label>
+          <label>Height (pt) <input type="number" id="resize-h" value="792" min="72" max="3000"></label>
+        </div>
+        <label>Apply to
+          <select id="resize-apply" onchange="toggleRangesInput('resize-ranges-wrap',this.value)">
+            <option value="all">All pages</option>
+            <option value="selected">Selected pages only</option>
+            <option value="ranges">Page ranges&hellip;</option>
+          </select>
+        </label>
+        <div id="resize-ranges-wrap" style="display:none">
+          <label>Ranges <input type="text" id="resize-ranges" placeholder="e.g. 1-3, 4, 5-7"></label>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="dlg-btn primary" onclick="applyResize()">Apply</button>
+        <button class="dlg-btn" onclick="closeDialog('dlg-resize')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export panel dialog -->
+  <div class="dialog-overlay" id="dlg-export-panel" style="display:none">
+    <div class="dialog dialog-lg">
+      <div class="dialog-header">
+        <h3><i class="bi bi-save" aria-hidden="true"></i> Export</h3>
+        <button class="dialog-close" onclick="closeDialog('dlg-export-panel')">&times;</button>
+      </div>
+      <div class="dialog-body">
+
+        <!-- File Name -->
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <label style="margin:0;font-weight:600;white-space:nowrap">File Name</label>
+          <input type="text" id="export-filename" value="edited.pdf" style="flex:1;min-width:160px">
+          <span class="dlg-info" style="margin:0;font-size:11px">(used as prefix when splitting)</span>
+        </div>
+
+        <!-- Export scope -->
+        <div style="margin-top:14px;display:flex;flex-direction:column;gap:6px">
+          <label class="export-opt">
+            <input type="radio" name="export-mode" value="all" checked onchange="onExportModeChange()">
+            All
+          </label>
+          <label class="export-opt" style="align-items:center;gap:6px">
+            <input type="radio" name="export-mode" value="pages" onchange="onExportModeChange()">
+            Pages&nbsp;<input type="text" id="export-pages-input" placeholder="1, 3-5, 8" style="width:130px;margin-left:4px"
+                   onfocus="document.querySelector('input[name=export-mode][value=pages]').checked=true;onExportModeChange()">
+          </label>
+          <label class="export-opt">
+            <input type="radio" name="export-mode" value="split" onchange="onExportModeChange()">
+            Split PDF
+          </label>
+          <!-- Split sub-options -->
+          <div id="export-split-options" style="display:none;padding-left:22px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label class="export-opt">
+                <input type="radio" name="split-sub-mode" value="all" checked>
+                Split every page into separate files
+              </label>
+              <label class="export-opt" style="align-items:center;gap:6px">
+                <input type="radio" name="split-sub-mode" value="ranges">
+                Custom ranges&nbsp;<input type="text" id="export-split-ranges" placeholder="1-3, 4, 5-7" style="width:130px;margin-left:4px"
+                       onfocus="document.querySelector('input[name=split-sub-mode][value=ranges]').checked=true">
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Options -->
+        <div class="pl-section" style="margin-top:14px">
+          <div class="pl-section-title">Options</div>
+          <div class="export-options">
+            <label class="export-opt"><input type="checkbox" id="export-compress"> Compress (smaller file)</label>
+            <label class="export-opt"><input type="checkbox" id="export-flatten"> Flatten form fields</label>
+            <label class="export-opt"><input type="checkbox" id="export-optimized"> Optimized (object streams)</label>
+          </div>
+        </div>
+
+        <!-- Protect PDF -->
+        <div class="pl-section" style="margin-top:14px">
+          <div class="pl-section-title"><i class="bi bi-lock" aria-hidden="true"></i> Protect PDF</div>
+          <p class="dlg-info" style="margin-bottom:8px">Encrypt the output PDF. When Split PDF is selected, protection is applied to every output file.</p>
+          <label class="export-opt" style="margin-bottom:6px">
+            <input type="checkbox" id="export-protect-enable" onchange="onProtectToggle()">
+            Enable Password Protection
+          </label>
+          <div id="export-protect-fields" style="display:none;padding-left:4px">
+            <label>User Password (required to open)
+              <input type="password" id="export-pw-user" autocomplete="new-password">
+            </label>
+            <label>Owner Password (for restrictions, optional)
+              <input type="password" id="export-pw-owner" autocomplete="new-password">
+            </label>
+            <div class="export-options" style="margin-top:6px">
+              <label class="export-opt"><input type="checkbox" id="export-pw-restrict-print"> Restrict printing</label>
+              <label class="export-opt"><input type="checkbox" id="export-pw-restrict-copy" checked> Restrict copying</label>
+              <label class="export-opt"><input type="checkbox" id="export-pw-restrict-edit" checked> Restrict editing &amp; annotations</label>
+              <label class="export-opt"><input type="checkbox" id="export-pw-read-only"> Lock (read-only)</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="export-info" id="export-info" style="margin-top:10px;font-size:12px;color:var(--text2)"></div>
+      </div>
+      <div class="dialog-footer">
+        <button class="dlg-btn primary" onclick="doExport()"><i class="bi bi-save" aria-hidden="true"></i> Export &amp; Download</button>
+        <button class="dlg-btn" onclick="closeDialog('dlg-export-panel')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF Password Unlock dialog -->
+  <div class="dialog-overlay" id="dlg-pdf-password" style="display:none">
+    <div class="dialog" style="max-width:400px">
+      <div class="dialog-header">
+        <h3><i class="bi bi-lock" aria-hidden="true"></i> Password Required</h3>
+      </div>
+      <div class="dialog-body">
+        <p class="dlg-info" id="pw-prompt-msg">This PDF is password protected. Enter the password to unlock it.</p>
+        <label>Password
+          <input type="password" id="pw-prompt-input" autocomplete="current-password" placeholder="Enter PDF password">
+        </label>
+      </div>
+      <div class="dialog-footer">
+        <button class="dlg-btn primary" onclick="pwPromptSubmit()"><i class="bi bi-unlock" aria-hidden="true"></i> Unlock &amp; Open</button>
+        <button class="dlg-btn" onclick="pwPromptCancel()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Text Annotation dialog -->
+  <div class="dialog-overlay" id="dlg-annotation" style="display:none">
+    <div class="dialog">
+      <div class="dialog-header">
+        <h3><i class="bi bi-pencil" aria-hidden="true"></i> Text Annotation</h3>
+        <button class="dialog-close" onclick="closeDialog('dlg-annotation')">&times;</button>
+      </div>
+      <div class="dialog-body">
+        <label>Text <input type="text" id="annot-text" placeholder="Enter annotation text" maxlength="200"></label>
+        <label>Font Size <input type="number" id="annot-size" value="14" min="6" max="72"></label>
+        <label>Color <input type="color" id="annot-color" value="#000000"></label>
+        <label>Position
+          <select id="annot-position">
+            <option value="top-left">Top Left</option>
+            <option value="top-center">Top Center</option>
+            <option value="top-right">Top Right</option>
+            <option value="center">Center</option>
+            <option value="bottom-left">Bottom Left</option>
+            <option value="bottom-center">Bottom Center</option>
+            <option value="bottom-right">Bottom Right</option>
+          </select>
+        </label>
+        <label>Apply to
+          <select id="annot-apply" onchange="toggleRangesInput('annot-ranges-wrap',this.value)">
+            <option value="all">All pages</option>
+            <option value="selected">Selected pages only</option>
+            <option value="ranges">Page ranges&hellip;</option>
+          </select>
+        </label>
+        <div id="annot-ranges-wrap" style="display:none">
+          <label>Ranges <input type="text" id="annot-ranges" placeholder="e.g. 1-3, 4, 5-7"></label>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="dlg-btn primary" onclick="applyAnnotation()">Apply</button>
+        <button class="dlg-btn" onclick="closeDialog('dlg-annotation')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Document Info dialog -->
+  <div class="dialog-overlay" id="dlg-docinfo" style="display:none">
+    <div class="dialog">
+      <div class="dialog-header">
+        <h3><i class="bi bi-info-circle" aria-hidden="true"></i> Document Info</h3>
+        <button class="dialog-close" onclick="closeDialog('dlg-docinfo')">&times;</button>
+      </div>
+      <div class="dialog-body">
+        <label>Title <input type="text" id="doc-title" placeholder="Document title"></label>
+        <label>Author <input type="text" id="doc-author" placeholder="Author name"></label>
+        <label>Subject <input type="text" id="doc-subject" placeholder="Subject"></label>
+        <label>Keywords <input type="text" id="doc-keywords" placeholder="Comma-separated keywords"></label>
+        <label>Creator <input type="text" id="doc-creator" placeholder="Creator application"></label>
+        <div class="doc-info-stats" id="doc-info-stats"></div>
+      </div>
+      <div class="dialog-footer dialog-footer-wrap">
+        <button class="dlg-btn danger-btn" onclick="removeMetadataAction()"><i class="bi bi-wrench" aria-hidden="true"></i> Remove Metadata</button>
+        <button class="dlg-btn danger-btn" onclick="removeHiddenDataAction()"><i class="bi bi-eye" aria-hidden="true"></i> Remove Hidden Data</button>
+        <button class="dlg-btn primary" onclick="applyDocInfo()">Save Info</button>
+        <button class="dlg-btn" onclick="closeDialog('dlg-docinfo')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Open / Merge PDF(s) & Images dialog -->
+  <div class="dialog-overlay" id="dlg-merge" style="display:none">
+    <div class="dialog dialog-lg">
+      <div class="dialog-header">
+        <h3><i class="bi bi-folder2-open" aria-hidden="true"></i> Open / Merge PDF(s) &amp; Images</h3>
+        <button class="dialog-close" onclick="closeDialog('dlg-merge')">&times;</button>
+      </div>
+      <div class="dialog-body">
+        <div class="merge-drop-zone" id="merge-drop-zone" onclick="triggerMergeFileInput()">
+          <div class="merge-drop-icon"><i class="bi bi-file-earmark-text" aria-hidden="true"></i></div>
+          <p>Drop PDF or image files here, or click to add</p>
+          <p class="dlg-info">Files will be merged in order &mdash; supports PDF, JPEG and PNG</p>
+        </div>
+        <div class="merge-file-list" id="merge-file-list"></div>
+      </div>
+      <div class="dialog-footer">
+        <button class="dlg-btn" onclick="triggerMergeFileInput()"><i class="bi bi-plus" aria-hidden="true"></i> Add Files</button>
+        <button class="dlg-btn primary" onclick="applyMerge()" id="btn-apply-merge" disabled><i class="bi bi-folder2-open" aria-hidden="true"></i> Open / Merge</button>
+        <button class="dlg-btn" onclick="closeDialog('dlg-merge')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Hidden file inputs -->
+  <input type="file" id="file-input-single" accept=".pdf,application/pdf" style="display:none" onchange="handleSinglePDF(this.files)">
+  <input type="file" id="file-input-merge" accept=".pdf,application/pdf,image/jpeg,image/png,image/jpg" multiple style="display:none" onchange="handleMergeDialogFiles(this.files)">
+  <input type="file" id="file-input-add" accept=".pdf,application/pdf,image/jpeg,image/png,image/jpg" multiple style="display:none" onchange="handleAddPages(this.files)">
+
+  <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../lib/pdf-utils.js"></script>
+  <script src="../lib/error-handler.js"></script>
+  <script src="../lib/shared-ui.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
