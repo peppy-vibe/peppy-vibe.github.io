@@ -10,7 +10,7 @@ Nine fully client-side browser tools bundled as a Progressive Web App. No server
 |------|-------------|
 | Advanced Notepad | Full-featured plain-text / Markdown / LaTeX editor |
 | Table Generator | Visual HTML table builder with rich export options |
-| Dev Tools | 33+ utilities for encoding, formatting, text, JSON/YAML, colors, regex, timestamps |
+| Dev Tools | 34 utilities for encoding, formatting, text, JSON/YAML, colors, regex, timestamps |
 | Random Tools | 11 randomisation utilities — wheel spinner, dice, cards, and more |
 | People & Group Tools | 11 people-management utilities — picker, teams, seating, Secret Santa |
 | QR & Barcode Tools | QR generator, scanner, batch QR, 15+ barcode formats |
@@ -238,7 +238,7 @@ All pages share a unified dark / light theme:
 | Timestamps | Unix Converter, Date Calculator, Date Formatter |
 | Regex | Pattern Tester, Find & Replace, Reference Cheatsheet |
 
-33 tools total across 6 collapsible sidebar groups.
+34 tools total across 7 collapsible sidebar groups.
 
 ---
 
