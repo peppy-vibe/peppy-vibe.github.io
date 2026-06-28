@@ -18,8 +18,17 @@
   <!-- Primary SEO -->
   <title>Peppy Vibe — AI Document Extraction, Spreadsheet SQL &amp; Free Browser Tools</title>
   <meta name="description" content="Peppy Vibe: AI-powered offline document extraction (with Thai OCR), SQL queries for Excel &amp; CSV spreadsheets, and 9 free browser-based tools. No sign-up, no cloud, no tracking.">
-  <meta name="keywords" content="peppy vibe, AI document extraction, Thai OCR, spreadsheet SQL, free browser tools, PDF tools, dev tools, QR code generator, offline tools, DuckDB, form extractor">
+  <meta name="keywords" content="peppy vibe, AI document extraction, Thai OCR, spreadsheet SQL, free browser tools, PDF tools, dev tools, QR code generator, offline tools, DuckDB, form extractor, herramientas gratis navegador, outils navigateur gratuits, Browser Tools kostenlos, 免费浏览器工具, เครื่องมือฟรี">
   <link rel="canonical" href="https://peppy-vibe.github.io/">
+
+  <!-- i18n hreflang -->
+  <link rel="alternate" hreflang="en"    href="https://peppy-vibe.github.io/">
+  <link rel="alternate" hreflang="es"    href="https://peppy-vibe.github.io/?lang=es">
+  <link rel="alternate" hreflang="fr"    href="https://peppy-vibe.github.io/?lang=fr">
+  <link rel="alternate" hreflang="de"    href="https://peppy-vibe.github.io/?lang=de">
+  <link rel="alternate" hreflang="zh-CN" href="https://peppy-vibe.github.io/?lang=zh-CN">
+  <link rel="alternate" hreflang="th"    href="https://peppy-vibe.github.io/?lang=th">
+  <link rel="alternate" hreflang="x-default" href="https://peppy-vibe.github.io/">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -37,29 +46,79 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Peppy Vibe",
-    "url": "https://peppy-vibe.github.io/",
-    "description": "A hobby-driven software lab building AI tools, data utilities, and browser applications in Python and JavaScript.",
-    "sameAs": ["https://github.com/peppy-vibe"],
-    "hasPart": [
+    "@graph": [
       {
-        "@type": "SoftwareApplication",
-        "name": "Peppy Tools",
-        "url": "https://peppy-vibe.github.io/peppy-tools/",
-        "applicationCategory": "UtilitiesApplication"
+        "@type": "Organization",
+        "name": "Peppy Vibe",
+        "url": "https://peppy-vibe.github.io/",
+        "description": "A hobby-driven software lab building AI tools, data utilities, and browser applications in Python and JavaScript.",
+        "sameAs": ["https://github.com/peppy-vibe"],
+        "hasPart": [
+          {
+            "@type": "SoftwareApplication",
+            "name": "Peppy Tools",
+            "url": "https://peppy-vibe.github.io/peppy-tools/",
+            "applicationCategory": "UtilitiesApplication",
+            "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "Peppy Form Extractor",
+            "url": "https://peppy-vibe.github.io/peppy-form-extractor/",
+            "applicationCategory": "BusinessApplication"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "Peppy SpreadsheetQL",
+            "url": "https://peppy-vibe.github.io/peppy-spreadsheetql/",
+            "applicationCategory": "BusinessApplication"
+          }
+        ]
       },
       {
-        "@type": "SoftwareApplication",
-        "name": "Peppy Form Extractor",
-        "url": "https://peppy-vibe.github.io/peppy-form-extractor/",
-        "applicationCategory": "BusinessApplication"
-      },
-      {
-        "@type": "SoftwareApplication",
-        "name": "Peppy SpreadsheetQL",
-        "url": "https://peppy-vibe.github.io/peppy-spreadsheetql/",
-        "applicationCategory": "BusinessApplication"
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Peppy Vibe?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Peppy Vibe is a hobby-driven software lab that builds free, client-side browser tools (Peppy Tools), AI-powered document extraction software (Peppy Form Extractor), and SQL-over-spreadsheet software (Peppy SpreadsheetQL). All tools respect privacy — no data leaves your device."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What free tools does Peppy Vibe offer?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Peppy Tools is a collection of 9 free browser utilities: PDF tools (18 features), a visual PDF editor, an advanced notepad with Markdown and LaTeX preview, a table generator, 34 developer utilities, QR and barcode tools, random decision tools, people and group tools, and clock tools. All run 100% in your browser with no sign-up and no uploads."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do Peppy Tools work offline?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Peppy Tools is a Progressive Web App (PWA) that caches all assets after the first visit. All 9 tools — including PDF merge/split/compress, QR code generator, and dev utilities — work fully offline without any internet connection."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Peppy Vibe collect or upload any data?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. All processing happens locally in your browser. Files are never uploaded to any server. Peppy Tools has no back-end — everything runs in JavaScript inside your browser tab."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What languages does Peppy Tools support?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The Peppy Tools interface supports English, Spanish (Español), French (Français), German (Deutsch), Chinese Simplified (中文简体), and Thai (ภาษาไทย). Use the language selector in the navigation bar to switch languages."
+            }
+          }
+        ]
       }
     ]
   }
@@ -428,19 +487,19 @@
     })();
   </script>
 
-  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <a href="#main-content" class="skip-link" data-i18n="skip-link">Skip to main content</a>
 
   <nav aria-label="Site navigation">
     <div class="nav-brand">
       <span class="nav-logo"><i class="bi bi-lightning-charge-fill" aria-hidden="true"></i></span>
       <span class="nav-title">Peppy Vibe</span>
     </div>
-    <div class="nav-actions">
+    <div class="nav-actions" id="nav-actions-root">
       <a href="https://github.com/peppy-vibe" target="_blank" rel="noopener noreferrer" class="nav-github" aria-label="GitHub organisation">
         <i class="bi bi-github" aria-hidden="true"></i>
       </a>
       <button id="theme-btn" class="nav-btn" onclick="toggleTheme()" aria-label="Toggle colour theme">
-        <i class="bi bi-sun" aria-hidden="true"></i> Light
+        <i class="bi bi-sun" aria-hidden="true"></i> <span id="theme-label" data-i18n="theme-light">Light</span>
       </button>
     </div>
   </nav>
@@ -449,34 +508,34 @@
     <a href="https://github.com/peppy-vibe" target="_blank" rel="noopener noreferrer">
       <span class="hero-eyebrow"><i class="bi bi-github" aria-hidden="true"></i> peppy-vibe on GitHub</span>
     </a>
-    <h1>Build Something<br><span>Peppy</span></h1>
-    <p class="hero-sub">A hobby-driven software lab crafting developer tools, data pipelines, and AI experiments.</p>
+    <h1><span data-i18n="root-hero-line1">Build Something</span><br><span data-i18n="root-hero-accent">Peppy</span></h1>
+    <p class="hero-sub" data-i18n="root-hero-sub">A hobby-driven software lab crafting developer tools, data pipelines, and AI experiments.</p>
     <div>
       <a href="./peppy-tools/index.html" class="hero-cta">
-        <i class="bi bi-tools" aria-hidden="true"></i> Explore Peppy Tools
+        <i class="bi bi-tools" aria-hidden="true"></i> <span data-i18n="root-cta-explore">Explore Peppy Tools</span>
       </a>
       <a href="https://github.com/peppy-vibe" target="_blank" rel="noopener noreferrer" class="hero-cta-ghost">
-        <i class="bi bi-github" aria-hidden="true"></i> View on GitHub
+        <i class="bi bi-github" aria-hidden="true"></i> <span data-i18n="root-cta-github">View on GitHub</span>
       </a>
     </div>
     <div class="features" role="list" aria-label="Key highlights">
-      <div class="feature-pill" role="listitem"><i class="bi bi-calendar3" aria-hidden="true"></i> Since Mar 2026</div>
+      <div class="feature-pill" role="listitem"><i class="bi bi-calendar3" aria-hidden="true"></i> <span data-i18n="root-since">Since Mar 2026</span></div>
     </div>
   </header>
 
   <main id="main-content">
 
     <!-- ── Featured: Peppy Tools ── -->
-    <p class="section-label" style="max-width:1060px;margin-left:auto;margin-right:auto;padding:0 0 1.25rem;">Featured</p>
+    <p class="section-label" style="max-width:1060px;margin-left:auto;margin-right:auto;padding:0 0 1.25rem;" data-i18n="root-section-featured">Featured</p>
     <a class="card-featured" href="./peppy-tools/index.html">
       <div class="card-featured-icon"><i class="bi bi-tools" aria-hidden="true"></i></div>
       <div class="card-featured-body">
         <div class="card-meta">
           <h2>Peppy Tools</h2>
-          <span class="badge-live">Live</span>
+          <span class="badge-live" data-i18n="badge-live">Live</span>
           <span class="tag lang-js">JS</span>
         </div>
-        <p class="card-desc">Nine fully client-side browser utilities — PDF tools &amp; editor, notepad, table generator, dev tools, random tools, people &amp; group tools, QR &amp; barcode, and clock tools. Nothing ever leaves your browser.</p>
+        <p class="card-desc" data-i18n="card-peppy-tools-desc">Nine fully client-side browser utilities — PDF tools &amp; editor, notepad, table generator, dev tools, random tools, people &amp; group tools, QR &amp; barcode, and clock tools. Nothing ever leaves your browser.</p>
         <div class="card-tags">
           <span class="tag">PDF</span>
           <span class="tag">Dev Tools</span>
@@ -484,11 +543,11 @@
           <span class="tag">Offline PWA</span>
           <span class="tag">120+ Features</span>
         </div>
-        <span class="btn-launch">Open App <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
+        <span class="btn-launch" data-i18n="btn-open-app">Open App</span> <i class="bi bi-arrow-right" aria-hidden="true"></i>
       </div>
     </a>
 
-    <p class="section-label">Software</p>
+    <p class="section-label" data-i18n="root-section-software">Software</p>
     <div class="projects-grid" style="margin-bottom:2.5rem">
 
       <!-- ── peppy-form-extractor ── -->
@@ -496,17 +555,17 @@
         <div class="card-icon"><i class="bi bi-file-earmark-text" aria-hidden="true"></i></div>
         <div class="card-meta">
           <h2>Peppy Form Extractor</h2>
-          <span class="badge-live">Live</span>
-          <span class="badge-proprietary">Proprietary</span>
+          <span class="badge-live" data-i18n="badge-live">Live</span>
+          <span class="badge-proprietary" data-i18n="badge-proprietary">Proprietary</span>
         </div>
-        <p class="card-desc">Offline AI document data extraction from invoices, receipts &amp; forms. Best-in-class Thai language OCR. Use any AI provider — OpenAI, Ollama, Anthropic &amp; more.</p>
+        <p class="card-desc" data-i18n="card-form-extractor-desc">Offline AI document data extraction from invoices, receipts &amp; forms. Best-in-class Thai language OCR. Use any AI provider — OpenAI, Ollama, Anthropic &amp; more.</p>
         <div class="card-tags">
           <span class="tag">AI Extraction</span>
           <span class="tag">Thai OCR</span>
           <span class="tag">BYOM</span>
           <span class="tag">Offline</span>
         </div>
-        <span class="btn-launch">Learn More <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
+        <span class="btn-launch"><span data-i18n="btn-learn-more">Learn More</span> <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
       </a>
 
       <!-- ── peppy-spreadsheetQL ── -->
@@ -514,22 +573,22 @@
         <div class="card-icon"><i class="bi bi-table" aria-hidden="true"></i></div>
         <div class="card-meta">
           <h2>Peppy SpreadsheetQL</h2>
-          <span class="badge-live">Live</span>
-          <span class="badge-proprietary">Proprietary</span>
+          <span class="badge-live" data-i18n="badge-live">Live</span>
+          <span class="badge-proprietary" data-i18n="badge-proprietary">Proprietary</span>
         </div>
-        <p class="card-desc">Query Excel, CSV &amp; Parquet files with standard SQL — no database required. JOIN across spreadsheets, GROUP BY, aggregate, and export results. Powered by DuckDB.</p>
+        <p class="card-desc" data-i18n="card-spreadsheetql-desc">Query Excel, CSV &amp; Parquet files with standard SQL — no database required. JOIN across spreadsheets, GROUP BY, aggregate, and export results. Powered by DuckDB.</p>
         <div class="card-tags">
           <span class="tag">SQL</span>
           <span class="tag">Excel</span>
           <span class="tag">DuckDB</span>
           <span class="tag">No DB Setup</span>
         </div>
-        <span class="btn-launch">Learn More <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
+        <span class="btn-launch"><span data-i18n="btn-learn-more">Learn More</span> <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
       </a>
 
     </div>
 
-    <p class="section-label">Python Packages &amp; Tools</p>
+    <p class="section-label" data-i18n="root-section-python">Python Packages &amp; Tools</p>
     <div class="projects-grid">
 
       <!-- ── peppy-python-toy-scripts ── -->
@@ -540,7 +599,7 @@
           <span class="badge-public">Public</span>
           <span class="tag lang-py">Python</span>
         </div>
-        <p class="card-desc">A growing collection of Python utility and toy scripts — experiments, automation snippets, and small tools built for fun and learning.</p>
+        <p class="card-desc" data-i18n="card-python-scripts-desc">A growing collection of Python utility and toy scripts — experiments, automation snippets, and small tools built for fun and learning.</p>
         <div class="card-tags">
           <span class="tag">Scripts</span>
           <span class="tag">Automation</span>
@@ -554,11 +613,11 @@
         <div class="card-icon"><i class="bi bi-circle-fill" aria-hidden="true" style="color:#22c55e;font-size:2rem"></i></div>
         <div class="card-meta">
           <h2>peppy-G-TEC</h2>
-          <span class="badge-new">New</span>
-          <span class="badge-public">Public</span>
+          <span class="badge-new" data-i18n="badge-new">New</span>
+          <span class="badge-public" data-i18n="badge-public">Public</span>
           <span class="tag lang-py">Python</span>
         </div>
-        <p class="card-desc">Keep Teams status green. A Python CLI package that simulates mouse activity during configured working hours, preventing inactivity timeouts and away status on Microsoft Teams.</p>
+        <p class="card-desc" data-i18n="card-gtec-desc">Keep Teams status green. A Python CLI package that simulates mouse activity during configured working hours, preventing inactivity timeouts and away status on Microsoft Teams.</p>
         <div class="card-tags">
           <span class="tag">CLI</span>
           <span class="tag">Automation</span>
@@ -577,7 +636,7 @@
           <span class="badge-public">Public</span>
           <span class="tag lang-py">Python</span>
         </div>
-        <p class="card-desc">Visual Link Protocol — transfer files between two devices using only cameras and screens via QR codes. No network, no cables, no pairing required.</p>
+        <p class="card-desc" data-i18n="card-vlp-desc">Visual Link Protocol — transfer files between two devices using only cameras and screens via QR codes. No network, no cables, no pairing required.</p>
         <div class="card-tags">
           <span class="tag">File Transfer</span>
           <span class="tag">QR Code</span>
@@ -594,25 +653,32 @@
     <div class="footer-inner">
       <div class="footer-brand">
         <strong>Peppy Vibe</strong>
-        <span>Hobby-driven software lab &mdash; Python &amp; JavaScript</span>
+        <span data-i18n="footer-tagline">Hobby-driven software lab &mdash; Python &amp; JavaScript</span>
       </div>
       <nav class="footer-links" aria-label="Footer navigation">
         <a href="./peppy-tools/index.html">Peppy Tools</a>
         <a href="./peppy-form-extractor/index.html">Form Extractor</a>
         <a href="./peppy-spreadsheetql/index.html">SpreadsheetQL</a>
-        <a href="./contact.html">Contact Us</a>
+        <a href="./contact.html" data-i18n="footer-contact">Contact Us</a>
         <a href="https://github.com/peppy-vibe" target="_blank" rel="noopener noreferrer">GitHub</a>
       </nav>
     </div>
   </footer>
 
+  <script src="peppy-tools/lib/i18n.js"></script>
   <script>
+    // Handle ?lang= query param on first load
+    (function () {
+      var urlLang = new URLSearchParams(location.search).get('lang');
+      if (urlLang) PeppyI18n.setLang(urlLang);
+    })();
+
     function updateThemeBtn() {
       var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
       var btn = document.getElementById('theme-btn');
-      btn.innerHTML = isDark
-        ? '<i class="bi bi-sun" aria-hidden="true"></i> Light'
-        : '<i class="bi bi-moon-stars" aria-hidden="true"></i> Dark';
+      var lbl = document.getElementById('theme-label');
+      btn.querySelector('i').className = isDark ? 'bi bi-sun' : 'bi bi-moon-stars';
+      if (lbl) lbl.setAttribute('data-i18n', isDark ? 'theme-light' : 'theme-dark');
     }
     function toggleTheme() {
       var cur = document.documentElement.getAttribute('data-theme');
@@ -620,8 +686,12 @@
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('stp-theme', next);
       updateThemeBtn();
+      PeppyI18n.init();
     }
     updateThemeBtn();
+
+    // Inject language switcher into nav
+    PeppyI18n.injectSwitcher('#nav-actions-root', 'nav-btn');
   </script>
   <script src="peppy-tools/lib/error-handler.js"></script>
   <script src="peppy-tools/lib/bootstrap/js/bootstrap.bundle.min.js"></script>

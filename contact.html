@@ -18,7 +18,15 @@
   <!-- Primary SEO -->
   <title>Contact Us — Peppy Vibe</title>
   <meta name="description" content="Get in touch with the Peppy Vibe team. Inquire about Peppy Form Extractor, Peppy SpreadsheetQL, licensing, demos, or general questions.">
+  <meta name="keywords" content="peppy vibe contact, peppy form extractor demo, peppy spreadsheetql licensing, contact peppy vibe">
   <link rel="canonical" href="https://peppy-vibe.github.io/contact.html">
+  <link rel="alternate" hreflang="en" href="https://peppy-vibe.github.io/contact.html">
+  <link rel="alternate" hreflang="es" href="https://peppy-vibe.github.io/contact.html?lang=es">
+  <link rel="alternate" hreflang="fr" href="https://peppy-vibe.github.io/contact.html?lang=fr">
+  <link rel="alternate" hreflang="de" href="https://peppy-vibe.github.io/contact.html?lang=de">
+  <link rel="alternate" hreflang="zh-CN" href="https://peppy-vibe.github.io/contact.html?lang=zh-CN">
+  <link rel="alternate" hreflang="th" href="https://peppy-vibe.github.io/contact.html?lang=th">
+  <link rel="alternate" hreflang="x-default" href="https://peppy-vibe.github.io/contact.html">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -333,7 +341,7 @@
     })();
   </script>
 
-  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <a href="#main-content" class="skip-link" data-i18n="skip-link">Skip to main content</a>
 
   <nav aria-label="Site navigation">
     <div class="nav-brand">
@@ -341,11 +349,11 @@
         <i class="bi bi-lightning-charge-fill" aria-hidden="true"></i>
       </a>
       <span class="nav-sep" aria-hidden="true">/</span>
-      <span class="nav-title">Contact Us</span>
+      <span class="nav-title" data-i18n="footer-contact">Contact Us</span>
     </div>
-    <div class="nav-actions">
+    <div class="nav-actions" id="contact-nav-actions" data-i18n-switcher="nav-btn">
       <button id="theme-btn" class="nav-btn" onclick="toggleTheme()" aria-label="Toggle colour theme">
-        <i class="bi bi-sun" aria-hidden="true"></i> Light
+        <i class="bi bi-sun" aria-hidden="true"></i> <span id="contact-theme-label" data-i18n="theme-light">Light</span>
       </button>
     </div>
   </nav>
@@ -466,7 +474,7 @@
     <div class="footer-inner">
       <div class="footer-brand">
         <strong>Peppy Vibe</strong>
-        <span>Hobby-driven software lab &mdash; Python &amp; JavaScript</span>
+        <span data-i18n="footer-tagline">Hobby-driven software lab &mdash; Python &amp; JavaScript</span>
       </div>
       <nav class="footer-links" aria-label="Footer navigation">
         <a href="./index.html">Home</a>
@@ -478,13 +486,16 @@
     </div>
   </footer>
 
+  <script src="peppy-tools/lib/i18n.js"></script>
   <script>
+    (function(){var l=new URLSearchParams(location.search).get('lang');if(l)PeppyI18n.setLang(l);})();
+
     function updateThemeBtn() {
       var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
       var btn = document.getElementById('theme-btn');
-      btn.innerHTML = isDark
-        ? '<i class="bi bi-sun" aria-hidden="true"></i> Light'
-        : '<i class="bi bi-moon-stars" aria-hidden="true"></i> Dark';
+      var lbl = document.getElementById('contact-theme-label');
+      btn.querySelector('i').className = isDark ? 'bi bi-sun' : 'bi bi-moon-stars';
+      if (lbl) lbl.setAttribute('data-i18n', isDark ? 'theme-light' : 'theme-dark');
     }
     function toggleTheme() {
       var cur = document.documentElement.getAttribute('data-theme');
@@ -492,6 +503,7 @@
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('stp-theme', next);
       updateThemeBtn();
+      PeppyI18n.init();
     }
     updateThemeBtn();
 

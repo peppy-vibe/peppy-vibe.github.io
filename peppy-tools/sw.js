@@ -92,6 +92,8 @@ const APP_ASSETS = [
   './lib/shared-utils.js',
   /* Shared UI boilerplate */
   './lib/shared-ui.js',
+  /* Internationalisation (i18n) */
+  './lib/i18n.js',
 ];
 
 const PRECACHE = APP_ASSETS.concat(CDN_DEPS);

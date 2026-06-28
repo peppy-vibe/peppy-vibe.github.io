@@ -12,8 +12,17 @@
   </script>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://region1.google-analytics.com; worker-src 'self' blob: https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Peppy Random Tools</title>
+  <title>Peppy Random Tools — Free Decision &amp; Randomisation Tools</title>
   <meta name="description" content="10 decision and randomisation tools: wheel spinner, dice roller, coin flip, card picker, yes/no generator, number generator, and more.">
+  <meta name="keywords" content="wheel spinner online, random decision maker, dice roller browser, coin flip online, random number generator, yes no generator free">
+  <link rel="canonical" href="https://peppy-vibe.github.io/peppy-tools/random-tools/">
+  <link rel="alternate" hreflang="en" href="https://peppy-vibe.github.io/peppy-tools/random-tools/">
+  <link rel="alternate" hreflang="es" href="https://peppy-vibe.github.io/peppy-tools/random-tools/?lang=es">
+  <link rel="alternate" hreflang="fr" href="https://peppy-vibe.github.io/peppy-tools/random-tools/?lang=fr">
+  <link rel="alternate" hreflang="de" href="https://peppy-vibe.github.io/peppy-tools/random-tools/?lang=de">
+  <link rel="alternate" hreflang="zh-CN" href="https://peppy-vibe.github.io/peppy-tools/random-tools/?lang=zh-CN">
+  <link rel="alternate" hreflang="th" href="https://peppy-vibe.github.io/peppy-tools/random-tools/?lang=th">
+  <link rel="alternate" hreflang="x-default" href="https://peppy-vibe.github.io/peppy-tools/random-tools/">
   <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="../lib/bootstrap-icons/bootstrap-icons.min.css">
   <link rel="stylesheet" href="style.css">
@@ -28,7 +37,7 @@
       <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
       <span class="top-bar-title"><i class="bi bi-dice-5" aria-hidden="true"></i> Peppy Random Tools</span>
     </div>
-    <div class="top-bar-right">
+    <div class="top-bar-right" data-i18n-switcher="top-btn">
       <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
       <button class="top-btn" id="theme-btn" onclick="toggleTheme(() => { if (wheelOptions.length) buildWheel(); })" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
     </div>
@@ -319,6 +328,8 @@ Option F</textarea>
   </div><!-- /app-body -->
 
   <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../lib/i18n.js"></script>
+  <script>(function(){var l=new URLSearchParams(location.search).get('lang');if(l)PeppyI18n.setLang(l);})();</script>
   <script src="../lib/error-handler.js"></script>
   <script src="../lib/shared-utils.js"></script>
   <script src="../lib/shared-ui.js"></script>

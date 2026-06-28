@@ -532,19 +532,19 @@
     })();
   </script>
 
-  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <a href="#main-content" class="skip-link" data-i18n="skip-link">Skip to main content</a>
 
   <nav aria-label="Site navigation">
     <div class="nav-brand">
-      <a href="../index.html" class="nav-home-link" aria-label="Back to Peppy Vibe home" title="Peppy Vibe Home">
+      <a href="../index.html" class="nav-home-link" aria-label="Back to Peppy Vibe home" title="Peppy Vibe Home" data-i18n-aria="nav-home-aria">
         <i class="bi bi-lightning-charge-fill" aria-hidden="true"></i>
       </a>
       <span class="nav-sep" aria-hidden="true">/</span>
       <span class="nav-title">Peppy Form Extractor</span>
     </div>
-    <div class="nav-actions">
+    <div class="nav-actions" data-i18n-switcher="nav-btn">
       <button id="theme-btn" class="nav-btn" onclick="toggleTheme()" aria-label="Toggle colour theme">
-        <i class="bi bi-sun" aria-hidden="true"></i> Light
+        <i class="bi bi-sun" aria-hidden="true"></i> <span id="fe-theme-label" data-i18n="theme-light">Light</span>
       </button>
     </div>
   </nav>
@@ -912,10 +912,12 @@
   <script>
     function updateThemeBtn() {
       var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      var lbl = document.getElementById('fe-theme-label');
+      if (lbl) lbl.setAttribute('data-i18n', isDark ? 'theme-light' : 'theme-dark');
       var btn = document.getElementById('theme-btn');
-      btn.innerHTML = isDark
-        ? '<i class="bi bi-sun" aria-hidden="true"></i> Light'
-        : '<i class="bi bi-moon-stars" aria-hidden="true"></i> Dark';
+      btn.firstElementChild.className = isDark ? 'bi bi-sun' : 'bi bi-moon-stars';
+      if (window.PeppyI18n) { if (lbl) lbl.textContent = PeppyI18n.t(isDark ? 'theme-light' : 'theme-dark'); }
+      else if (lbl) { lbl.textContent = isDark ? 'Light' : 'Dark'; }
     }
     function toggleTheme() {
       var cur = document.documentElement.getAttribute('data-theme');
@@ -926,6 +928,8 @@
     }
     updateThemeBtn();
   </script>
+  <script src="../peppy-tools/lib/i18n.js"></script>
+  <script>(function(){var l=new URLSearchParams(location.search).get('lang');if(l)PeppyI18n.setLang(l);updateThemeBtn();})();</script>
   <script src="../peppy-tools/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

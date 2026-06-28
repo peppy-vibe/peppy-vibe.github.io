@@ -12,8 +12,21 @@
   </script>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://region1.google-analytics.com; worker-src 'self' blob: https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Peppy PDF Tools</title>
+  <title>Peppy PDF Tools — 18 Free Client-Side PDF Utilities</title>
   <meta name="description" content="18 free client-side PDF tools: merge, split, rotate, watermark (with position), compress, AES-256 encrypt, redact, sanitize and more — nothing leaves your browser.">
+  <meta name="keywords" content="free PDF merge, PDF split online, PDF compress, PDF watermark, PDF password, PDF rotate, PDF editor, PDF tools browser, merge PDF free, split PDF online, compress PDF free">
+  <link rel="canonical" href="https://peppy-vibe.github.io/peppy-tools/pdf-tools/">
+  <!-- i18n hreflang -->
+  <link rel="alternate" hreflang="en"    href="https://peppy-vibe.github.io/peppy-tools/pdf-tools/">
+  <link rel="alternate" hreflang="es"    href="https://peppy-vibe.github.io/peppy-tools/pdf-tools/?lang=es">
+  <link rel="alternate" hreflang="fr"    href="https://peppy-vibe.github.io/peppy-tools/pdf-tools/?lang=fr">
+  <link rel="alternate" hreflang="de"    href="https://peppy-vibe.github.io/peppy-tools/pdf-tools/?lang=de">
+  <link rel="alternate" hreflang="zh-CN" href="https://peppy-vibe.github.io/peppy-tools/pdf-tools/?lang=zh-CN">
+  <link rel="alternate" hreflang="th"    href="https://peppy-vibe.github.io/peppy-tools/pdf-tools/?lang=th">
+  <link rel="alternate" hreflang="x-default" href="https://peppy-vibe.github.io/peppy-tools/pdf-tools/">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Peppy PDF Tools","applicationCategory":"UtilitiesApplication","operatingSystem":"Web Browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"18 free client-side PDF tools including merge, split, compress, watermark, rotate, AES-256 password protection, redact, and sanitize. Nothing leaves your browser.","url":"https://peppy-vibe.github.io/peppy-tools/pdf-tools/"}
+  </script>
   <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="../lib/bootstrap-icons/bootstrap-icons.min.css">
   <link rel="stylesheet" href="style.css">
@@ -33,7 +46,7 @@
       <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
       <span class="top-bar-title"><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> Peppy PDF Tools</span>
     </div>
-    <div class="top-bar-right">
+    <div class="top-bar-right" data-i18n-switcher="top-btn">
       <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
       <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
     </div>
@@ -775,6 +788,8 @@
 
   <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../lib/pdf-utils.js"></script>
+  <script src="../lib/i18n.js"></script>
+  <script>(function(){var l=new URLSearchParams(location.search).get('lang');if(l)PeppyI18n.setLang(l);})();</script>
   <script src="../lib/error-handler.js"></script>
   <script src="../lib/shared-ui.js"></script>
   <script src="app.js"></script>

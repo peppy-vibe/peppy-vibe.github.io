@@ -1,4 +1,30 @@
 User-agent: *
 Allow: /
+Crawl-delay: 2
+
+# Allow AI/LLM crawlers for Generative Engine Optimization (GEO)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
 
 Sitemap: https://peppy-vibe.github.io/sitemap.xml

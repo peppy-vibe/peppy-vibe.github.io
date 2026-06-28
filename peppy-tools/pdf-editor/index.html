@@ -12,8 +12,17 @@
   </script>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://cdn.jsdelivr.net https://www.google-analytics.com https://region1.google-analytics.com; worker-src 'self' blob: https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Peppy PDF Mini Editor BETA</title>
+  <title>Peppy PDF Mini Editor BETA — Visual Browser PDF Editor</title>
   <meta name="description" content="Interactive PDF editor — import (including encrypted PDFs), edit pages visually, and export with AES-256 encryption. Merge, split, rotate, rearrange, watermark, password protect and more. 100% client-side.">
+  <meta name="keywords" content="visual PDF editor, PDF editor browser, online PDF editor free, PDF password protect, PDF watermark, PDF rearrange pages, AES-256 PDF">
+  <link rel="canonical" href="https://peppy-vibe.github.io/peppy-tools/pdf-editor/">
+  <link rel="alternate" hreflang="en" href="https://peppy-vibe.github.io/peppy-tools/pdf-editor/">
+  <link rel="alternate" hreflang="es" href="https://peppy-vibe.github.io/peppy-tools/pdf-editor/?lang=es">
+  <link rel="alternate" hreflang="fr" href="https://peppy-vibe.github.io/peppy-tools/pdf-editor/?lang=fr">
+  <link rel="alternate" hreflang="de" href="https://peppy-vibe.github.io/peppy-tools/pdf-editor/?lang=de">
+  <link rel="alternate" hreflang="zh-CN" href="https://peppy-vibe.github.io/peppy-tools/pdf-editor/?lang=zh-CN">
+  <link rel="alternate" hreflang="th" href="https://peppy-vibe.github.io/peppy-tools/pdf-editor/?lang=th">
+  <link rel="alternate" hreflang="x-default" href="https://peppy-vibe.github.io/peppy-tools/pdf-editor/">
   <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="../lib/bootstrap-icons/bootstrap-icons.min.css">
   <link rel="stylesheet" href="style.css">
@@ -33,7 +42,7 @@
       <span class="top-bar-title"><i class="bi bi-file-earmark-text" aria-hidden="true"></i> Peppy PDF Mini Editor BETA</span>
     </div>
     <div class="top-bar-center" id="file-name-display"></div>
-    <div class="top-bar-right">
+    <div class="top-bar-right" data-i18n-switcher="top-btn">
       <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
       <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
     </div>
@@ -493,6 +502,8 @@
 
   <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../lib/pdf-utils.js"></script>
+  <script src="../lib/i18n.js"></script>
+  <script>(function(){var l=new URLSearchParams(location.search).get('lang');if(l)PeppyI18n.setLang(l);})();</script>
   <script src="../lib/error-handler.js"></script>
   <script src="../lib/shared-ui.js"></script>
   <script src="app.js"></script>
