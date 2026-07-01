@@ -9,7 +9,7 @@ const S = {
   anchor: null,        // {r, c}
   headerRow: false,
   headerCol: false,
-  importMode: null,    // 'html' | 'csv'
+  importMode: null,    // 'html' | 'csv' | 'markdown' | 'latex'
   previewText: '',
   previewFile: '',
   ts: {                // table settings
@@ -649,10 +649,15 @@ function downloadPreview() {
 /* ── Import ────────────────────────────────── */
 function showImportDlg(mode) {
   S.importMode = mode;
-  document.getElementById('import-title').textContent =
-    mode === 'html' ? 'Import HTML Table' : 'Import CSV';
-  document.getElementById('import-ta').placeholder =
-    mode === 'html' ? 'Paste HTML with a <table> element\u2026' : 'Paste CSV data\u2026';
+  const titles = { html: 'Import HTML Table', csv: 'Import CSV', markdown: 'Import Markdown Table', latex: 'Import LaTeX Table' };
+  const placeholders = {
+    html:     'Paste HTML with a <table> element\u2026',
+    csv:      'Paste CSV data\u2026',
+    markdown: 'Paste a Markdown pipe table\u2026',
+    latex:    'Paste a LaTeX \\begin{tabular}\u2026\\end{tabular} block\u2026',
+  };
+  document.getElementById('import-title').textContent = titles[mode] || 'Import';
+  document.getElementById('import-ta').placeholder = placeholders[mode] || 'Paste here\u2026';
   document.getElementById('import-ta').value  = '';
   document.getElementById('import-msg').textContent = '';
   document.getElementById('import-msg').className   = 'dlg-msg';
@@ -661,8 +666,10 @@ function showImportDlg(mode) {
 }
 
 function doImport() {
-  if (S.importMode === 'html') importHTML();
-  else importCSV();
+  if (S.importMode === 'html')     importHTML();
+  else if (S.importMode === 'csv') importCSV();
+  else if (S.importMode === 'markdown') importMarkdown();
+  else if (S.importMode === 'latex')    importLatex();
 }
 
 function importHTML() {
@@ -698,6 +705,7 @@ function importHTML() {
 
   newData.forEach(row => { while (row.length < maxCols) row.push(mkCell()); });
 
+  saveUndoState();
   S.data = newData;
   S.rows = newData.length;
   S.cols = maxCols;
@@ -723,6 +731,7 @@ function importCSV() {
     return row;
   });
 
+  saveUndoState();
   S.data = newData;
   S.rows = newData.length;
   S.cols = maxCols;
@@ -755,6 +764,111 @@ function parseCSV(text) {
     rows.push(row);
   }
   return rows;
+}
+
+function importMarkdown() {
+  const input  = document.getElementById('import-ta').value.trim();
+  const msgEl  = document.getElementById('import-msg');
+  if (!input) return;
+
+  // Split lines, strip leading/trailing pipes, skip separator rows (---|---).
+  const lines = input.split('\n')
+    .map(l => l.trim())
+    .filter(l => l.length > 0);
+
+  const dataRows = lines.filter(l => !/^\|?\s*[-:]+[-| :]*\s*\|?$/.test(l));
+
+  if (!dataRows.length) {
+    msgEl.textContent = 'No table rows found.';
+    msgEl.className = 'dlg-msg err';
+    return;
+  }
+
+  const parseRow = (line) => {
+    // Remove leading/trailing pipe then split on unescaped |
+    const stripped = line.replace(/^\||\|$/g, '');
+    const cells = stripped.split(/(?<!\\)\|/).map(c => c.trim().replace(/\\\|/g, '|'));
+    return cells;
+  };
+
+  const grid    = dataRows.map(parseRow);
+  const maxCols = Math.max(...grid.map(r => r.length));
+  const newData = grid.map(row => {
+    const cells = row.map(t => { const cell = mkCell(); cell.text = t; return cell; });
+    while (cells.length < maxCols) cells.push(mkCell());
+    return cells;
+  });
+
+  saveUndoState();
+  S.data = newData;
+  S.rows = newData.length;
+  S.cols = maxCols;
+  document.getElementById('inp-rows').value = S.rows;
+  document.getElementById('inp-cols').value = S.cols;
+  S.sel.clear();
+  closeDlg('import-overlay');
+  renderTable();
+}
+
+function importLatex() {
+  const input  = document.getElementById('import-ta').value.trim();
+  const msgEl  = document.getElementById('import-msg');
+  if (!input) return;
+
+  // Extract content between \begin{tabular} and \end{tabular}
+  const bodyMatch = input.match(/\\begin\{tabular\}[^}]*}([\s\S]*?)\\end\{tabular\}/);
+  if (!bodyMatch) {
+    msgEl.textContent = 'No \\begin{tabular}…\\end{tabular} block found.';
+    msgEl.className = 'dlg-msg err';
+    return;
+  }
+
+  const body  = bodyMatch[1];
+  // Split on \\ row terminators, ignoring \hline
+  const lines = body.split('\\\\')
+    .map(l => l.replace(/\\hline/g, '').trim())
+    .filter(l => l.length > 0);
+
+  if (!lines.length) {
+    msgEl.textContent = 'No rows found in tabular block.';
+    msgEl.className = 'dlg-msg err';
+    return;
+  }
+
+  // Unescape LaTeX special characters escaped during export
+  const unescape = t => t
+    .replace(/\\&/g, '&').replace(/\\%/g, '%').replace(/\\\$/g, '$')
+    .replace(/\\#/g, '#').replace(/\\_/g, '_').replace(/\\\{/g, '{')
+    .replace(/\\\}/g, '}').replace(/\\~/g, '~').replace(/\\\^/g, '^')
+    .replace(/\\\\/g, '\\').trim();
+
+  // Parse \multicolumn{n}{spec}{text} as a spanned cell
+  const parseCells = (line) =>
+    line.split('&').map(raw => {
+      const mc = raw.trim().match(/^\\multicolumn\{(\d+)\}\{[^}]*\}\{([\s\S]*)\}$/);
+      if (mc) {
+        const cell = mkCell();
+        cell.text    = unescape(mc[2]);
+        cell.colspan = parseInt(mc[1], 10);
+        return cell;
+      }
+      const cell = mkCell();
+      cell.text = unescape(raw);
+      return cell;
+    });
+
+  const newData = lines.map(parseCells);
+  const maxCols = Math.max(...newData.map(r => r.reduce((s, c) => s + (c.colspan || 1), 0)));
+
+  saveUndoState();
+  S.data = newData;
+  S.rows = newData.length;
+  S.cols = maxCols;
+  document.getElementById('inp-rows').value = S.rows;
+  document.getElementById('inp-cols').value = S.cols;
+  S.sel.clear();
+  closeDlg('import-overlay');
+  renderTable();
 }
 
 /* ── Dialog helpers ────────────────────────── */
