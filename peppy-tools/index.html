@@ -453,12 +453,12 @@
   </script>
 
   <div id="update-banner" onclick="location.reload(true)" title="Click to reload">
-    <i class="bi bi-arrow-clockwise" aria-hidden="true"></i> A new version is available &mdash; click to reload.
+    <i class="bi bi-arrow-clockwise" aria-hidden="true"></i> <span data-i18n="portal-update-banner">A new version is available &mdash; click to reload.</span>
   </div>
 
-  <div id="offline-banner" hidden><i class="bi bi-exclamation-triangle" aria-hidden="true"></i> You are offline &mdash; all tools still work from cache.</div>
+  <div id="offline-banner" hidden><i class="bi bi-exclamation-triangle" aria-hidden="true"></i> <span data-i18n="portal-offline-banner">You are offline &mdash; all tools still work from cache.</span></div>
 
-  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <a href="#main-content" class="skip-link" data-i18n="skip-link">Skip to main content</a>
 
   <nav aria-label="Site navigation">
     <div class="nav-brand">
@@ -468,9 +468,9 @@
       <span class="nav-sep" aria-hidden="true">/</span>
       <span class="nav-title">Peppy Tools</span>
     </div>
-    <div class="nav-actions">
-      <button id="install-btn" class="nav-btn" onclick="installPWA()" aria-label="Install app"><i class="bi bi-download" aria-hidden="true"></i> Install App</button>
-      <button id="theme-btn" class="nav-btn" onclick="togglePortalTheme()" aria-label="Toggle colour theme"><i class="bi bi-sun" aria-hidden="true"></i> Light</button>
+    <div class="nav-actions" id="nav-actions-portal">
+      <button id="install-btn" class="nav-btn" onclick="installPWA()" aria-label="Install app"><i class="bi bi-download" aria-hidden="true"></i> <span data-i18n="btn-install-app">Install App</span></button>
+      <button id="theme-btn" class="nav-btn" onclick="togglePortalTheme()" aria-label="Toggle colour theme"><i class="bi bi-sun" aria-hidden="true"></i> <span id="portal-theme-label" data-i18n="theme-light">Light</span></button>
     </div>
   </nav>
 

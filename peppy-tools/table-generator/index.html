@@ -33,12 +33,12 @@
   <!-- App header -->
   <div class="top-bar">
     <div class="top-bar-left">
-      <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+      <a href="../index.html" class="top-bar-back" data-i18n-title="btn-home" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
       <span class="top-bar-title"><i class="bi bi-clipboard" aria-hidden="true"></i> Peppy Table Generator</span>
     </div>
     <div class="top-bar-right" data-i18n-switcher="top-btn">
-      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
-      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
+      <button class="top-btn" onclick="toggleFullscreen()" data-i18n-title="btn-fullscreen" title="Fullscreen" data-i18n-aria="btn-toggle-fs" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" data-i18n-title="btn-toggle-theme" title="Toggle theme" data-i18n-aria="btn-toggle-theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
     </div>
   </div>
 
@@ -47,37 +47,37 @@
   <!-- Toolbar -->
   <div class="toolbar">
     <div class="tb-group">
-      <span class="tb-label">History</span>
-      <button id="btn-undo" onclick="doUndo()" title="Undo (Ctrl+Z)" disabled><i class="bi bi-arrow-return-left" aria-hidden="true"></i> Undo</button>
-      <button id="btn-redo" onclick="doRedo()" title="Redo (Ctrl+Y)" disabled><i class="bi bi-arrow-return-right" aria-hidden="true"></i> Redo</button>
+      <span class="tb-label" data-i18n="tbl-lbl-history">History</span>
+      <button id="btn-undo" onclick="doUndo()" title="Undo (Ctrl+Z)" disabled><i class="bi bi-arrow-return-left" aria-hidden="true"></i> <span data-i18n="np-undo">Undo</span></button>
+      <button id="btn-redo" onclick="doRedo()" title="Redo (Ctrl+Y)" disabled><i class="bi bi-arrow-return-right" aria-hidden="true"></i> <span data-i18n="np-redo">Redo</span></button>
     </div>
     <div class="tb-sep"></div>
     <div class="tb-group">
-      <span class="tb-label">Rows/Cols</span>
-      <button onclick="addRow()" title="Add row below">+ Row</button>
-      <button onclick="removeLastRow()" title="Remove last row">&minus; Row</button>
-      <button onclick="addCol()" title="Add column right">+ Col</button>
-      <button onclick="removeLastCol()" title="Remove last column">&minus; Col</button>
+      <span class="tb-label" data-i18n="tbl-lbl-rowcol">Rows/Cols</span>
+      <button onclick="addRow()" title="Add row below" data-i18n="tbl-add-row">+ Row</button>
+      <button onclick="removeLastRow()" title="Remove last row" data-i18n="tbl-rem-row">− Row</button>
+      <button onclick="addCol()" title="Add column right" data-i18n="tbl-add-col">+ Col</button>
+      <button onclick="removeLastCol()" title="Remove last column" data-i18n="tbl-rem-col">− Col</button>
     </div>
     <div class="tb-sep"></div>
     <div class="tb-group">
-      <span class="tb-label">Size</span>
+      <span class="tb-label" data-i18n="tbl-lbl-size">Size</span>
       <label>R:<input type="number" id="inp-rows" min="1" max="50"  value="3" onchange="resizeTable()"></label>
       <label>C:<input type="number" id="inp-cols" min="1" max="30"  value="3" onchange="resizeTable()"></label>
-      <button onclick="resetTable()" title="Reset table to defaults">Reset</button>
+      <button onclick="resetTable()" title="Reset table to defaults" data-i18n="tbl-btn-reset">Reset</button>
     </div>
     <div class="tb-sep"></div>
     <div class="tb-group">
-      <span class="tb-label">Cells</span>
-      <button onclick="mergeCells()"  title="Merge selected cells">Merge</button>
-      <button onclick="splitCell()"   title="Split merged cell">Split</button>
-      <button onclick="clearCells()"  title="Clear cell content">Clear</button>
+      <span class="tb-label" data-i18n="tbl-lbl-cells">Cells</span>
+      <button onclick="mergeCells()"  title="Merge selected cells" data-i18n="tbl-btn-merge">Merge</button>
+      <button onclick="splitCell()"   title="Split merged cell" data-i18n="tbl-btn-split">Split</button>
+      <button onclick="clearCells()"  title="Clear cell content" data-i18n="tbl-btn-clear">Clear</button>
     </div>
     <div class="tb-sep"></div>
     <div class="tb-group">
-      <span class="tb-label">Headers</span>
-      <button id="btn-hrow" onclick="toggleHeaderRow()" title="Toggle header row">Header Row</button>
-      <button id="btn-hcol" onclick="toggleHeaderCol()" title="Toggle header column">Header Col</button>
+      <span class="tb-label" data-i18n="tbl-lbl-headers">Headers</span>
+      <button id="btn-hrow" onclick="toggleHeaderRow()" title="Toggle header row" data-i18n="tbl-header-row">Header Row</button>
+      <button id="btn-hcol" onclick="toggleHeaderCol()" title="Toggle header column" data-i18n="tbl-header-col">Header Col</button>
     </div>
   </div>
 
@@ -94,8 +94,8 @@
     <!-- Settings panel -->
     <div class="settings-panel" id="settings-panel">
       <div class="panel-tabs">
-        <button class="ptab active" data-tab="tab-table" onclick="switchTab(this, 'tab-table')">Table</button>
-        <button class="ptab"        data-tab="tab-cell"  onclick="switchTab(this, 'tab-cell')">Cell</button>
+        <button class="ptab active" data-tab="tab-table" onclick="switchTab(this, 'tab-table')" data-i18n="tbl-tab-table">Table</button>
+        <button class="ptab"        data-tab="tab-cell"  onclick="switchTab(this, 'tab-cell')" data-i18n="tbl-tab-cell">Cell</button>
       </div>
 
       <!-- Table settings -->
@@ -179,13 +179,13 @@
 
   <!-- Export / Import bar -->
   <div class="export-bar">
-    <span class="tb-label">Export:</span>
+    <span class="tb-label" data-i18n="tbl-export-lbl">Export:</span>
     <button onclick="exportAs('html')">HTML</button>
     <button onclick="exportAs('markdown')">Markdown</button>
     <button onclick="exportAs('latex')">LaTeX</button>
     <button onclick="exportAs('csv')">CSV</button>
     <span class="bar-sep"></span>
-    <span class="tb-label">Import:</span>
+    <span class="tb-label" data-i18n="tbl-import-lbl">Import:</span>
     <button onclick="showImportDlg('html')">HTML</button>
     <button onclick="showImportDlg('csv')">CSV</button>
     <button onclick="showImportDlg('markdown')">Markdown</button>

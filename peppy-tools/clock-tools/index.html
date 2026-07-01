@@ -32,13 +32,13 @@
 
 <div class="top-bar">
   <div class="top-bar-left">
-    <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu"><i class="bi bi-list" aria-hidden="true"></i></button>
-    <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i><span class="visually-hidden">Home</span></a>
+    <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" data-i18n-aria="btn-toggle-menu" aria-label="Menu"><i class="bi bi-list" aria-hidden="true"></i></button>
+    <a href="../index.html" class="top-bar-back" data-i18n-title="btn-home" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i><span class="visually-hidden">Home</span></a>
     <span class="top-bar-title"><i class="bi bi-clock" aria-hidden="true"></i> Peppy Clock Tools</span>
   </div>
   <div class="top-bar-right" data-i18n-switcher="top-btn">
-    <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
-    <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
+    <button class="top-btn" onclick="toggleFullscreen()" data-i18n-title="btn-fullscreen" title="Fullscreen" data-i18n-aria="btn-toggle-fs" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+    <button class="top-btn" id="theme-btn" onclick="toggleTheme()" data-i18n-title="btn-toggle-theme" title="Toggle theme" data-i18n-aria="btn-toggle-theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
   </div>
 </div>
 
@@ -48,15 +48,15 @@
     <div class="sidebar-groups" id="sidebar-groups">
       <div class="sidebar-group" id="grp-clocks">
         <button class="grp-hdr" onclick="toggleGroup('clocks')">
-          <span><i class="bi bi-clock" aria-hidden="true"></i> Clock Tools</span>
+          <span><i class="bi bi-clock" aria-hidden="true"></i> <span data-i18n="clk-grp">Clock Tools</span></span>
           <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
         </button>
         <div class="grp-tools">
-          <button class="tab-btn active" data-tool="stopwatch" data-grp="clocks" onclick="showTool('stopwatch')">Stopwatch</button>
-          <button class="tab-btn" data-tool="timer" data-grp="clocks" onclick="showTool('timer')">Countdown Timer</button>
-          <button class="tab-btn" data-tool="world-clocks" data-grp="clocks" onclick="showTool('world-clocks')">World Clocks</button>
-          <button class="tab-btn" data-tool="pomodoro" data-grp="clocks" onclick="showTool('pomodoro')">Pomodoro Timer</button>
-          <button class="tab-btn" data-tool="alarm" data-grp="clocks" onclick="showTool('alarm')">Alarm</button>
+          <button class="tab-btn active" data-tool="stopwatch" data-grp="clocks" onclick="showTool('stopwatch')" data-i18n="clk-stopwatch">Stopwatch</button>
+          <button class="tab-btn" data-tool="timer" data-grp="clocks" onclick="showTool('timer')" data-i18n="clk-countdown">Countdown Timer</button>
+          <button class="tab-btn" data-tool="world-clocks" data-grp="clocks" onclick="showTool('world-clocks')" data-i18n="clk-world">World Clocks</button>
+          <button class="tab-btn" data-tool="pomodoro" data-grp="clocks" onclick="showTool('pomodoro')" data-i18n="clk-pomodoro">Pomodoro Timer</button>
+          <button class="tab-btn" data-tool="alarm" data-grp="clocks" onclick="showTool('alarm')" data-i18n="clk-alarm">Alarm</button>
         </div>
       </div>
     </div>
@@ -67,14 +67,14 @@
 
     <!-- 1. Stopwatch -->
     <div class="tool-panel active" id="tool-stopwatch">
-      <div class="panel-title"><i class="bi bi-stopwatch" aria-hidden="true"></i> Stopwatch</div>
+      <div class="panel-title"><i class="bi bi-stopwatch" aria-hidden="true"></i> <span data-i18n="clk-stopwatch">Stopwatch</span></div>
       <div class="clock-display-center">
         <div class="clock-big-display" id="sw-display">00:00:00<span class="ms">.000</span></div>
         <div class="btn-row" style="justify-content:center;">
-          <button onclick="swStart()" id="sw-start-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> Start</button>
-          <button onclick="swStop()" id="sw-stop-btn" disabled class="btn-secondary"><i class="bi bi-stop-fill" aria-hidden="true"></i> Stop</button>
-          <button onclick="swLap()" id="sw-lap-btn" disabled class="btn-secondary"><i class="bi bi-clipboard" aria-hidden="true"></i> Lap</button>
-          <button onclick="swReset()" class="btn-secondary"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Reset</button>
+          <button onclick="swStart()" id="sw-start-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> <span data-i18n="clk-sw-start">Start</span></button>
+          <button onclick="swStop()" id="sw-stop-btn" disabled class="btn-secondary"><i class="bi bi-stop-fill" aria-hidden="true"></i> <span data-i18n="clk-sw-stop">Stop</span></button>
+          <button onclick="swLap()" id="sw-lap-btn" disabled class="btn-secondary"><i class="bi bi-clipboard" aria-hidden="true"></i> <span data-i18n="clk-sw-lap">Lap</span></button>
+          <button onclick="swReset()" class="btn-secondary"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> <span data-i18n="clk-sw-reset">Reset</span></button>
         </div>
       </div>
       <div id="sw-laps" class="laps-list"></div>
@@ -82,7 +82,7 @@
 
     <!-- 2. Countdown Timer -->
     <div class="tool-panel" id="tool-timer">
-      <div class="panel-title"><i class="bi bi-hourglass-split" aria-hidden="true"></i> Countdown Timer</div>
+      <div class="panel-title"><i class="bi bi-hourglass-split" aria-hidden="true"></i> <span data-i18n="clk-countdown">Countdown Timer</span></div>
       <div class="clock-display-center">
         <div class="timer-inputs" id="timer-setup">
           <div class="timer-input-group">
@@ -103,9 +103,9 @@
         <div class="clock-big-display" id="timer-display" style="display:none;">00:05:00</div>
         <div class="timer-progress-bar"><div class="timer-progress-fill" id="timer-progress"></div></div>
         <div class="btn-row" style="justify-content:center;">
-          <button onclick="timerStart()" id="timer-start-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> Start</button>
-          <button onclick="timerPause()" id="timer-pause-btn" disabled class="btn-secondary"><i class="bi bi-pause-fill" aria-hidden="true"></i> Pause</button>
-          <button onclick="timerReset()" class="btn-secondary"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Reset</button>
+          <button onclick="timerStart()" id="timer-start-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> <span data-i18n="clk-cd-start">Start</span></button>
+          <button onclick="timerPause()" id="timer-pause-btn" disabled class="btn-secondary"><i class="bi bi-pause-fill" aria-hidden="true"></i> <span data-i18n="clk-cd-pause">Pause</span></button>
+          <button onclick="timerReset()" class="btn-secondary"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> <span data-i18n="clk-cd-reset">Reset</span></button>
         </div>
         <div class="timer-presets">
           <span class="io-label">Quick Presets:</span>
@@ -122,18 +122,18 @@
 
     <!-- 3. World Clocks -->
     <div class="tool-panel" id="tool-world-clocks">
-      <div class="panel-title"><i class="bi bi-globe" aria-hidden="true"></i> World Clocks</div>
-      <p class="tool-desc">Current time in major world time zones (updates every second).</p>
+      <div class="panel-title"><i class="bi bi-globe" aria-hidden="true"></i> <span data-i18n="clk-world">World Clocks</span></div>
+      <p class="tool-desc" data-i18n="clk-world-desc">Current time in major world time zones (updates every second).</p>
       <div id="world-clocks" class="world-clocks-grid"></div>
     </div>
 
     <!-- 4. Pomodoro Timer -->
     <div class="tool-panel" id="tool-pomodoro">
-      <div class="panel-title"><i class="bi bi-circle-fill text-danger" aria-hidden="true"></i> Pomodoro Timer</div>
+      <div class="panel-title"><i class="bi bi-circle-fill text-danger" aria-hidden="true"></i> <span data-i18n="clk-pomodoro">Pomodoro Timer</span></div>
       <!-- TODO: replace emoji with bootstrap icon — no tomato icon available -->
-      <p class="tool-desc">Focus with the Pomodoro technique: 25 min work, 5 min short break, 15 min long break after 4 rounds.</p>
+      <p class="tool-desc" data-i18n="clk-pomo-info">Focus with the Pomodoro technique: 25 min work, 5 min short break, 15 min long break after 4 rounds.</p>
       <div class="clock-display-center">
-        <div class="pomo-status" id="pomo-status">Work Session</div>
+        <div class="pomo-status" id="pomo-status" data-i18n="clk-pomo-work">Work Session</div>
         <div class="clock-big-display pomo-display" id="pomo-display">25:00</div>
         <div class="timer-progress-bar"><div class="timer-progress-fill pomo-fill" id="pomo-progress"></div></div>
         <div class="pomo-rounds">
@@ -141,17 +141,17 @@
           <span id="pomo-total-label">Total: 0 min focused</span>
         </div>
         <div class="btn-row" style="justify-content:center;">
-          <button onclick="pomoStart()" id="pomo-start-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> Start</button>
-          <button onclick="pomoPause()" id="pomo-pause-btn" disabled class="btn-secondary"><i class="bi bi-pause-fill" aria-hidden="true"></i> Pause</button>
-          <button onclick="pomoSkip()" id="pomo-skip-btn" disabled class="btn-secondary"><i class="bi bi-skip-forward-fill" aria-hidden="true"></i> Skip</button>
-          <button onclick="pomoReset()" class="btn-secondary"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Reset</button>
+          <button onclick="pomoStart()" id="pomo-start-btn"><i class="bi bi-play-fill" aria-hidden="true"></i> <span data-i18n="clk-pomo-start">Start</span></button>
+          <button onclick="pomoPause()" id="pomo-pause-btn" disabled class="btn-secondary"><i class="bi bi-pause-fill" aria-hidden="true"></i> <span data-i18n="clk-pomo-pause">Pause</span></button>
+          <button onclick="pomoSkip()" id="pomo-skip-btn" disabled class="btn-secondary"><i class="bi bi-skip-forward-fill" aria-hidden="true"></i> <span data-i18n="clk-pomo-skip">Skip</span></button>
+          <button onclick="pomoReset()" class="btn-secondary"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> <span data-i18n="clk-pomo-reset">Reset</span></button>
         </div>
         <div class="pomo-settings">
           <div class="form-row">
-            <div class="form-group"><label class="io-label">Work (min)</label><input type="number" id="pomo-work" value="25" min="1" max="90" style="width:60px" onchange="applyPomoSettings()"></div>
-            <div class="form-group"><label class="io-label">Short Break</label><input type="number" id="pomo-short" value="5" min="1" max="30" style="width:60px" onchange="applyPomoSettings()"></div>
-            <div class="form-group"><label class="io-label">Long Break</label><input type="number" id="pomo-long" value="15" min="1" max="60" style="width:60px" onchange="applyPomoSettings()"></div>
-            <div class="form-group"><label class="io-label">Rounds</label><input type="number" id="pomo-rounds" value="4" min="1" max="12" style="width:60px" onchange="applyPomoSettings()"></div>
+            <div class="form-group"><label class="io-label" data-i18n="clk-pomo-work-lbl">Work (min)</label><input type="number" id="pomo-work" value="25" min="1" max="90" style="width:60px" onchange="applyPomoSettings()"></div>
+            <div class="form-group"><label class="io-label" data-i18n="clk-pomo-short-lbl">Short Break</label><input type="number" id="pomo-short" value="5" min="1" max="30" style="width:60px" onchange="applyPomoSettings()"></div>
+            <div class="form-group"><label class="io-label" data-i18n="clk-pomo-long-lbl">Long Break</label><input type="number" id="pomo-long" value="15" min="1" max="60" style="width:60px" onchange="applyPomoSettings()"></div>
+            <div class="form-group"><label class="io-label" data-i18n="clk-pomo-rounds">Rounds</label><input type="number" id="pomo-rounds" value="4" min="1" max="12" style="width:60px" onchange="applyPomoSettings()"></div>
           </div>
         </div>
       </div>
@@ -159,29 +159,29 @@
 
     <!-- 5. Alarm -->
     <div class="tool-panel" id="tool-alarm">
-      <div class="panel-title"><i class="bi bi-alarm" aria-hidden="true"></i> Alarm</div>
-      <p class="tool-desc">Set an alarm for a specific time. The alarm will ring even when you switch tabs (notification sound).</p>
+      <div class="panel-title"><i class="bi bi-alarm" aria-hidden="true"></i> <span data-i18n="clk-alarm">Alarm</span></div>
+      <p class="tool-desc" data-i18n="clk-alarm-desc">Set an alarm for a specific time. The alarm will ring even when you switch tabs (notification sound).</p>
       <div class="clock-display-center">
         <div class="current-time-display" id="alarm-current-time">--:--:--</div>
         <div class="form-row" style="justify-content:center;">
           <div class="form-group">
-            <label class="io-label">Alarm Time</label>
+            <label class="io-label" data-i18n="clk-alarm-time-lbl">Alarm Time</label>
             <input type="time" id="alarm-time" value="08:00" step="1" class="alarm-time-input">
           </div>
           <div class="form-group">
-            <label class="io-label">Label (optional)</label>
-            <input type="text" id="alarm-label" placeholder="Wake up!" style="width:160px">
+            <label class="io-label" data-i18n="clk-alarm-lbl-lbl">Label (optional)</label>
+            <input type="text" id="alarm-label" data-i18n-ph="clk-alarm-lbl-ph" placeholder="Wake up!" style="width:160px">
           </div>
         </div>
         <div class="btn-row" style="justify-content:center;">
-          <button onclick="setAlarm()" id="alarm-set-btn"><i class="bi bi-alarm" aria-hidden="true"></i> Set Alarm</button>
-          <button onclick="cancelAlarm()" id="alarm-cancel-btn" disabled class="btn-secondary"><i class="bi bi-x-lg" aria-hidden="true"></i> Cancel</button>
+          <button onclick="setAlarm()" id="alarm-set-btn"><i class="bi bi-alarm" aria-hidden="true"></i> <span data-i18n="clk-alarm-set">Set Alarm</span></button>
+          <button onclick="cancelAlarm()" id="alarm-cancel-btn" disabled class="btn-secondary"><i class="bi bi-x-lg" aria-hidden="true"></i> <span data-i18n="clk-alarm-cancel">Cancel</span></button>
         </div>
         <div id="alarm-status" class="tool-msg" style="text-align:center;font-size:14px;"></div>
         <div id="alarm-ringing" class="alarm-ring-display" style="display:none;">
           <div class="alarm-ring-icon"><i class="bi bi-bell-fill" aria-hidden="true"></i></div>
-          <div id="alarm-ring-label">Alarm!</div>
-          <button onclick="dismissAlarm()" style="font-size:1.1rem;padding:10px 32px;">Dismiss</button>
+          <div id="alarm-ring-label" data-i18n="clk-alarm-ring">Alarm!</div>
+          <button onclick="dismissAlarm()" style="font-size:1.1rem;padding:10px 32px;" data-i18n="clk-alarm-dismiss">Dismiss</button>
         </div>
       </div>
       <div>

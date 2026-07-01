@@ -42,13 +42,13 @@
 <!-- ═══ APP HEADER ═══════════════════════════════════════════ -->
 <header class="top-bar">
   <div class="top-bar-left">
-    <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu"><i class="bi bi-list" aria-hidden="true"></i></button>
-    <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+    <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" data-i18n-aria="btn-toggle-menu" aria-label="Menu"><i class="bi bi-list" aria-hidden="true"></i></button>
+    <a href="../index.html" class="top-bar-back" data-i18n-title="btn-home" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
     <span class="top-bar-title"><i class="bi bi-lock" aria-hidden="true"></i> QR &amp; Barcode Tools</span>
   </div>
   <div class="top-bar-right" data-i18n-switcher="top-btn">
-    <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
-    <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
+    <button class="top-btn" onclick="toggleFullscreen()" data-i18n-title="btn-fullscreen" title="Fullscreen" data-i18n-aria="btn-toggle-fs" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+    <button class="top-btn" id="theme-btn" onclick="toggleTheme()" data-i18n-title="btn-toggle-theme" title="Toggle theme" data-i18n-aria="btn-toggle-theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
   </div>
 </header>
 
@@ -62,22 +62,22 @@
       <!-- QR Group -->
       <div class="sidebar-group" id="grp-qr">
         <button class="grp-hdr" onclick="toggleGroup('grp-qr')">
-          <span><i class="bi bi-qr-code" aria-hidden="true"></i> QR Code</span><span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
+          <span><i class="bi bi-qr-code" aria-hidden="true"></i> <span data-i18n="qr-grp-qr">QR Code</span></span><span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
         </button>
         <div class="grp-tools">
-          <button class="tab-btn active" onclick="showTool('panel-qr')">QR Generator</button>
-          <button class="tab-btn"        onclick="showTool('panel-qr-batch')">Batch QR</button>
-          <button class="tab-btn"        onclick="showTool('panel-qr-scan')">QR Scanner</button>
+          <button class="tab-btn active" onclick="showTool('panel-qr')" data-i18n="qr-generator">QR Generator</button>
+          <button class="tab-btn"        onclick="showTool('panel-qr-batch')" data-i18n="qr-batch">Batch QR</button>
+          <button class="tab-btn"        onclick="showTool('panel-qr-scan')" data-i18n="qr-scanner">QR Scanner</button>
         </div>
       </div>
       <!-- Barcode Group -->
       <div class="sidebar-group" id="grp-bc">
         <button class="grp-hdr" onclick="toggleGroup('grp-bc')">
-          <span><i class="bi bi-upc-scan" aria-hidden="true"></i> Barcode</span><span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
+          <span><i class="bi bi-upc-scan" aria-hidden="true"></i> <span data-i18n="qr-grp-barcode">Barcode</span></span><span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
         </button>
         <div class="grp-tools">
-          <button class="tab-btn" onclick="showTool('panel-barcode')">Barcode Generator</button>
-          <button class="tab-btn" onclick="showTool('panel-bc-batch')">Batch Barcodes</button>
+          <button class="tab-btn" onclick="showTool('panel-barcode')" data-i18n="qr-barcode-gen">Barcode Generator</button>
+          <button class="tab-btn" onclick="showTool('panel-bc-batch')" data-i18n="qr-batch-bc">Batch Barcodes</button>
         </div>
       </div>
     </div>

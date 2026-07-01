@@ -33,13 +33,13 @@
 
   <div class="top-bar">
     <div class="top-bar-left">
-      <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu"><i class="bi bi-list" aria-hidden="true"></i></button>
-      <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+      <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" data-i18n-aria="btn-toggle-menu" aria-label="Menu"><i class="bi bi-list" aria-hidden="true"></i></button>
+      <a href="../index.html" class="top-bar-back" data-i18n-title="btn-home" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
       <span class="top-bar-title"><i class="bi bi-dice-5" aria-hidden="true"></i> Peppy Random Tools</span>
     </div>
     <div class="top-bar-right" data-i18n-switcher="top-btn">
-      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
-      <button class="top-btn" id="theme-btn" onclick="toggleTheme(() => { if (wheelOptions.length) buildWheel(); })" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
+      <button class="top-btn" onclick="toggleFullscreen()" data-i18n-title="btn-fullscreen" title="Fullscreen" data-i18n-aria="btn-toggle-fs" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+      <button class="top-btn" id="theme-btn" onclick="toggleTheme(() => { if (wheelOptions.length) buildWheel(); })" data-i18n-title="btn-toggle-theme" title="Toggle theme" data-i18n-aria="btn-toggle-theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
     </div>
   </div>
 
@@ -54,20 +54,20 @@
         <!-- Group 1: Decision & Random Choice -->
         <div class="sidebar-group" id="grp-decision">
           <button class="grp-hdr" onclick="toggleGroup('decision')">
-            <span><i class="bi bi-dice-5" aria-hidden="true"></i> Decision &amp; Random</span>
+            <span><i class="bi bi-dice-5" aria-hidden="true"></i> <span data-i18n="rnd-grp-decision">Decision &amp; Random</span></span>
             <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
-            <button class="tab-btn active" data-tool="wheel"         data-grp="decision" onclick="showTool('wheel')">Wheel Spinner</button>
-            <button class="tab-btn"        data-tool="yesno"         data-grp="decision" onclick="showTool('yesno')">Yes / No Generator</button>
-            <button class="tab-btn"        data-tool="option-picker" data-grp="decision" onclick="showTool('option-picker')">Option Picker</button>
-            <button class="tab-btn"        data-tool="winner"        data-grp="decision" onclick="showTool('winner')">Winner Picker</button>
-            <button class="tab-btn"        data-tool="number-gen"    data-grp="decision" onclick="showTool('number-gen')">Number Generator</button>
-            <button class="tab-btn"        data-tool="dice"          data-grp="decision" onclick="showTool('dice')">Dice Roller</button>
-            <button class="tab-btn"        data-tool="coin"          data-grp="decision" onclick="showTool('coin')">Coin Flip</button>
-            <button class="tab-btn"        data-tool="card"          data-grp="decision" onclick="showTool('card')">Card Picker</button>
-            <button class="tab-btn"        data-tool="day"           data-grp="decision" onclick="showTool('day')">Day Picker</button>
-            <button class="tab-btn"        data-tool="time-gen"      data-grp="decision" onclick="showTool('time-gen')">Time Generator</button>
+            <button class="tab-btn active" data-tool="wheel"         data-grp="decision" onclick="showTool('wheel')" data-i18n="rnd-wheel">Wheel Spinner</button>
+            <button class="tab-btn"        data-tool="yesno"         data-grp="decision" onclick="showTool('yesno')" data-i18n="rnd-yesno">Yes / No Generator</button>
+            <button class="tab-btn"        data-tool="option-picker" data-grp="decision" onclick="showTool('option-picker')" data-i18n="rnd-option">Option Picker</button>
+            <button class="tab-btn"        data-tool="winner"        data-grp="decision" onclick="showTool('winner')" data-i18n="rnd-winner">Winner Picker</button>
+            <button class="tab-btn"        data-tool="number-gen"    data-grp="decision" onclick="showTool('number-gen')" data-i18n="rnd-number">Number Generator</button>
+            <button class="tab-btn"        data-tool="dice"          data-grp="decision" onclick="showTool('dice')" data-i18n="rnd-dice">Dice Roller</button>
+            <button class="tab-btn"        data-tool="coin"          data-grp="decision" onclick="showTool('coin')" data-i18n="rnd-coin">Coin Flip</button>
+            <button class="tab-btn"        data-tool="card"          data-grp="decision" onclick="showTool('card')" data-i18n="rnd-card">Card Picker</button>
+            <button class="tab-btn"        data-tool="day"           data-grp="decision" onclick="showTool('day')" data-i18n="rnd-day">Day Picker</button>
+            <button class="tab-btn"        data-tool="time-gen"      data-grp="decision" onclick="showTool('time-gen')" data-i18n="rnd-time">Time Generator</button>
           </div>
         </div>
 
@@ -79,11 +79,11 @@
 
       <!-- ── 1. Wheel Spinner ── -->
       <div class="tool-panel active" id="tool-wheel">
-        <div class="panel-title"><i class="bi bi-circle" aria-hidden="true"></i> Random Wheel Spinner</div>
+        <div class="panel-title"><i class="bi bi-circle" aria-hidden="true"></i> <span data-i18n="rnd-wheel">Random Wheel Spinner</span></div>
         <div class="wheel-layout">
           <div class="wheel-left">
             <div class="form-group">
-              <label class="io-label">Options (one per line)</label>
+              <label class="io-label" data-i18n="rnd-wheel-lbl">Options (one per line)</label>
               <textarea class="io-area" id="wheel-options" rows="9" placeholder="Apple&#10;Banana&#10;Cherry&#10;Option D">Apple
 Banana
 Cherry
@@ -92,11 +92,11 @@ Option E
 Option F</textarea>
             </div>
             <div class="btn-row">
-              <button onclick="buildWheel()">Update Wheel</button>
-              <button id="spin-btn" onclick="spinWheel()"><i class="bi bi-dice-5" aria-hidden="true"></i> Spin!</button>
-              <button class="btn-secondary" onclick="resetWheel()">Reset</button>
-              <button class="btn-secondary" onclick="shuffleWheelOptions()"><i class="bi bi-shuffle" aria-hidden="true"></i> Shuffle</button>
-              <button class="btn-secondary" onclick="sortWheelOptions()"><i class="bi bi-arrow-down-up" aria-hidden="true"></i> Sort</button>
+              <button onclick="buildWheel()" data-i18n="rnd-wheel-update">Update Wheel</button>
+              <button id="spin-btn" onclick="spinWheel()"><i class="bi bi-dice-5" aria-hidden="true"></i> <span data-i18n="rnd-wheel-spin">Spin!</span></button>
+              <button class="btn-secondary" onclick="resetWheel()" data-i18n="rnd-wheel-reset">Reset</button>
+              <button class="btn-secondary" onclick="shuffleWheelOptions()"><i class="bi bi-shuffle" aria-hidden="true"></i> <span data-i18n="rnd-wheel-shuffle">Shuffle</span></button>
+              <button class="btn-secondary" onclick="sortWheelOptions()"><i class="bi bi-arrow-down-up" aria-hidden="true"></i> <span data-i18n="rnd-wheel-sort">Sort</span></button>
             </div>
           </div>
           <div class="wheel-right">
@@ -112,10 +112,10 @@ Option F</textarea>
 
       <!-- ── 2. Yes / No Generator ── -->
       <div class="tool-panel" id="tool-yesno">
-        <div class="panel-title"><i class="bi bi-question-circle" aria-hidden="true"></i> Yes / No Decision Generator</div>
+        <div class="panel-title"><i class="bi bi-question-circle" aria-hidden="true"></i> <span data-i18n="rnd-yesno">Yes / No Decision Generator</span></div>
         <div class="form-group">
-          <label class="io-label">Your question (optional)</label>
-          <input type="text" id="yesno-q" class="io-area" placeholder="Should I go for it?" style="height:auto;padding:8px 10px;">
+          <label class="io-label" data-i18n="rnd-yesno-lbl">Your question (optional)</label>
+          <input type="text" id="yesno-q" class="io-area" data-i18n-ph="rnd-yesno-ph" placeholder="Should I go for it?" style="height:auto;padding:8px 10px;">
         </div>
         <div class="yesno-center">
           <div class="yesno-display" id="yesno-display">?</div>

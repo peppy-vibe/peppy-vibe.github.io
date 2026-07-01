@@ -41,63 +41,63 @@
         <span class="top-bar-title"><i class="bi bi-journal-text" aria-hidden="true"></i> Peppy Advanced Notepad</span>
       </div>
       <div class="top-bar-right" data-i18n-switcher="top-btn">
-        <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
-        <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
+        <button class="top-btn" onclick="toggleFullscreen()" data-i18n-title="btn-fullscreen" title="Fullscreen" data-i18n-aria="btn-toggle-fs" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+        <button class="top-btn" id="theme-btn" onclick="toggleTheme()" data-i18n-title="btn-toggle-theme" title="Toggle theme" data-i18n-aria="btn-toggle-theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
       </div>
     </div>
 
     <!-- Menu bar -->
     <div class="menubar" id="menubar">
         <div class="menu-item" id="mi-file">
-        File
+        <span data-i18n="np-menu-file">File</span>
         <div class="dropdown">
-            <button onclick="newFile()">New <span class="kbd">Ctrl+N</span></button>
-            <button onclick="openFile()">Open&hellip; <span class="kbd">Ctrl+O</span></button>
+            <button onclick="newFile()"><span data-i18n="np-new">New</span> <span class="kbd">Ctrl+N</span></button>
+            <button onclick="openFile()"><span data-i18n="np-open">Open…</span> <span class="kbd">Ctrl+O</span></button>
             <hr>
-            <button onclick="saveFile()">Save <span class="kbd">Ctrl+S</span></button>
-            <button onclick="saveFileAs()">Save As&hellip;</button>
+            <button onclick="saveFile()"><span data-i18n="np-save">Save</span> <span class="kbd">Ctrl+S</span></button>
+            <button onclick="saveFileAs()" data-i18n="np-save-as">Save As…</button>
             <hr>
-            <button onclick="exportAsHtml()">Export as HTML&hellip;</button>
+            <button onclick="exportAsHtml()" data-i18n="np-export-html">Export as HTML…</button>
         </div>
         </div>
 
     <div class="menu-item" id="mi-edit">
-      Edit
+      <span data-i18n="np-menu-edit">Edit</span>
       <div class="dropdown">
-        <button onclick="doUndo()">Undo <span class="kbd">Ctrl+Z</span></button>
-        <button onclick="doRedo()">Redo <span class="kbd">Ctrl+Y</span></button>
+        <button onclick="doUndo()"><span data-i18n="np-undo">Undo</span> <span class="kbd">Ctrl+Z</span></button>
+        <button onclick="doRedo()"><span data-i18n="np-redo">Redo</span> <span class="kbd">Ctrl+Y</span></button>
         <hr>
-        <button onclick="doCut()">Cut <span class="kbd">Ctrl+X</span></button>
-        <button onclick="doCopy()">Copy <span class="kbd">Ctrl+C</span></button>
-        <button onclick="doPaste()">Paste <span class="kbd">Ctrl+V</span></button>
+        <button onclick="doCut()"><span data-i18n="np-cut">Cut</span> <span class="kbd">Ctrl+X</span></button>
+        <button onclick="doCopy()"><span data-i18n="np-copy">Copy</span> <span class="kbd">Ctrl+C</span></button>
+        <button onclick="doPaste()"><span data-i18n="np-paste">Paste</span> <span class="kbd">Ctrl+V</span></button>
         <hr>
-        <button onclick="selectAll()">Select All <span class="kbd">Ctrl+A</span></button>
-        <button onclick="deleteSelection()">Delete</button>
+        <button onclick="selectAll()"><span data-i18n="np-select-all">Select All</span> <span class="kbd">Ctrl+A</span></button>
+        <button onclick="deleteSelection()" data-i18n="np-delete">Delete</button>
         <hr>
-        <button onclick="openFind()">Find&hellip; <span class="kbd">Ctrl+F</span></button>
-        <button onclick="openReplace()">Replace&hellip; <span class="kbd">Ctrl+H</span></button>
+        <button onclick="openFind()"><span data-i18n="np-find">Find…</span> <span class="kbd">Ctrl+F</span></button>
+        <button onclick="openReplace()"><span data-i18n="np-replace">Replace…</span> <span class="kbd">Ctrl+H</span></button>
         <hr>
-        <button onclick="openCaseConverter()">Case Converter&hellip;</button>
+        <button onclick="openCaseConverter()" data-i18n="np-case-menu">Case Converter…</button>
       </div>
     </div>
 
     <div class="menu-item" id="mi-format">
-      Format
+      <span data-i18n="np-menu-format">Format</span>
       <div class="dropdown">
-        <button onclick="toggleWordWrap()">Word Wrap <span id="ww-check">&#10003;</span></button>
-        <button onclick="toggleLineNumbers()">Line Numbers <span id="ln-check"></span></button>
+        <button onclick="toggleWordWrap()"><span data-i18n="np-word-wrap">Word Wrap</span> <span id="ww-check">&#10003;</span></button>
+        <button onclick="toggleLineNumbers()"><span data-i18n="np-line-numbers">Line Numbers</span> <span id="ln-check"></span></button>
         <hr>
-        <button onclick="togglePreview()">Markdown Preview <span id="prev-check"></span> <span class="kbd">Ctrl+P</span></button>
-        <button onclick="toggleSplit()">Split Preview <span id="split-check"></span> <span class="kbd">Ctrl+Shift+P</span></button>
+        <button onclick="togglePreview()"><span data-i18n="np-md-preview">Markdown Preview</span> <span id="prev-check"></span> <span class="kbd">Ctrl+P</span></button>
+        <button onclick="toggleSplit()"><span data-i18n="np-split-preview">Split Preview</span> <span id="split-check"></span> <span class="kbd">Ctrl+Shift+P</span></button>
       </div>
     </div>
 
     <div class="menu-item" id="mi-view">
-      View
+      <span data-i18n="np-menu-view">View</span>
       <div class="dropdown">
-        <button onclick="zoomIn()">Zoom In <span class="kbd">Ctrl++</span></button>
-        <button onclick="zoomOut()">Zoom Out <span class="kbd">Ctrl+&minus;</span></button>
-        <button onclick="zoomReset()">Reset Zoom <span class="kbd">Ctrl+0</span></button>
+        <button onclick="zoomIn()"><span data-i18n="np-zoom-in">Zoom In</span> <span class="kbd">Ctrl++</span></button>
+        <button onclick="zoomOut()"><span data-i18n="np-zoom-out">Zoom Out</span> <span class="kbd">Ctrl+&minus;</span></button>
+        <button onclick="zoomReset()"><span data-i18n="np-zoom-reset">Reset Zoom</span> <span class="kbd">Ctrl+0</span></button>
       </div>
     </div>
   </div>
@@ -105,14 +105,14 @@
   <!-- Toolbar -->
   <div class="toolbar">
     <div class="tb-group">
-      <button title="New (Ctrl+N)" onclick="newFile()">New</button>
-      <button title="Open (Ctrl+O)" onclick="openFile()">Open</button>
-      <button title="Save (Ctrl+S)" onclick="saveFile()">Save</button>
-      <button title="Save As" onclick="saveFileAs()">Save As</button>
+      <button title="New (Ctrl+N)" onclick="newFile()" data-i18n="np-new">New</button>
+      <button title="Open (Ctrl+O)" onclick="openFile()" data-i18n="np-open">Open</button>
+      <button title="Save (Ctrl+S)" onclick="saveFile()" data-i18n="np-save">Save</button>
+      <button title="Save As" onclick="saveFileAs()" data-i18n="np-save-as">Save As</button>
     </div>
     <div class="tb-sep"></div>
     <div class="tb-group">
-      <label>Font</label>
+      <label data-i18n="np-tb-font">Font</label>
       <select id="sel-font" onchange="applyFont()">
         <option value="Consolas, 'Courier New', monospace">Consolas</option>
         <option value="'Courier New', monospace">Courier New</option>
@@ -124,7 +124,7 @@
       </select>
     </div>
     <div class="tb-group">
-      <label>Size</label>
+      <label data-i18n="np-tb-size">Size</label>
       <select id="sel-size" onchange="applyFont()">
         <option value="10">10</option>
         <option value="11">11</option>
@@ -143,12 +143,12 @@
     </div>
     <div class="tb-sep"></div>
     <div class="tb-group">
-      <button title="Find (Ctrl+F)" onclick="openFind()">Find</button>
-      <button title="Replace (Ctrl+H)" onclick="openReplace()">Replace</button>
+      <button title="Find (Ctrl+F)" onclick="openFind()" data-i18n="np-find">Find…</button>
+      <button title="Replace (Ctrl+H)" onclick="openReplace()" data-i18n="np-replace">Replace…</button>
     </div>
     <div class="tb-sep"></div>
     <div class="tb-group">
-      <button id="btn-split" title="Toggle Preview (Ctrl+Shift+P)" onclick="toggleSplit()"><i class="bi bi-eye" aria-hidden="true"></i> Preview</button>
+      <button id="btn-split" title="Toggle Preview (Ctrl+Shift+P)" onclick="toggleSplit()"><i class="bi bi-eye" aria-hidden="true"></i> <span data-i18n="np-tb-preview">Preview</span></button>
     </div>
   </div>
 

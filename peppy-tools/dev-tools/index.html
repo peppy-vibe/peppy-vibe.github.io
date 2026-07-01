@@ -35,13 +35,13 @@
   <!-- App header -->
   <div class="top-bar">
     <div class="top-bar-left">
-      <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu"><i class="bi bi-list" aria-hidden="true"></i></button>
-      <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+      <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" data-i18n-aria="btn-toggle-menu" aria-label="Toggle navigation menu"><i class="bi bi-list" aria-hidden="true"></i></button>
+      <a href="../index.html" class="top-bar-back" data-i18n-title="btn-home" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
       <span class="top-bar-title"><i class="bi bi-tools" aria-hidden="true"></i> Peppy Dev Tools</span>
     </div>
     <div class="top-bar-right" data-i18n-switcher="top-btn">
-      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
-      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
+      <button class="top-btn" onclick="toggleFullscreen()" data-i18n-title="btn-fullscreen" title="Fullscreen" data-i18n-aria="btn-toggle-fs" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" data-i18n-title="btn-toggle-theme" title="Toggle theme" data-i18n-aria="btn-toggle-theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
     </div>
   </div>
 
@@ -55,86 +55,86 @@
 
         <div class="sidebar-group" id="grp-encoding">
           <button class="grp-hdr" onclick="toggleGroup('encoding')">
-            <span><i class="bi bi-lock" aria-hidden="true"></i> Encoding &amp; Security</span>
+            <span><i class="bi bi-lock" aria-hidden="true"></i> <span data-i18n="dev-grp-encoding">Encoding &amp; Security</span></span>
             <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
-            <button class="tab-btn active" data-tool="base64"   data-grp="encoding" onclick="showTool('base64')">Base64</button>
-            <button class="tab-btn"        data-tool="url"      data-grp="encoding" onclick="showTool('url')">URL Encoder</button>
-            <button class="tab-btn"        data-tool="hash"     data-grp="encoding" onclick="showTool('hash')">Hash Generator</button>
-            <button class="tab-btn"        data-tool="password" data-grp="encoding" onclick="showTool('password')">Password Generator</button>
-            <button class="tab-btn"        data-tool="uuid"     data-grp="encoding" onclick="showTool('uuid')">UUID Generator</button>
-            <button class="tab-btn"        data-tool="jwt"      data-grp="encoding" onclick="showTool('jwt')">JWT Decoder</button>
-            <button class="tab-btn"        data-tool="html-ent" data-grp="encoding" onclick="showTool('html-ent')">HTML Entities</button>
+            <button class="tab-btn active" data-tool="base64"   data-grp="encoding" onclick="showTool('base64')" data-i18n="dev-base64">Base64</button>
+            <button class="tab-btn"        data-tool="url"      data-grp="encoding" onclick="showTool('url')" data-i18n="dev-url-enc">URL Encoder</button>
+            <button class="tab-btn"        data-tool="hash"     data-grp="encoding" onclick="showTool('hash')" data-i18n="dev-hash">Hash Generator</button>
+            <button class="tab-btn"        data-tool="password" data-grp="encoding" onclick="showTool('password')" data-i18n="dev-password">Password Generator</button>
+            <button class="tab-btn"        data-tool="uuid"     data-grp="encoding" onclick="showTool('uuid')" data-i18n="dev-uuid">UUID Generator</button>
+            <button class="tab-btn"        data-tool="jwt"      data-grp="encoding" onclick="showTool('jwt')" data-i18n="dev-jwt">JWT Decoder</button>
+            <button class="tab-btn"        data-tool="html-ent" data-grp="encoding" onclick="showTool('html-ent')" data-i18n="dev-html-entities">HTML Entities</button>
           </div>
         </div>
 
         <div class="sidebar-group" id="grp-text">
           <button class="grp-hdr" onclick="toggleGroup('text')">
-            <span><i class="bi bi-file-text" aria-hidden="true"></i> Text Tools</span>
+            <span><i class="bi bi-file-text" aria-hidden="true"></i> <span data-i18n="dev-grp-text">Text Tools</span></span>
             <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
-            <button class="tab-btn" data-tool="diff"  data-grp="text" onclick="showTool('diff')">Text Diff</button>
-            <button class="tab-btn" data-tool="sort"  data-grp="text" onclick="showTool('sort')">Sorter</button>
-            <button class="tab-btn" data-tool="dedup" data-grp="text" onclick="showTool('dedup')">Dedup Lines</button>
-            <button class="tab-btn" data-tool="rand"  data-grp="text" onclick="showTool('rand')">Random String</button>
-            <button class="tab-btn" data-tool="lorem" data-grp="text" onclick="showTool('lorem')">Lorem Ipsum</button>
-            <button class="tab-btn" data-tool="stats" data-grp="text" onclick="showTool('stats')">Text Statistics</button>
+            <button class="tab-btn" data-tool="diff"  data-grp="text" onclick="showTool('diff')" data-i18n="dev-diff">Text Diff</button>
+            <button class="tab-btn" data-tool="sort"  data-grp="text" onclick="showTool('sort')" data-i18n="dev-sort">Sorter</button>
+            <button class="tab-btn" data-tool="dedup" data-grp="text" onclick="showTool('dedup')" data-i18n="dev-dedup">Dedup Lines</button>
+            <button class="tab-btn" data-tool="rand"  data-grp="text" onclick="showTool('rand')" data-i18n="dev-random-str">Random String</button>
+            <button class="tab-btn" data-tool="lorem" data-grp="text" onclick="showTool('lorem')" data-i18n="dev-lorem">Lorem Ipsum</button>
+            <button class="tab-btn" data-tool="stats" data-grp="text" onclick="showTool('stats')" data-i18n="dev-stats">Text Statistics</button>
           </div>
         </div>
 
         <div class="sidebar-group" id="grp-json">
           <button class="grp-hdr" onclick="toggleGroup('json')">
-            <span><i class="bi bi-braces" aria-hidden="true"></i> JSON / Data</span>
+            <span><i class="bi bi-braces" aria-hidden="true"></i> <span data-i18n="dev-grp-json">JSON / Data</span></span>
             <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
-            <button class="tab-btn" data-tool="jf"   data-grp="json" onclick="showTool('jf')">JSON Formatter</button>
-            <button class="tab-btn" data-tool="jv"   data-grp="json" onclick="showTool('jv')">JSON Viewer</button>
-            <button class="tab-btn" data-tool="jval" data-grp="json" onclick="showTool('jval')">JSON Validator</button>
-            <button class="tab-btn" data-tool="jcsv" data-grp="json" onclick="showTool('jcsv')">JSON <i class="bi bi-arrow-right" aria-hidden="true"></i> CSV</button>
-            <button class="tab-btn" data-tool="jy"   data-grp="json" onclick="showTool('jy')">JSON <i class="bi bi-arrow-right" aria-hidden="true"></i> YAML</button>
-            <button class="tab-btn" data-tool="yj"   data-grp="json" onclick="showTool('yj')">YAML <i class="bi bi-arrow-right" aria-hidden="true"></i> JSON</button>
-            <button class="tab-btn" data-tool="xf"   data-grp="json" onclick="showTool('xf')">XML Formatter</button>
-            <button class="tab-btn" data-tool="xj"   data-grp="json" onclick="showTool('xj')">XML <i class="bi bi-arrow-right" aria-hidden="true"></i> JSON</button>
+            <button class="tab-btn" data-tool="jf"   data-grp="json" onclick="showTool('jf')" data-i18n="dev-json-fmt">JSON Formatter</button>
+            <button class="tab-btn" data-tool="jv"   data-grp="json" onclick="showTool('jv')" data-i18n="dev-json-view">JSON Viewer</button>
+            <button class="tab-btn" data-tool="jval" data-grp="json" onclick="showTool('jval')" data-i18n="dev-json-val">JSON Validator</button>
+            <button class="tab-btn" data-tool="jcsv" data-grp="json" onclick="showTool('jcsv')" data-i18n="dev-json-csv">JSON → CSV</button>
+            <button class="tab-btn" data-tool="jy"   data-grp="json" onclick="showTool('jy')" data-i18n="dev-json-yaml">JSON → YAML</button>
+            <button class="tab-btn" data-tool="yj"   data-grp="json" onclick="showTool('yj')" data-i18n="dev-yaml-json">YAML → JSON</button>
+            <button class="tab-btn" data-tool="xf"   data-grp="json" onclick="showTool('xf')" data-i18n="dev-xml-fmt">XML Formatter</button>
+            <button class="tab-btn" data-tool="xj"   data-grp="json" onclick="showTool('xj')" data-i18n="dev-xml-json">XML → JSON</button>
           </div>
         </div>
 
         <div class="sidebar-group" id="grp-colors">
           <button class="grp-hdr" onclick="toggleGroup('colors')">
-            <span><i class="bi bi-palette" aria-hidden="true"></i> Colors</span>
+            <span><i class="bi bi-palette" aria-hidden="true"></i> <span data-i18n="dev-grp-colors">Colors</span></span>
             <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
-            <button class="tab-btn" data-tool="convert"  data-grp="colors" onclick="showTool('convert')">Color Converter</button>
-            <button class="tab-btn" data-tool="picker"   data-grp="colors" onclick="showTool('picker')">Color Picker</button>
-            <button class="tab-btn" data-tool="contrast" data-grp="colors" onclick="showTool('contrast')">Contrast Checker</button>
-            <button class="tab-btn" data-tool="palette"  data-grp="colors" onclick="showTool('palette')">Palette Generator</button>
+            <button class="tab-btn" data-tool="convert"  data-grp="colors" onclick="showTool('convert')" data-i18n="dev-color-conv">Color Converter</button>
+            <button class="tab-btn" data-tool="picker"   data-grp="colors" onclick="showTool('picker')" data-i18n="dev-color-pick">Color Picker</button>
+            <button class="tab-btn" data-tool="contrast" data-grp="colors" onclick="showTool('contrast')" data-i18n="dev-contrast">Contrast Checker</button>
+            <button class="tab-btn" data-tool="palette"  data-grp="colors" onclick="showTool('palette')" data-i18n="dev-palette">Palette Generator</button>
           </div>
         </div>
 
         <div class="sidebar-group" id="grp-time">
           <button class="grp-hdr" onclick="toggleGroup('time')">
-            <span><i class="bi bi-clock" aria-hidden="true"></i> Timestamps</span>
+            <span><i class="bi bi-clock" aria-hidden="true"></i> <span data-i18n="dev-grp-timestamps">Timestamps</span></span>
             <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
-            <button class="tab-btn" data-tool="unix"      data-grp="time" onclick="showTool('unix')">Unix Converter</button>
-            <button class="tab-btn" data-tool="calc"      data-grp="time" onclick="showTool('calc')">Date Calculator</button>
-            <button class="tab-btn" data-tool="format"    data-grp="time" onclick="showTool('format')">Date Formatter</button>
+            <button class="tab-btn" data-tool="unix"      data-grp="time" onclick="showTool('unix')" data-i18n="dev-unix">Unix Converter</button>
+            <button class="tab-btn" data-tool="calc"      data-grp="time" onclick="showTool('calc')" data-i18n="dev-date-calc">Date Calculator</button>
+            <button class="tab-btn" data-tool="format"    data-grp="time" onclick="showTool('format')" data-i18n="dev-date-fmt">Date Formatter</button>
           </div>
         </div>
 
         <div class="sidebar-group" id="grp-regex">
           <button class="grp-hdr" onclick="toggleGroup('regex')">
-            <span><i class="bi bi-search" aria-hidden="true"></i> Regex</span>
+            <span><i class="bi bi-search" aria-hidden="true"></i> <span data-i18n="dev-grp-regex">Regex</span></span>
             <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
-            <button class="tab-btn" data-tool="tester"  data-grp="regex" onclick="showTool('tester')">Pattern Tester</button>
-            <button class="tab-btn" data-tool="replace" data-grp="regex" onclick="showTool('replace')">Find &amp; Replace</button>
-            <button class="tab-btn" data-tool="ref"     data-grp="regex" onclick="showTool('ref')">Reference</button>
+            <button class="tab-btn" data-tool="tester"  data-grp="regex" onclick="showTool('tester')" data-i18n="dev-regex-test">Pattern Tester</button>
+            <button class="tab-btn" data-tool="replace" data-grp="regex" onclick="showTool('replace')" data-i18n="dev-regex-replace">Find &amp; Replace</button>
+            <button class="tab-btn" data-tool="ref"     data-grp="regex" onclick="showTool('ref')" data-i18n="dev-regex-ref">Reference</button>
           </div>
         </div>
 

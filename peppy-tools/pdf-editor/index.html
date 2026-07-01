@@ -43,8 +43,8 @@
     </div>
     <div class="top-bar-center" id="file-name-display"></div>
     <div class="top-bar-right" data-i18n-switcher="top-btn">
-      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
-      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
+      <button class="top-btn" onclick="toggleFullscreen()" data-i18n-title="btn-fullscreen" title="Fullscreen" data-i18n-aria="btn-toggle-fs" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" data-i18n-title="btn-toggle-theme" title="Toggle theme" data-i18n-aria="btn-toggle-theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
     </div>
   </div>
 
@@ -54,25 +54,25 @@
     <!-- ── LEFT: Action sidebar ── -->
     <aside class="action-sidebar" id="action-sidebar">
       <div class="action-section">
-        <div class="action-section-title">Import</div>
-        <button class="action-btn" onclick="openMergeDialog()"><span class="action-icon"><i class="bi bi-folder2-open" aria-hidden="true"></i></span> Open / Merge PDF(s)</button>
+        <div class="action-section-title" data-i18n="pdfe-grp-import">Import</div>
+        <button class="action-btn" onclick="openMergeDialog()"><span class="action-icon"><i class="bi bi-folder2-open" aria-hidden="true"></i></span> <span data-i18n="pdfe-btn-import">Open / Merge PDF(s)</span></button>
       </div>
       <div class="action-section">
-        <div class="action-section-title">Edit Pages</div>
-        <button class="action-btn" onclick="openWatermarkDialog()"><span class="action-icon"><i class="bi bi-droplet" aria-hidden="true"></i></span> Watermark</button>
-        <button class="action-btn" onclick="openPageNumbersDialog()"><span class="action-icon">#</span> Page Numbers</button>
-        <button class="action-btn" onclick="openCropDialog()"><span class="action-icon"><i class="bi bi-scissors" aria-hidden="true"></i></span> Crop</button>
-        <button class="action-btn" onclick="openResizeDialog()"><span class="action-icon"><i class="bi bi-arrows-expand" aria-hidden="true"></i></span> Resize</button>
-        <button class="action-btn" onclick="openAnnotationDialog()"><span class="action-icon"><i class="bi bi-pencil" aria-hidden="true"></i></span> Text Annotation</button>
-        <button class="action-btn" onclick="toggleRedactMode()"><span class="action-icon"><i class="bi bi-square-fill" aria-hidden="true"></i></span> Redact</button>
+        <div class="action-section-title" data-i18n="pdfe-grp-edit">Edit Pages</div>
+        <button class="action-btn" onclick="openWatermarkDialog()"><span class="action-icon"><i class="bi bi-droplet" aria-hidden="true"></i></span> <span data-i18n="pdfe-btn-watermark">Watermark</span></button>
+        <button class="action-btn" onclick="openPageNumbersDialog()"><span class="action-icon">#</span> <span data-i18n="pdfe-btn-pagenums">Page Numbers</span></button>
+        <button class="action-btn" onclick="openCropDialog()"><span class="action-icon"><i class="bi bi-scissors" aria-hidden="true"></i></span> <span data-i18n="pdfe-btn-crop">Crop</span></button>
+        <button class="action-btn" onclick="openResizeDialog()"><span class="action-icon"><i class="bi bi-arrows-expand" aria-hidden="true"></i></span> <span data-i18n="pdfe-btn-resize">Resize</span></button>
+        <button class="action-btn" onclick="openAnnotationDialog()"><span class="action-icon"><i class="bi bi-pencil" aria-hidden="true"></i></span> <span data-i18n="pdfe-btn-annotate">Text Annotation</span></button>
+        <button class="action-btn" onclick="toggleRedactMode()"><span class="action-icon"><i class="bi bi-square-fill" aria-hidden="true"></i></span> <span data-i18n="pdfe-btn-redact">Redact</span></button>
       </div>
       <div class="action-section">
-        <div class="action-section-title">Document</div>
-        <button class="action-btn" onclick="openDocInfoDialog()"><span class="action-icon"><i class="bi bi-info-circle" aria-hidden="true"></i></span> Document Info</button>
+        <div class="action-section-title" data-i18n="pdfe-grp-document">Document</div>
+        <button class="action-btn" onclick="openDocInfoDialog()"><span class="action-icon"><i class="bi bi-info-circle" aria-hidden="true"></i></span> <span data-i18n="pdfe-btn-docinfo">Document Info</span></button>
       </div>
       <div class="action-section">
-        <div class="action-section-title">Export</div>
-        <button class="action-btn action-btn-primary" onclick="openExportPanel()"><span class="action-icon"><i class="bi bi-save" aria-hidden="true"></i></span> Export</button>
+        <div class="action-section-title" data-i18n="pdfe-grp-export">Export</div>
+        <button class="action-btn action-btn-primary" onclick="openExportPanel()"><span class="action-icon"><i class="bi bi-save" aria-hidden="true"></i></span> <span data-i18n="pdfe-grp-export">Export</span></button>
       </div>
     </aside>
 
@@ -81,13 +81,13 @@
       <!-- Empty state -->
       <div class="workspace-empty" id="workspace-empty">
         <div class="empty-icon"><i class="bi bi-file-earmark-text" style="font-size:4rem" aria-hidden="true"></i></div>
-        <h2>Open a PDF to get started</h2>
-        <p>Import a PDF, merge multiple files, or convert images to PDF</p>
+        <h2 data-i18n="pdfe-empty-h">Open a PDF to get started</h2>
+        <p data-i18n="pdfe-empty-sub">Import a PDF, merge multiple files, or convert images to PDF</p>
         <div class="empty-actions">
-          <button class="empty-btn primary" onclick="openMergeDialog()"><i class="bi bi-folder2-open" aria-hidden="true"></i> Open / Merge PDF(s)</button>
+          <button class="empty-btn primary" onclick="openMergeDialog()"><i class="bi bi-folder2-open" aria-hidden="true"></i> <span data-i18n="pdfe-btn-import">Open / Merge PDF(s)</span></button>
         </div>
         <div class="drop-hint" id="global-drop-zone">
-          <span>or drop PDF / images here</span>
+          <span data-i18n="pdfe-drop-hint">or drop PDF / images here</span>
         </div>
       </div>
 

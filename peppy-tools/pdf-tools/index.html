@@ -42,13 +42,13 @@
   <!-- ═══ TOP BAR ═══════════════════════════════════════════════════ -->
   <div class="top-bar">
     <div class="top-bar-left">
-      <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu"><i class="bi bi-list" aria-hidden="true"></i></button>
-      <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+      <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" data-i18n-aria="btn-toggle-menu" aria-label="Menu"><i class="bi bi-list" aria-hidden="true"></i></button>
+      <a href="../index.html" class="top-bar-back" data-i18n-title="btn-home" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
       <span class="top-bar-title"><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> Peppy PDF Tools</span>
     </div>
     <div class="top-bar-right" data-i18n-switcher="top-btn">
-      <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
-      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
+      <button class="top-btn" onclick="toggleFullscreen()" data-i18n-title="btn-fullscreen" title="Fullscreen" data-i18n-aria="btn-toggle-fs" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+      <button class="top-btn" id="theme-btn" onclick="toggleTheme()" data-i18n-title="btn-toggle-theme" title="Toggle theme" data-i18n-aria="btn-toggle-theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
     </div>
   </div>
 
@@ -63,68 +63,68 @@
         <!-- Group: Pages -->
         <div class="sidebar-group" id="grp-pages">
           <button class="grp-hdr" onclick="toggleGroup('pages')">
-            <span><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> Page Operations</span>
+            <span><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> <span data-i18n="pdf-grp-pages">Page Operations</span></span>
             <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
-            <button class="tab-btn active" data-tool="merge"     data-grp="pages" onclick="showTool('merge')">Merge / Combine PDF</button>
-            <button class="tab-btn"        data-tool="split"     data-grp="pages" onclick="showTool('split')">Split PDF</button>
-            <button class="tab-btn"        data-tool="extract"   data-grp="pages" onclick="showTool('extract')">Extract Pages</button>
-            <button class="tab-btn"        data-tool="delete"    data-grp="pages" onclick="showTool('delete')">Delete Pages</button>
-            <button class="tab-btn"        data-tool="rotate"    data-grp="pages" onclick="showTool('rotate')">Rotate PDF Pages</button>
-            <button class="tab-btn"        data-tool="rearrange" data-grp="pages" onclick="showTool('rearrange')">Rearrange Pages</button>
+            <button class="tab-btn active" data-tool="merge"     data-grp="pages" onclick="showTool('merge')" data-i18n="pdf-tool-merge">Merge / Combine PDF</button>
+            <button class="tab-btn"        data-tool="split"     data-grp="pages" onclick="showTool('split')" data-i18n="pdf-tool-split">Split PDF</button>
+            <button class="tab-btn"        data-tool="extract"   data-grp="pages" onclick="showTool('extract')" data-i18n="pdf-tool-extract">Extract Pages</button>
+            <button class="tab-btn"        data-tool="delete"    data-grp="pages" onclick="showTool('delete')" data-i18n="pdf-tool-delete">Delete Pages</button>
+            <button class="tab-btn"        data-tool="rotate"    data-grp="pages" onclick="showTool('rotate')" data-i18n="pdf-tool-rotate">Rotate PDF Pages</button>
+            <button class="tab-btn"        data-tool="rearrange" data-grp="pages" onclick="showTool('rearrange')" data-i18n="pdf-tool-rearrange">Rearrange Pages</button>
           </div>
         </div>
 
         <!-- Group: Enhance -->
         <div class="sidebar-group" id="grp-enhance">
           <button class="grp-hdr" onclick="toggleGroup('enhance')">
-            <span><i class="bi bi-stars" aria-hidden="true"></i> Enhance</span>
+            <span><i class="bi bi-stars" aria-hidden="true"></i> <span data-i18n="pdf-grp-enhance">Enhance</span></span>
             <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
-            <button class="tab-btn" data-tool="watermark"   data-grp="enhance" onclick="showTool('watermark')">Add Watermark</button>
-            <button class="tab-btn" data-tool="pagenumbers" data-grp="enhance" onclick="showTool('pagenumbers')">Add Page Numbers</button>
-            <button class="tab-btn" data-tool="img2pdf"     data-grp="enhance" onclick="showTool('img2pdf')">Convert Images to PDF</button>
+            <button class="tab-btn" data-tool="watermark"   data-grp="enhance" onclick="showTool('watermark')" data-i18n="pdf-tool-watermark">Add Watermark</button>
+            <button class="tab-btn" data-tool="pagenumbers" data-grp="enhance" onclick="showTool('pagenumbers')" data-i18n="pdf-tool-pagenums">Add Page Numbers</button>
+            <button class="tab-btn" data-tool="img2pdf"     data-grp="enhance" onclick="showTool('img2pdf')" data-i18n="pdf-tool-img2pdf">Convert Images to PDF</button>
           </div>
         </div>
 
         <!-- Group: Optimize -->
         <div class="sidebar-group" id="grp-optimize">
           <button class="grp-hdr" onclick="toggleGroup('optimize')">
-            <span><i class="bi bi-gear" aria-hidden="true"></i> Optimize &amp; Fix</span>
+            <span><i class="bi bi-gear" aria-hidden="true"></i> <span data-i18n="pdf-grp-optimize">Optimize &amp; Fix</span></span>
             <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
-            <button class="tab-btn" data-tool="compress" data-grp="optimize" onclick="showTool('compress')">Compress PDF</button>
-            <button class="tab-btn" data-tool="crop"     data-grp="optimize" onclick="showTool('crop')">Crop PDF Pages</button>
-            <button class="tab-btn" data-tool="resize"   data-grp="optimize" onclick="showTool('resize')">Resize PDF Pages</button>
-            <button class="tab-btn" data-tool="flatten"  data-grp="optimize" onclick="showTool('flatten')">Flatten PDF</button>
+            <button class="tab-btn" data-tool="compress" data-grp="optimize" onclick="showTool('compress')" data-i18n="pdf-tool-compress">Compress PDF</button>
+            <button class="tab-btn" data-tool="crop"     data-grp="optimize" onclick="showTool('crop')" data-i18n="pdf-tool-crop">Crop PDF Pages</button>
+            <button class="tab-btn" data-tool="resize"   data-grp="optimize" onclick="showTool('resize')" data-i18n="pdf-tool-resize">Resize PDF Pages</button>
+            <button class="tab-btn" data-tool="flatten"  data-grp="optimize" onclick="showTool('flatten')" data-i18n="pdf-tool-flatten">Flatten PDF</button>
           </div>
         </div>
 
         <!-- Group: Security & Privacy -->
         <div class="sidebar-group" id="grp-security">
           <button class="grp-hdr" onclick="toggleGroup('security')">
-            <span><i class="bi bi-lock" aria-hidden="true"></i> Security &amp; Privacy</span>
+            <span><i class="bi bi-lock" aria-hidden="true"></i> <span data-i18n="pdf-grp-security">Security &amp; Privacy</span></span>
             <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
-            <button class="tab-btn" data-tool="addpassword"    data-grp="security" onclick="showTool('addpassword')">Add Password</button>
-            <button class="tab-btn" data-tool="removepassword" data-grp="security" onclick="showTool('removepassword')">Remove Password</button>
-            <button class="tab-btn" data-tool="redact"         data-grp="security" onclick="showTool('redact')">Redact PDF</button>
-            <button class="tab-btn" data-tool="hiddendata"     data-grp="security" onclick="showTool('hiddendata')">Sanitize PDF</button>
+            <button class="tab-btn" data-tool="addpassword"    data-grp="security" onclick="showTool('addpassword')" data-i18n="pdf-tool-addpwd">Add Password</button>
+            <button class="tab-btn" data-tool="removepassword" data-grp="security" onclick="showTool('removepassword')" data-i18n="pdf-tool-removepwd">Remove Password</button>
+            <button class="tab-btn" data-tool="redact"         data-grp="security" onclick="showTool('redact')" data-i18n="pdf-tool-redact">Redact PDF</button>
+            <button class="tab-btn" data-tool="hiddendata"     data-grp="security" onclick="showTool('hiddendata')" data-i18n="pdf-tool-sanitize">Sanitize PDF</button>
           </div>
         </div>
 
         <!-- Group: View -->
         <div class="sidebar-group" id="grp-view">
           <button class="grp-hdr" onclick="toggleGroup('view')">
-            <span><i class="bi bi-eye" aria-hidden="true"></i> View</span>
+            <span><i class="bi bi-eye" aria-hidden="true"></i> <span data-i18n="pdf-grp-view">View</span></span>
             <span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
           </button>
           <div class="grp-tools">
-            <button class="tab-btn" data-tool="viewer" data-grp="view" onclick="showTool('viewer')">PDF Viewer / Preview</button>
+            <button class="tab-btn" data-tool="viewer" data-grp="view" onclick="showTool('viewer')" data-i18n="pdf-tool-viewer">PDF Viewer / Preview</button>
           </div>
         </div>
 
@@ -138,22 +138,22 @@
            1. MERGE / COMBINE PDF
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel active" id="tool-merge">
-        <div class="panel-title"><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> Merge / Combine PDF</div>
-        <div class="info-box">Upload two or more PDF files. They will be combined in the order listed below. Drag handles (&#8801;) to reorder.</div>
+        <div class="panel-title"><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> <span data-i18n="pdf-tool-merge">Merge / Combine PDF</span></div>
+        <div class="info-box" data-i18n="pdf-merge-info">Upload two or more PDF files. They will be combined in the order listed below. Drag handles (&#8801;) to reorder.</div>
 
         <div class="drop-zone" id="merge-drop" onclick="document.getElementById('merge-input').click()"
              ondragover="dzOver(event,'merge-drop')" ondragleave="dzLeave('merge-drop')" ondrop="dzDrop(event,'merge-drop',mergeDrop)">
           <input type="file" id="merge-input" accept=".pdf,application/pdf" multiple onchange="mergeAdd(this.files)">
           <div class="drop-zone-icon"><i class="bi bi-file-earmark-pdf" aria-hidden="true" style="font-size:2rem"></i></div>
-          <strong>Click or drop PDF files here</strong>
-          <span>Multiple files supported</span>
+          <strong data-i18n="btn-click-drop">Click or drop PDF files here</strong>
+          <span data-i18n="btn-multiple">Multiple files supported</span>
         </div>
 
         <div class="file-list" id="merge-file-list"></div>
 
         <div class="btn-row">
-          <button onclick="mergePDFs()"><i class="bi bi-link-45deg" aria-hidden="true"></i> Merge &amp; Download</button>
-          <button class="btn-secondary" onclick="mergeClear()">Clear</button>
+          <button onclick="mergePDFs()"><i class="bi bi-link-45deg" aria-hidden="true"></i> <span data-i18n="btn-merge-dl">Merge &amp; Download</span></button>
+          <button class="btn-secondary" onclick="mergeClear()" data-i18n="btn-clear">Clear</button>
         </div>
         <div class="progress-wrap" id="merge-prog-wrap" style="display:none"><div class="progress-bar" id="merge-prog"></div></div>
         <div class="tool-msg" id="merge-msg"></div>
@@ -163,8 +163,8 @@
            2. SPLIT PDF
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-split">
-        <div class="panel-title"><i class="bi bi-scissors" aria-hidden="true"></i> Split PDF</div>
-        <div class="info-box">Split a PDF into individual pages, or into defined page ranges.</div>
+        <div class="panel-title"><i class="bi bi-scissors" aria-hidden="true"></i> <span data-i18n="pdf-tool-split">Split PDF</span></div>
+        <div class="info-box" data-i18n="pdf-split-info">Split a PDF into individual pages, or into defined page ranges.</div>
 
         <div class="drop-zone" id="split-drop" onclick="document.getElementById('split-input').click()"
              ondragover="dzOver(event,'split-drop')" ondragleave="dzLeave('split-drop')" ondrop="dzDrop(event,'split-drop',splitDrop)">
@@ -175,22 +175,22 @@
         <div class="file-list" id="split-file-info"></div>
 
         <div class="form-group">
-          <label class="io-label">Split mode</label>
+          <label class="io-label" data-i18n="pdf-split-mode">Split mode</label>
           <div class="form-row">
-            <label class="checkbox-label"><input type="radio" name="split-mode" value="all" checked onchange="splitModeChange()"> Every page (individual files)</label>
-            <label class="checkbox-label"><input type="radio" name="split-mode" value="ranges" onchange="splitModeChange()"> Custom ranges</label>
+            <label class="checkbox-label"><input type="radio" name="split-mode" value="all" checked onchange="splitModeChange()"> <span data-i18n="pdf-split-all">Every page (individual files)</span></label>
+            <label class="checkbox-label"><input type="radio" name="split-mode" value="ranges" onchange="splitModeChange()"> <span data-i18n="pdf-split-ranges">Custom ranges</span></label>
           </div>
         </div>
 
         <div class="form-group" id="split-ranges-group" style="display:none">
-          <label class="io-label">Ranges (e.g. 1-3, 4, 5-7)</label>
+          <label class="io-label" data-i18n="pdf-split-ranges-lbl">Ranges (e.g. 1-3, 4, 5-7)</label>
           <input type="text" id="split-ranges" placeholder="1-3, 4, 5-7" style="width:300px">
           <div class="tool-msg" id="split-ranges-msg"></div>
         </div>
 
         <div class="btn-row">
-          <button onclick="splitPDF()"><i class="bi bi-scissors" aria-hidden="true"></i> Split &amp; Download</button>
-          <button class="btn-secondary" onclick="splitClear()">Clear</button>
+          <button onclick="splitPDF()"><i class="bi bi-scissors" aria-hidden="true"></i> <span data-i18n="btn-split-dl">Split &amp; Download</span></button>
+          <button class="btn-secondary" onclick="splitClear()" data-i18n="btn-clear">Clear</button>
         </div>
         <div class="progress-wrap" id="split-prog-wrap" style="display:none"><div class="progress-bar" id="split-prog"></div></div>
         <div class="tool-msg" id="split-msg"></div>
@@ -200,8 +200,8 @@
            3. EXTRACT PAGES
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-extract">
-        <div class="panel-title"><i class="bi bi-clipboard" aria-hidden="true"></i> Extract Pages from PDF</div>
-        <div class="info-box">Upload a PDF and select which pages to extract into a new PDF.</div>
+        <div class="panel-title"><i class="bi bi-clipboard" aria-hidden="true"></i> <span data-i18n="pdf-tool-extract">Extract Pages from PDF</span></div>
+        <div class="info-box" data-i18n="pdf-extract-info">Upload a PDF and select which pages to extract into a new PDF.</div>
 
         <div class="drop-zone" id="extract-drop" onclick="document.getElementById('extract-input').click()"
              ondragover="dzOver(event,'extract-drop')" ondragleave="dzLeave('extract-drop')" ondrop="dzDrop(event,'extract-drop',extractDrop)">
@@ -212,12 +212,12 @@
         <div class="file-list" id="extract-file-info"></div>
 
         <div class="form-group">
-          <label class="io-label">Pages to extract (e.g. 1, 3-5, 8)</label>
+          <label class="io-label" data-i18n="pdf-extract-pages">Pages to extract (e.g. 1, 3-5, 8)</label>
           <input type="text" id="extract-pages" placeholder="1, 3-5, 8" style="width:300px">
         </div>
         <div class="btn-row">
-          <button onclick="extractPages()"><i class="bi bi-clipboard" aria-hidden="true"></i> Extract &amp; Download</button>
-          <button class="btn-secondary" onclick="extractClear()">Clear</button>
+          <button onclick="extractPages()"><i class="bi bi-clipboard" aria-hidden="true"></i> <span data-i18n="btn-extract-dl">Extract &amp; Download</span></button>
+          <button class="btn-secondary" onclick="extractClear()" data-i18n="btn-clear">Clear</button>
         </div>
         <div class="tool-msg" id="extract-msg"></div>
       </div>
@@ -226,8 +226,8 @@
            4. DELETE PAGES
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-delete">
-        <div class="panel-title"><i class="bi bi-trash" aria-hidden="true"></i> Delete Pages from PDF</div>
-        <div class="info-box">Upload a PDF and specify which pages to remove. The remaining pages will be saved as a new PDF.</div>
+        <div class="panel-title"><i class="bi bi-trash" aria-hidden="true"></i> <span data-i18n="pdf-tool-delete">Delete Pages from PDF</span></div>
+        <div class="info-box" data-i18n="pdf-delete-info">Upload a PDF and specify which pages to remove. The remaining pages will be saved as a new PDF.</div>
 
         <div class="drop-zone" id="delete-drop" onclick="document.getElementById('delete-input').click()"
              ondragover="dzOver(event,'delete-drop')" ondragleave="dzLeave('delete-drop')" ondrop="dzDrop(event,'delete-drop',deleteDrop)">
@@ -238,12 +238,12 @@
         <div class="file-list" id="delete-file-info"></div>
 
         <div class="form-group">
-          <label class="io-label">Pages to delete (e.g. 2, 4-6)</label>
+          <label class="io-label" data-i18n="pdf-delete-pages">Pages to delete (e.g. 2, 4-6)</label>
           <input type="text" id="delete-pages" placeholder="2, 4-6" style="width:300px">
         </div>
         <div class="btn-row">
-          <button class="btn-danger" onclick="deletePages()"><i class="bi bi-trash" aria-hidden="true"></i> Delete &amp; Download</button>
-          <button class="btn-secondary" onclick="deleteClear()">Clear</button>
+          <button class="btn-danger" onclick="deletePages()"><i class="bi bi-trash" aria-hidden="true"></i> <span data-i18n="btn-delete-dl">Delete &amp; Download</span></button>
+          <button class="btn-secondary" onclick="deleteClear()" data-i18n="btn-clear">Clear</button>
         </div>
         <div class="tool-msg" id="delete-msg"></div>
       </div>
@@ -252,8 +252,8 @@
            5. ROTATE PDF PAGES
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-rotate">
-        <div class="panel-title"><i class="bi bi-arrow-repeat" aria-hidden="true"></i> Rotate PDF Pages</div>
-        <div class="info-box">Rotate all pages or specific pages by 90°, 180°, or 270°.</div>
+        <div class="panel-title"><i class="bi bi-arrow-repeat" aria-hidden="true"></i> <span data-i18n="pdf-tool-rotate">Rotate PDF Pages</span></div>
+        <div class="info-box" data-i18n="pdf-rotate-info">Rotate all pages or specific pages by 90°, 180°, or 270°.</div>
 
         <div class="drop-zone" id="rotate-drop" onclick="document.getElementById('rotate-input').click()"
              ondragover="dzOver(event,'rotate-drop')" ondragleave="dzLeave('rotate-drop')" ondrop="dzDrop(event,'rotate-drop',rotateDrop)">
@@ -265,7 +265,7 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label class="io-label">Angle</label>
+            <label class="io-label" data-i18n="pdf-rotate-angle">Angle</label>
             <select id="rotate-angle">
               <option value="90">90° Clockwise</option>
               <option value="180">180°</option>
@@ -273,7 +273,7 @@
             </select>
           </div>
           <div class="form-group">
-            <label class="io-label">Apply to</label>
+            <label class="io-label" data-i18n="pdf-rotate-apply">Apply to</label>
             <select id="rotate-target">
               <option value="all">All pages</option>
               <option value="odd">Odd pages</option>
@@ -287,8 +287,8 @@
           <input type="text" id="rotate-custom" placeholder="1, 3-5" style="width:240px">
         </div>
         <div class="btn-row">
-          <button onclick="rotatePDF()"><i class="bi bi-arrow-repeat" aria-hidden="true"></i> Rotate &amp; Download</button>
-          <button class="btn-secondary" onclick="rotateClear()">Clear</button>
+          <button onclick="rotatePDF()"><i class="bi bi-arrow-repeat" aria-hidden="true"></i> <span data-i18n="btn-rotate-dl">Rotate &amp; Download</span></button>
+          <button class="btn-secondary" onclick="rotateClear()" data-i18n="btn-clear">Clear</button>
         </div>
         <div class="tool-msg" id="rotate-msg"></div>
       </div>
@@ -297,8 +297,8 @@
            6. REARRANGE PAGES
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-rearrange">
-        <div class="panel-title"><i class="bi bi-arrow-down-up" aria-hidden="true"></i> Rearrange PDF Pages</div>
-        <div class="info-box">Upload a PDF, then drag thumbnails (or enter a custom order) to rearrange pages.</div>
+        <div class="panel-title"><i class="bi bi-arrow-down-up" aria-hidden="true"></i> <span data-i18n="pdf-tool-rearrange">Rearrange PDF Pages</span></div>
+        <div class="info-box" data-i18n="pdf-rearrange-info">Upload a PDF, then drag thumbnails (or enter a custom order) to rearrange pages.</div>
 
         <div class="drop-zone" id="rearrange-drop" onclick="document.getElementById('rearrange-input').click()"
              ondragover="dzOver(event,'rearrange-drop')" ondragleave="dzLeave('rearrange-drop')" ondrop="dzDrop(event,'rearrange-drop',rearrangeDrop)">
@@ -309,7 +309,7 @@
         <div class="file-list" id="rearrange-file-info"></div>
 
         <div class="form-group">
-          <label class="io-label">New page order (comma-separated, 1-based, e.g. 3,1,2)</label>
+          <label class="io-label" data-i18n="pdf-reorder-lbl">New page order (comma-separated, 1-based, e.g. 3,1,2)</label>
           <input type="text" id="rearrange-order" placeholder="3,1,2" style="width:300px">
           <div class="tool-msg" id="rearrange-order-msg" style="font-size:11px;"></div>
         </div>
@@ -317,8 +317,8 @@
         <div class="page-grid" id="rearrange-thumbs"></div>
 
         <div class="btn-row">
-          <button onclick="rearrangePDF()"><i class="bi bi-arrow-down-up" aria-hidden="true"></i> Reorder &amp; Download</button>
-          <button class="btn-secondary" onclick="rearrangeClear()">Clear</button>
+          <button onclick="rearrangePDF()"><i class="bi bi-arrow-down-up" aria-hidden="true"></i> <span data-i18n="btn-reorder-dl">Reorder &amp; Download</span></button>
+          <button class="btn-secondary" onclick="rearrangeClear()" data-i18n="btn-clear">Clear</button>
         </div>
         <div class="tool-msg" id="rearrange-msg"></div>
       </div>
@@ -327,8 +327,8 @@
            7. ADD WATERMARK
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-watermark">
-        <div class="panel-title"><i class="bi bi-lock" aria-hidden="true"></i> Add Watermark to PDF</div>
-        <div class="info-box">Add a diagonal text watermark to every page of a PDF.</div>
+        <div class="panel-title"><i class="bi bi-lock" aria-hidden="true"></i> <span data-i18n="pdf-tool-watermark">Add Watermark to PDF</span></div>
+        <div class="info-box" data-i18n="pdf-watermark-info">Add a diagonal text watermark to every page of a PDF.</div>
 
         <div class="drop-zone" id="watermark-drop" onclick="document.getElementById('watermark-input').click()"
              ondragover="dzOver(event,'watermark-drop')" ondragleave="dzLeave('watermark-drop')" ondrop="dzDrop(event,'watermark-drop',watermarkDrop)">
@@ -340,7 +340,7 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label class="io-label">Watermark text</label>
+            <label class="io-label" data-i18n="pdf-wm-text">Watermark text</label>
             <input type="text" id="wm-text" value="CONFIDENTIAL" style="width:200px">
           </div>
           <div class="form-group">
@@ -348,21 +348,21 @@
             <input type="number" id="wm-size" value="48" min="10" max="200" style="width:80px">
           </div>
           <div class="form-group">
-            <label class="io-label">Opacity (0–1)</label>
+            <label class="io-label" data-i18n="pdf-wm-opacity">Opacity (0–1)</label>
             <input type="number" id="wm-opacity" value="0.25" min="0.05" max="1" step="0.05" style="width:80px">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="io-label">Color</label>
+            <label class="io-label" data-i18n="pdf-wm-color">Color</label>
             <input type="color" id="wm-color" value="#ff0000">
           </div>
           <div class="form-group">
-            <label class="io-label">Angle (degrees)</label>
+            <label class="io-label" data-i18n="pdf-wm-angle">Angle (degrees)</label>
             <input type="number" id="wm-angle" value="45" min="-180" max="180" style="width:80px">
           </div>
           <div class="form-group">
-            <label class="io-label">Position</label>
+            <label class="io-label" data-i18n="pdf-wm-position">Position</label>
             <select id="wm-position">
               <option value="center">Center (diagonal)</option>
               <option value="top-left">Top Left</option>
@@ -373,8 +373,8 @@
           </div>
         </div>
         <div class="btn-row">
-          <button onclick="addWatermark()"><i class="bi bi-lock" aria-hidden="true"></i> Apply &amp; Download</button>
-          <button class="btn-secondary" onclick="watermarkClear()">Clear</button>
+          <button onclick="addWatermark()"><i class="bi bi-lock" aria-hidden="true"></i> <span data-i18n="btn-apply-dl">Apply &amp; Download</span></button>
+          <button class="btn-secondary" onclick="watermarkClear()" data-i18n="btn-clear">Clear</button>
         </div>
         <div class="tool-msg" id="watermark-msg"></div>
       </div>
@@ -383,8 +383,8 @@
            8. ADD PAGE NUMBERS
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-pagenumbers">
-        <div class="panel-title"><i class="bi bi-hash" aria-hidden="true"></i> Add Page Numbers to PDF</div>
-        <div class="info-box">Stamp page numbers onto each page of a PDF.</div>
+        <div class="panel-title"><i class="bi bi-hash" aria-hidden="true"></i> <span data-i18n="pdf-tool-pagenums">Add Page Numbers to PDF</span></div>
+        <div class="info-box" data-i18n="pdf-pagenums-info">Stamp page numbers onto each page of a PDF.</div>
 
         <div class="drop-zone" id="pn-drop" onclick="document.getElementById('pn-input').click()"
              ondragover="dzOver(event,'pn-drop')" ondragleave="dzLeave('pn-drop')" ondrop="dzDrop(event,'pn-drop',pnDrop)">
@@ -396,7 +396,7 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label class="io-label">Position</label>
+            <label class="io-label" data-i18n="pdf-pn-position">Position</label>
             <select id="pn-position">
               <option value="bottom-center">Bottom Center</option>
               <option value="bottom-right">Bottom Right</option>
@@ -407,17 +407,17 @@
             </select>
           </div>
           <div class="form-group">
-            <label class="io-label">Start from</label>
+            <label class="io-label" data-i18n="pdf-pn-start">Start from</label>
             <input type="number" id="pn-start" value="1" min="0" style="width:70px">
           </div>
           <div class="form-group">
-            <label class="io-label">Font size</label>
+            <label class="io-label" data-i18n="pdf-pn-fontsize">Font size</label>
             <input type="number" id="pn-size" value="12" min="6" max="72" style="width:70px">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="io-label">Format</label>
+            <label class="io-label" data-i18n="pdf-pn-format">Format</label>
             <select id="pn-format">
               <option value="n">1, 2, 3…</option>
               <option value="page-n">Page 1, Page 2…</option>
@@ -425,13 +425,13 @@
             </select>
           </div>
           <div class="form-group">
-            <label class="io-label">Color</label>
+            <label class="io-label" data-i18n="pdf-pn-color">Color</label>
             <input type="color" id="pn-color" value="#333333">
           </div>
         </div>
         <div class="btn-row">
-          <button onclick="addPageNumbers()"><i class="bi bi-hash" aria-hidden="true"></i> Apply &amp; Download</button>
-          <button class="btn-secondary" onclick="pnClear()">Clear</button>
+          <button onclick="addPageNumbers()"><i class="bi bi-hash" aria-hidden="true"></i> <span data-i18n="btn-apply-dl">Apply &amp; Download</span></button>
+          <button class="btn-secondary" onclick="pnClear()" data-i18n="btn-clear">Clear</button>
         </div>
         <div class="tool-msg" id="pn-msg"></div>
       </div>
@@ -440,8 +440,8 @@
            9. CONVERT IMAGES TO PDF
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-img2pdf">
-        <div class="panel-title"><i class="bi bi-camera" aria-hidden="true"></i> Convert Images to PDF</div>
-        <div class="info-box">Upload JPG, PNG, GIF, BMP, or WEBP images. Each image becomes one page. Reorder files before converting.</div>
+        <div class="panel-title"><i class="bi bi-camera" aria-hidden="true"></i> <span data-i18n="pdf-tool-img2pdf">Convert Images to PDF</span></div>
+        <div class="info-box" data-i18n="pdf-img2pdf-info">Upload JPG, PNG, GIF, BMP, or WEBP images. Each image becomes one page. Reorder files before converting.</div>
 
         <div class="drop-zone" id="img2pdf-drop" onclick="document.getElementById('img2pdf-input').click()"
              ondragover="dzOver(event,'img2pdf-drop')" ondragleave="dzLeave('img2pdf-drop')" ondrop="dzDrop(event,'img2pdf-drop',img2pdfDrop)">
@@ -455,7 +455,7 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label class="io-label">Page size</label>
+            <label class="io-label" data-i18n="pdf-i2p-pagesize">Page size</label>
             <select id="img2pdf-size">
               <option value="fit">Fit image (image dimensions)</option>
               <option value="A4">A4 (595 × 842 pt)</option>
@@ -473,8 +473,8 @@
           </div>
         </div>
         <div class="btn-row">
-          <button onclick="convertImg2PDF()"><i class="bi bi-camera" aria-hidden="true"></i> Convert &amp; Download</button>
-          <button class="btn-secondary" onclick="img2pdfClear()">Clear</button>
+          <button onclick="convertImg2PDF()"><i class="bi bi-camera" aria-hidden="true"></i> <span data-i18n="btn-convert-dl">Convert &amp; Download</span></button>
+          <button class="btn-secondary" onclick="img2pdfClear()" data-i18n="btn-clear">Clear</button>
         </div>
         <div class="progress-wrap" id="img2pdf-prog-wrap" style="display:none"><div class="progress-bar" id="img2pdf-prog"></div></div>
         <div class="tool-msg" id="img2pdf-msg"></div>
@@ -485,18 +485,18 @@
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-viewer" style="padding:0;gap:0;">
         <div class="viewer-toolbar">
-          <button class="btn-secondary" onclick="document.getElementById('viewer-input').click()"><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> Open PDF</button>
+          <button class="btn-secondary" onclick="document.getElementById('viewer-input').click()"><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> <span data-i18n="btn-open-pdf">Open PDF</span></button>
           <input type="file" id="viewer-input" accept=".pdf,application/pdf" style="display:none" onchange="viewerLoad(this.files[0])">
-          <button class="btn-secondary" onclick="viewerPrev()"><i class="bi bi-arrow-left" aria-hidden="true"></i> Prev</button>
+          <button class="btn-secondary" onclick="viewerPrev()"><i class="bi bi-arrow-left" aria-hidden="true"></i> <span data-i18n="btn-prev">Prev</span></button>
           <span id="viewer-page-info">— / —</span>
-          <button class="btn-secondary" onclick="viewerNext()">Next <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+          <button class="btn-secondary" onclick="viewerNext()"><span data-i18n="btn-next">Next</span> <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
           <span>Zoom:</span>
           <input type="range" id="viewer-zoom" min="0.5" max="3" step="0.1" value="1.0" oninput="viewerRender()" style="width:100px">
           <span id="viewer-zoom-label">100%</span>
           <span id="viewer-filename" style="margin-left:auto;font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;"></span>
         </div>
         <div id="viewer-canvas-wrap">
-          <div id="viewer-placeholder" style="color:var(--text2);font-size:14px;padding:40px;text-align:center;">Open a PDF file to preview it here.</div>
+          <div id="viewer-placeholder" style="color:var(--text2);font-size:14px;padding:40px;text-align:center;" data-i18n="pdf-viewer-empty">Open a PDF file to preview it here.</div>
         </div>
       </div>
 
@@ -504,7 +504,7 @@
            11. COMPRESS PDF
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-compress">
-        <div class="panel-title"><i class="bi bi-save" aria-hidden="true"></i> Compress PDF</div>
+        <div class="panel-title"><i class="bi bi-save" aria-hidden="true"></i> <span data-i18n="pdf-tool-compress">Compress PDF</span></div>
         <div class="info-box"><strong>Note:</strong> This tool strips embedded metadata, XMP streams, and re-serializes the PDF. Deep image compression requires server-side tools, but this often reduces file size by removing redundant overhead.</div>
 
         <div class="drop-zone" id="compress-drop" onclick="document.getElementById('compress-input').click()"
@@ -521,8 +521,8 @@
           <label class="checkbox-label"><input type="checkbox" id="compress-unused" checked> Remove unused objects</label>
         </div>
         <div class="btn-row">
-          <button onclick="compressPDF()"><i class="bi bi-save" aria-hidden="true"></i> Compress &amp; Download</button>
-          <button class="btn-secondary" onclick="compressClear()">Clear</button>
+          <button onclick="compressPDF()"><i class="bi bi-save" aria-hidden="true"></i> <span data-i18n="btn-compress-dl">Compress &amp; Download</span></button>
+          <button class="btn-secondary" onclick="compressClear()" data-i18n="btn-clear">Clear</button>
         </div>
         <div class="tool-msg" id="compress-msg"></div>
       </div>
@@ -531,7 +531,7 @@
            12. CROP PDF PAGES
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-crop">
-        <div class="panel-title"><i class="bi bi-scissors" aria-hidden="true"></i> Crop PDF Pages</div>
+        <div class="panel-title"><i class="bi bi-scissors" aria-hidden="true"></i> <span data-i18n="pdf-tool-crop">Crop PDF Pages</span></div>
         <div class="info-box">Set the crop box (in points, 1 pt = 1/72 inch) to trim white space or restrict the visible area. One point = 1/72 of an inch.</div>
 
         <div class="drop-zone" id="crop-drop" onclick="document.getElementById('crop-input').click()"
@@ -561,8 +561,8 @@
           <input type="text" id="crop-custom" placeholder="1, 3-5" style="width:240px">
         </div>
         <div class="btn-row">
-          <button onclick="cropPDF()"><i class="bi bi-scissors" aria-hidden="true"></i> Crop &amp; Download</button>
-          <button class="btn-secondary" onclick="cropClear()">Clear</button>
+          <button onclick="cropPDF()"><i class="bi bi-scissors" aria-hidden="true"></i> <span data-i18n="btn-apply-dl">Crop &amp; Download</span></button>
+          <button class="btn-secondary" onclick="cropClear()" data-i18n="btn-clear">Clear</button>
         </div>
         <div class="tool-msg" id="crop-msg"></div>
       </div>
@@ -571,7 +571,7 @@
            13. RESIZE PDF PAGES
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-resize">
-        <div class="panel-title"><i class="bi bi-aspect-ratio" aria-hidden="true"></i> Resize PDF Pages</div>
+        <div class="panel-title"><i class="bi bi-aspect-ratio" aria-hidden="true"></i> <span data-i18n="pdf-tool-resize">Resize PDF Pages</span></div>
         <div class="info-box">Rescale all pages to a target paper size. Content is scaled to fit within the new dimensions.</div>
 
         <div class="drop-zone" id="resize-drop" onclick="document.getElementById('resize-input').click()"
@@ -607,8 +607,8 @@
           <div class="form-group"><label class="io-label">Height (pt)</label><input type="number" id="resize-h" value="842" min="1" style="width:90px"></div>
         </div>
         <div class="btn-row">
-          <button onclick="resizePDF()"><i class="bi bi-aspect-ratio" aria-hidden="true"></i> Resize &amp; Download</button>
-          <button class="btn-secondary" onclick="resizeClear()">Clear</button>
+          <button onclick="resizePDF()"><i class="bi bi-aspect-ratio" aria-hidden="true"></i> <span data-i18n="btn-apply-dl">Resize &amp; Download</span></button>
+          <button class="btn-secondary" onclick="resizeClear()" data-i18n="btn-clear">Clear</button>
         </div>
         <div class="tool-msg" id="resize-msg"></div>
       </div>
@@ -617,7 +617,7 @@
            14. FLATTEN PDF
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-flatten">
-        <div class="panel-title"><i class="bi bi-layers" aria-hidden="true"></i> Flatten PDF</div>
+        <div class="panel-title"><i class="bi bi-layers" aria-hidden="true"></i> <span data-i18n="pdf-tool-flatten">Flatten PDF</span></div>
         <div class="info-box">Flatten embeds interactive form fields and widget annotations into the page content so they can no longer be edited.</div>
 
         <div class="drop-zone" id="flatten-drop" onclick="document.getElementById('flatten-input').click()"
@@ -629,8 +629,8 @@
         <div class="file-list" id="flatten-file-info"></div>
 
         <div class="btn-row">
-          <button onclick="flattenPDF()"><i class="bi bi-layers" aria-hidden="true"></i> Flatten &amp; Download</button>
-          <button class="btn-secondary" onclick="flattenClear()">Clear</button>
+          <button onclick="flattenPDF()"><i class="bi bi-layers" aria-hidden="true"></i> <span data-i18n="btn-apply-dl">Flatten &amp; Download</span></button>
+          <button class="btn-secondary" onclick="flattenClear()" data-i18n="btn-clear">Clear</button>
         </div>
         <div class="tool-msg" id="flatten-msg"></div>
       </div>
@@ -641,7 +641,7 @@
            16. ADD PASSWORD (& Lock Permissions)
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-addpassword">
-        <div class="panel-title"><i class="bi bi-shield-lock" aria-hidden="true"></i> Add Password to PDF</div>
+        <div class="panel-title"><i class="bi bi-shield-lock" aria-hidden="true"></i> <span data-i18n="pdf-tool-addpwd">Add Password to PDF</span></div>
         <div class="info-box">Encrypt the PDF with AES-256. The <strong>user password</strong> is required to open the file. The <strong>owner password</strong> controls permissions (optional — defaults to user password). You can also restrict specific operations using the permission checkboxes below. Leave the user password blank and set only an owner password to restrict operations without requiring a password to open.</div>
 
         <div class="drop-zone" id="addpw-drop" onclick="document.getElementById('addpw-input').click()"
@@ -684,7 +684,7 @@
            17. REMOVE PASSWORD
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-removepassword">
-        <div class="panel-title"><i class="bi bi-unlock" aria-hidden="true"></i> Remove Password from PDF</div>
+        <div class="panel-title"><i class="bi bi-unlock" aria-hidden="true"></i> <span data-i18n="pdf-tool-removepwd">Remove Password from PDF</span></div>
         <div class="info-box">Upload an encrypted PDF and provide its password to produce an unencrypted copy.</div>
 
         <div class="drop-zone" id="rmpw-drop" onclick="document.getElementById('rmpw-input').click()"
@@ -700,8 +700,8 @@
           <input type="password" id="rmpw-pw" placeholder="Enter the PDF password" autocomplete="current-password" style="width:260px">
         </div>
         <div class="btn-row">
-          <button onclick="removePassword()"><i class="bi bi-unlock" aria-hidden="true"></i> Decrypt &amp; Download</button>
-          <button class="btn-secondary" onclick="rmpwClear()">Clear</button>
+          <button onclick="removePassword()"><i class="bi bi-unlock" aria-hidden="true"></i> <span data-i18n="btn-export-dl">Decrypt &amp; Download</span></button>
+          <button class="btn-secondary" onclick="rmpwClear()" data-i18n="btn-clear">Clear</button>
         </div>
         <div class="tool-msg" id="rmpw-msg"></div>
       </div>
@@ -712,7 +712,7 @@
            19. REDACT PDF
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-redact">
-        <div class="panel-title"><i class="bi bi-eraser" aria-hidden="true"></i> Redact PDF (Hide Sensitive Content)</div>
+        <div class="panel-title"><i class="bi bi-eraser" aria-hidden="true"></i> <span data-i18n="pdf-tool-redact">Redact PDF (Hide Sensitive Content)</span></div>
         <div class="info-box"><strong>How to use:</strong> Load a PDF, navigate to the page, then draw redaction boxes by clicking and dragging over the text/area you want to hide. Click <em>Apply Redactions</em> when done. Each redaction box is permanently filled with an opaque rectangle.</div>
 
         <div class="drop-zone" id="redact-drop" onclick="document.getElementById('redact-input').click()"
@@ -751,7 +751,7 @@
            15/20. SANITIZE PDF (Metadata + Hidden Data combined)
       ────────────────────────────────────────────────────── -->
       <div class="tool-panel" id="tool-hiddendata">
-        <div class="panel-title"><i class="bi bi-shield-check" aria-hidden="true"></i> Sanitize PDF</div>
+        <div class="panel-title"><i class="bi bi-shield-check" aria-hidden="true"></i> <span data-i18n="pdf-tool-sanitize">Sanitize PDF</span></div>
         <div class="info-box">Load a PDF to review its embedded metadata and hidden data before cleaning. Select the items you want to strip, then download the sanitized copy.</div>
 
         <div class="drop-zone" id="hidden-drop" onclick="document.getElementById('hidden-input').click()"
@@ -777,8 +777,8 @@
           <label class="checkbox-label"><input type="checkbox" id="hidden-embeds"  checked> Embedded files / attachments</label>
         </div>
         <div class="btn-row">
-          <button onclick="removeHiddenData()"><i class="bi bi-shield-check" aria-hidden="true"></i> Sanitize &amp; Download</button>
-          <button class="btn-secondary" onclick="hiddenClear()">Clear</button>
+          <button onclick="removeHiddenData()"><i class="bi bi-shield-check" aria-hidden="true"></i> <span data-i18n="btn-apply-dl">Sanitize &amp; Download</span></button>
+          <button class="btn-secondary" onclick="hiddenClear()" data-i18n="btn-clear">Clear</button>
         </div>
         <div class="tool-msg" id="hidden-msg"></div>
       </div>

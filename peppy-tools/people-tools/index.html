@@ -38,13 +38,13 @@
 <!-- ═══ APP HEADER ═══════════════════════════════════════════ -->
 <div class="top-bar">
   <div class="top-bar-left">
-    <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" aria-label="Menu"><i class="bi bi-list" aria-hidden="true"></i></button>
-    <a href="../index.html" class="top-bar-back" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+  <button class="top-btn menu-toggle" onclick="toggleMobileMenu()" data-i18n-aria="btn-toggle-menu" aria-label="Menu"><i class="bi bi-list" aria-hidden="true"></i></button>
+  <a href="../index.html" class="top-bar-back" data-i18n-title="btn-home" title="Home"><i class="bi bi-arrow-left" aria-hidden="true"></i></a>
     <span class="top-bar-title"><i class="bi bi-people-fill" aria-hidden="true"></i> People &amp; Group Tools</span>
   </div>
   <div class="top-bar-right" data-i18n-switcher="top-btn">
-    <button class="top-btn" onclick="toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
-    <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
+    <button class="top-btn" onclick="toggleFullscreen()" data-i18n-title="btn-fullscreen" title="Fullscreen" data-i18n-aria="btn-toggle-fs" aria-label="Fullscreen"><i class="bi bi-fullscreen" aria-hidden="true"></i></button>
+    <button class="top-btn" id="theme-btn" onclick="toggleTheme()" data-i18n-title="btn-toggle-theme" title="Toggle theme" data-i18n-aria="btn-toggle-theme" aria-label="Toggle theme"><i class="bi bi-sun" aria-hidden="true"></i></button>
   </div>
 </div> ═══════════════════════════════════════════ -->
 <div class="app-body">
@@ -52,14 +52,14 @@
   <div class="sidebar">
     <!-- Saved Lists -->
     <div class="savedlist-bar">
-      <span class="io-label" style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;font-weight:700;">Saved Lists</span>
+      <span class="io-label" style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;font-weight:700;" data-i18n="ppl-saved-lbl">Saved Lists</span>
       <select class="savedlist-select" id="savedListSelect" onchange="loadSavedList()">
-        <option value="">— select a list —</option>
+        <option value="" data-i18n="ppl-saved-select">— select a list —</option>
       </select>
       <div class="savedlist-btns">
-        <button onclick="saveCurrentList()">Save</button>
-        <button onclick="renameSavedList()">Rename</button>
-        <button onclick="deleteSavedList()">Delete</button>
+        <button onclick="saveCurrentList()" data-i18n="ppl-saved-save">Save</button>
+        <button onclick="renameSavedList()" data-i18n="ppl-saved-rename">Rename</button>
+        <button onclick="deleteSavedList()" data-i18n="ppl-saved-delete">Delete</button>
       </div>
     </div>
     <!-- Tool Groups -->
@@ -67,36 +67,36 @@
       <!-- Pickers -->
       <div class="sidebar-group" id="grp-pickers">
         <button class="grp-hdr" onclick="toggleGroup('grp-pickers')">
-          <span><i class="bi bi-bullseye" aria-hidden="true"></i> Pickers</span><span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
+          <span><i class="bi bi-bullseye" aria-hidden="true"></i> <span data-i18n="ppl-grp-pickers">Pickers</span></span><span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
         </button>
         <div class="grp-tools">
-          <button class="tab-btn active" onclick="showTool('tool-person')"><i class="bi bi-person" aria-hidden="true"></i> Person Picker</button>
-          <button class="tab-btn"        onclick="showTool('tool-meeting-host')"><i class="bi bi-mic" aria-hidden="true"></i> Host Picker</button>
-          <button class="tab-btn"        onclick="showTool('tool-attendance')"><i class="bi bi-clipboard-check" aria-hidden="true"></i> Attendance</button>
-          <button class="tab-btn"        onclick="showTool('tool-speaker')"><i class="bi bi-megaphone" aria-hidden="true"></i> Speaker Selector</button>
-          <button class="tab-btn"        onclick="showTool('tool-winner')"><i class="bi bi-trophy" aria-hidden="true"></i> Winner Picker</button>
+          <button class="tab-btn active" onclick="showTool('tool-person')"><i class="bi bi-person" aria-hidden="true"></i> <span data-i18n="ppl-person">Person Picker</span></button>
+          <button class="tab-btn"        onclick="showTool('tool-meeting-host')"><i class="bi bi-mic" aria-hidden="true"></i> <span data-i18n="ppl-host">Host Picker</span></button>
+          <button class="tab-btn"        onclick="showTool('tool-attendance')"><i class="bi bi-clipboard-check" aria-hidden="true"></i> <span data-i18n="ppl-attendance">Attendance</span></button>
+          <button class="tab-btn"        onclick="showTool('tool-speaker')"><i class="bi bi-megaphone" aria-hidden="true"></i> <span data-i18n="ppl-speaker">Speaker Selector</span></button>
+          <button class="tab-btn"        onclick="showTool('tool-winner')"><i class="bi bi-trophy" aria-hidden="true"></i> <span data-i18n="ppl-winner">Winner Picker</span></button>
         </div>
       </div>
       <!-- Teams -->
       <div class="sidebar-group" id="grp-teams">
         <button class="grp-hdr" onclick="toggleGroup('grp-teams')">
-          <span><i class="bi bi-people" aria-hidden="true"></i> Teams &amp; Groups</span><span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
+          <span><i class="bi bi-people" aria-hidden="true"></i> <span data-i18n="ppl-grp-teams">Teams &amp; Groups</span></span><span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
         </button>
         <div class="grp-tools">
-          <button class="tab-btn" onclick="showTool('tool-team-gen')"><i class="bi bi-people-fill" aria-hidden="true"></i> Team Generator</button>
-          <button class="tab-btn" onclick="showTool('tool-pair-gen')"><i class="bi bi-person-standing" aria-hidden="true"></i> Pair Generator</button>
-          <button class="tab-btn" onclick="showTool('tool-group-creator')"><i class="bi bi-box" aria-hidden="true"></i> Group Creator</button>
-          <button class="tab-btn" onclick="showTool('tool-seating')"><i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> Seating Chart</button>
+          <button class="tab-btn" onclick="showTool('tool-team-gen')"><i class="bi bi-people-fill" aria-hidden="true"></i> <span data-i18n="ppl-team">Team Generator</span></button>
+          <button class="tab-btn" onclick="showTool('tool-pair-gen')"><i class="bi bi-person-standing" aria-hidden="true"></i> <span data-i18n="ppl-pair">Pair Generator</span></button>
+          <button class="tab-btn" onclick="showTool('tool-group-creator')"><i class="bi bi-box" aria-hidden="true"></i> <span data-i18n="ppl-group">Group Creator</span></button>
+          <button class="tab-btn" onclick="showTool('tool-seating')"><i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> <span data-i18n="ppl-seating">Seating Chart</span></button>
         </div>
       </div>
       <!-- Events -->
       <div class="sidebar-group" id="grp-events">
         <button class="grp-hdr" onclick="toggleGroup('grp-events')">
-          <span><i class="bi bi-balloon" aria-hidden="true"></i> Events</span><span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
+          <span><i class="bi bi-balloon" aria-hidden="true"></i> <span data-i18n="ppl-grp-events">Events</span></span><span class="grp-chevron"><i class="bi bi-chevron-down" aria-hidden="true"></i></span>
         </button>
         <div class="grp-tools">
-          <button class="tab-btn" onclick="showTool('tool-name-shuffle')"><i class="bi bi-shuffle" aria-hidden="true"></i> Name Shuffler</button>
-          <button class="tab-btn" onclick="showTool('tool-secret-santa')"><i class="bi bi-gift" aria-hidden="true"></i> Secret Santa</button>
+          <button class="tab-btn" onclick="showTool('tool-name-shuffle')"><i class="bi bi-shuffle" aria-hidden="true"></i> <span data-i18n="ppl-shuffler">Name Shuffler</span></button>
+          <button class="tab-btn" onclick="showTool('tool-secret-santa')"><i class="bi bi-gift" aria-hidden="true"></i> <span data-i18n="ppl-santa">Secret Santa</span></button>
         </div>
       </div>
     </div>
