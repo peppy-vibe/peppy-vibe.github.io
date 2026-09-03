@@ -15,7 +15,7 @@ Nine fully client-side browser tools bundled as a Progressive Web App. No server
 | People & Group Tools | 11 people-management utilities — picker, teams, seating, Secret Santa |
 | QR & Barcode Tools | QR generator, scanner, batch QR, 15+ barcode formats |
 | Easy PDF Tools | 20 non-destructive PDF operations with no upload required |
-| PDF Mini Editor BETA | Full PDF editing workspace — reorder, annotate, redact, export |
+| PDF Studio | Non-destructive visual PDF editor — live-preview edit steps, reorder, redact, export |
 | Clock Tools | Stopwatch, countdown, world clocks, Pomodoro, alarm |
 
 ---
@@ -344,41 +344,40 @@ All randomisation uses `crypto.getRandomValues()`.
 
 ---
 
-## Peppy PDF Mini Editor BETA
+## Peppy PDF Studio
 
-Full PDF editing workspace — process everything locally; nothing leaves the browser.
+Non-destructive visual PDF editor — process everything locally; nothing leaves the browser. Edits are recorded as **steps** (watermark, page numbers, text, crop, resize, redact) that preview live on every page and can be toggled, edited, reordered, or removed at any time; the PDF itself is only built at export.
 
 ### Features
 
 | Feature | Details |
 |---------|---------|
-| Open / Merge | Unified import dialog — PDFs and JPEG/PNG images in any order; drag-drop to reorder before merging |
+| Add Files / Merge | Add any number of PDFs and JPEG/PNG images — pages append to one document; drop files anywhere on the page |
 | Encrypted PDF | Auto-detected on open; password-unlock dialog appears automatically |
-| Add More Pages | Append PDFs or images to an already-open document |
-| Drag-to-Rearrange | Drag thumbnails to reorder pages in Grid view |
-| Delete Pages | Removes selected pages (Grid) or current page (Reader) |
-| Rotate Pages | CW / CCW in toolbar; context-aware for Grid / Reader view |
-| Add Watermark | Text, size, opacity, color, angle, and position (5 spots). Apply to all / selected / page range |
-| Add Page Numbers | 4 formats × 6 positions, configurable size, color, and start number |
-| Crop Pages | Top / bottom / left / right margins in points. All / selected / range |
-| Resize Pages | A4, Letter, Legal, A3, A5, or custom. All / selected / range |
-| Text Annotation | Size, color, position (7 placements). All / selected / range |
-| Redact | Draw black rectangles in Reader view; Ctrl+Z removes last rect; Apply Redact burns them permanently |
-| Document Info | View / edit metadata; Remove Metadata and Remove Hidden Data actions |
-| Export | Modes: **All**, **Pages** (range), **Split PDF** (every page or custom ranges). Options: Compress, Flatten, Optimized. Built-in password protection (AES-256, user/owner passwords, permission checkboxes) applied per output file |
-| Compress PDF | Re-serialize with object streams; shows before / after file size |
-| Undo / Redo | Up to 20 snapshots for all destructive operations |
+| Blank Pages | Insert blank pages (sized to match the neighboring page) |
+| Drag-to-Rearrange | Drag thumbnails with a live insertion marker; dragging a selected page moves the whole selection |
+| Page Actions | Rotate, duplicate, and delete from each card's hover toolbar, the main toolbar, or the keyboard |
+| Edit Steps Panel | Every edit is a non-destructive step — toggle its visibility, edit its settings, reorder, or remove it; thumbnails and Reader preview update live |
+| Watermark | Text, size, opacity, color, angle, and position (5 spots). Apply to all / selected / page range |
+| Page Numbers | 4 formats × 6 positions, configurable size, color, and start number — numbering follows the final page order |
+| Text | Size, color, position (7 placements). All / selected / range |
+| Crop | Top / bottom / left / right margins in points, previewed live. All / selected / range |
+| Resize | A4, Letter, Legal, A3, A5, or custom — content scales to fit, centered. All / selected / range |
+| Redact | Draw black rectangles in Reader view; they preview instantly and are burned in at export |
+| Document Info | Edit metadata applied at export; one-click Strip All Metadata |
+| Export | Modes: **All**, **Selected**, **Pages** (range), **Split PDF** (every page or custom ranges). Options: Compress, Flatten forms, Remove hidden data. Password protection (AES-256, user/owner passwords, permission checkboxes) applied per output file |
+| Undo / Redo | Deep history (100 snapshots) covering page operations and every step change |
 | Dual View | Grid (thumbnail overview) ↔ Reader (single-page, 25–400% zoom) |
-| Select All / Deselect | Bulk page selection in Grid view |
-| Thumbnail Zoom | 50%–250% |
-| Global Drag & Drop | Drop PDFs or images anywhere on the page |
 
 ### Keyboard Shortcuts
 
 | Shortcut | Action |
 |----------|--------|
-| Ctrl+Z | Undo (or remove last drawn redact rect) |
-| Ctrl+Y / Ctrl+Shift+Z | Redo |
+| Ctrl+Z / Ctrl+Y | Undo / Redo |
+| Ctrl+A | Select all pages |
+| Delete | Delete selected pages |
+| ← / → | Previous / next page (Reader view) |
+| Esc | Exit redact mode · close dialog · deselect |
 
 ### Libraries Used
 

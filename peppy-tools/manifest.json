@@ -45,9 +45,9 @@
       "description": "Generate and scan QR codes and barcodes"
     },
     {
-      "name": "PDF Mini Editor BETA",
+      "name": "PDF Studio",
       "url": "./pdf-editor/",
-      "description": "Interactive visual PDF editor workspace"
+      "description": "Non-destructive visual PDF editor with live-preview edit steps"
     },
     {
       "name": "Clock Tools",

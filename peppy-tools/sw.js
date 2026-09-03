@@ -68,7 +68,7 @@ const APP_ASSETS = [
   './pdf-tools/index.html',
   './pdf-tools/style.css',
   './pdf-tools/app.js',
-  /* PDF Mini Editor */
+  /* PDF Studio */
   './pdf-editor/',
   './pdf-editor/index.html',
   './pdf-editor/style.css',
