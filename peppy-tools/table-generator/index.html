@@ -179,31 +179,38 @@
 
   <!-- Export / Import bar -->
   <div class="export-bar">
-    <span class="tb-label" data-i18n="tbl-export-lbl">Export:</span>
-    <button onclick="exportAs('html')">HTML</button>
-    <button onclick="exportAs('markdown')">Markdown</button>
-    <button onclick="exportAs('latex')">LaTeX</button>
-    <button onclick="exportAs('csv')">CSV</button>
+    <button class="bar-primary" onclick="openExportDlg()"><i class="bi bi-box-arrow-up" aria-hidden="true"></i> <span data-i18n="tbl-btn-export">Export</span></button>
+    <button onclick="showImportDlg()"><i class="bi bi-box-arrow-in-down" aria-hidden="true"></i> <span data-i18n="tbl-btn-import">Import</span></button>
     <span class="bar-sep"></span>
-    <span class="tb-label" data-i18n="tbl-import-lbl">Import:</span>
-    <button onclick="showImportDlg('html')">HTML</button>
-    <button onclick="showImportDlg('csv')">CSV</button>
-    <button onclick="showImportDlg('markdown')">Markdown</button>
-    <button onclick="showImportDlg('latex')">LaTeX</button>
+    <button onclick="copyTableForSpreadsheet()"><i class="bi bi-clipboard-check" aria-hidden="true"></i> <span data-i18n="tbl-copy-excel">Copy for Excel/Sheets</span></button>
+    <span class="export-formats" data-i18n="tbl-formats-hint">HTML &middot; Markdown &middot; LaTeX &middot; CSV &middot; TSV</span>
   </div>
 
   <!-- Import dialog -->
   <div class="dlg-overlay" id="import-overlay" onclick="overlayClose(event,'import-overlay')">
     <div class="dlg">
       <div class="dlg-hdr">
-        <span id="import-title">Import</span>
+        <span id="import-title" data-i18n="tbl-import-title">Import</span>
         <button class="dlg-x" onclick="closeDlg('import-overlay')"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
       </div>
       <div class="dlg-body">
-        <textarea id="import-ta" rows="9" placeholder="Paste here&hellip;"></textarea>
+        <div class="dlg-row">
+          <label for="import-fmt" data-i18n="tbl-imp-format">Format</label>
+          <select id="import-fmt">
+            <option value="auto" data-i18n="tbl-imp-auto">Auto-detect</option>
+            <option value="html">HTML</option>
+            <option value="csv">CSV</option>
+            <option value="tsv">TSV</option>
+            <option value="markdown">Markdown</option>
+            <option value="latex">LaTeX</option>
+          </select>
+          <button onclick="document.getElementById('import-file').click()" data-i18n="tbl-imp-file">From file&hellip;</button>
+          <input type="file" id="import-file" hidden accept=".html,.htm,.csv,.tsv,.txt,.md,.markdown,.tex" onchange="importFromFile(this)">
+        </div>
+        <textarea id="import-ta" rows="9" data-i18n-ph="tbl-imp-ph" placeholder="Paste your table data here &mdash; the format is detected automatically&hellip;"></textarea>
         <div class="dlg-btns">
-          <button onclick="doImport()">Import</button>
-          <button onclick="closeDlg('import-overlay')">Cancel</button>
+          <button class="bar-primary" onclick="doImport()" data-i18n="tbl-btn-do-import">Import</button>
+          <button onclick="closeDlg('import-overlay')" data-i18n="tbl-btn-cancel">Cancel</button>
         </div>
         <div id="import-msg" class="dlg-msg"></div>
       </div>
@@ -218,12 +225,19 @@
         <button class="dlg-x" onclick="closeDlg('preview-overlay')"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
       </div>
       <div class="dlg-body">
-        <div class="dlg-btns">
-          <button onclick="copyPreview()">Copy</button>
-          <button onclick="downloadPreview()">Download</button>
-          <button onclick="closeDlg('preview-overlay')">Close</button>
+        <div class="fmt-pills" id="export-pills">
+          <button class="pill" data-fmt="html" onclick="setExportFormat('html')">HTML</button>
+          <button class="pill" data-fmt="markdown" onclick="setExportFormat('markdown')">Markdown</button>
+          <button class="pill" data-fmt="latex" onclick="setExportFormat('latex')">LaTeX</button>
+          <button class="pill" data-fmt="csv" onclick="setExportFormat('csv')">CSV</button>
+          <button class="pill" data-fmt="tsv" onclick="setExportFormat('tsv')">TSV</button>
         </div>
         <pre id="preview-code" class="preview-code"></pre>
+        <div class="dlg-btns">
+          <button class="bar-primary" onclick="copyPreview()"><i class="bi bi-clipboard" aria-hidden="true"></i> <span data-i18n="tbl-btn-copy">Copy</span></button>
+          <button onclick="downloadPreview()"><i class="bi bi-download" aria-hidden="true"></i> <span data-i18n="tbl-btn-download">Download</span></button>
+          <button onclick="closeDlg('preview-overlay')" data-i18n="tbl-btn-close">Close</button>
+        </div>
       </div>
     </div>
   </div>
@@ -247,7 +261,7 @@
   <div class="tbl-statusbar" id="tbl-statusbar">
     <span id="sb-dims">3 × 3</span>
     <span id="sb-sel-info"></span>
-    <span id="sb-hint">Click cells to select · Shift+click to extend</span>
+    <span id="sb-hint" data-i18n="tbl-status-hint">Drag to select · Drag cell edges to resize · Ctrl+C copies for spreadsheets</span>
     <span class="sb-zoom-group">
       <button class="sb-btn" onclick="tableZoomOut()" title="Zoom Out"><i class="bi bi-zoom-out" aria-hidden="true"></i></button>
       <span id="sb-tbl-zoom">100%</span>

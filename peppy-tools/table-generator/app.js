@@ -9,7 +9,10 @@ const S = {
   anchor: null,        // {r, c}
   headerRow: false,
   headerCol: false,
-  importMode: null,    // 'html' | 'csv' | 'markdown' | 'latex'
+  colWidths: [],       // per-column px width (null = auto)
+  rowHeights: [],      // per-row px height (null = auto)
+  importMode: 'auto',  // 'auto' | 'html' | 'csv' | 'tsv' | 'markdown' | 'latex'
+  exportFormat: 'html',
   previewText: '',
   previewFile: '',
   ts: {                // table settings
@@ -39,6 +42,8 @@ function initTable(r, c) {
   S.rows = r;
   S.cols = c;
   S.data = Array.from({ length: r }, () => Array.from({ length: c }, mkCell));
+  S.colWidths  = Array(c).fill(null);
+  S.rowHeights = Array(r).fill(null);
   S.sel.clear();
   S.anchor = null;
   renderTable();
@@ -54,6 +59,8 @@ function _cloneState() {
     rows: S.rows, cols: S.cols,
     data: JSON.parse(JSON.stringify(S.data)),
     headerRow: S.headerRow, headerCol: S.headerCol,
+    colWidths: [...S.colWidths],
+    rowHeights: [...S.rowHeights],
     ts: JSON.parse(JSON.stringify(S.ts)),
   };
 }
@@ -69,6 +76,8 @@ function _restoreState(snap) {
   S.rows = snap.rows; S.cols = snap.cols;
   S.data = snap.data;
   S.headerRow = snap.headerRow; S.headerCol = snap.headerCol;
+  S.colWidths  = snap.colWidths  ? [...snap.colWidths]  : Array(snap.cols).fill(null);
+  S.rowHeights = snap.rowHeights ? [...snap.rowHeights] : Array(snap.rows).fill(null);
   S.ts = snap.ts;
   S.sel.clear(); S.anchor = null;
   document.getElementById('inp-rows').value = S.rows;
@@ -110,16 +119,29 @@ function renderTable() {
   const ts  = S.ts;
   const brd = ts.borderW > 0 ? `${ts.borderW}px solid ${ts.borderC}` : 'none';
 
+  _syncSizeArrays();
+  const hasW = S.colWidths.some(w => w != null);
+
   const tbl = document.createElement('table');
   tbl.style.borderCollapse = 'collapse';
-  tbl.style.width          = ts.width;
+  // Once columns have explicit px widths, let the table size itself from them.
+  tbl.style.width          = hasW ? 'auto' : ts.width;
   if (ts.bg) tbl.style.backgroundColor = ts.bg;
   if (ts.align === 'center') { tbl.style.marginLeft = tbl.style.marginRight = 'auto'; }
   else if (ts.align === 'right') { tbl.style.marginLeft = 'auto'; tbl.style.marginRight = ''; }
   else { tbl.style.marginLeft = tbl.style.marginRight = ''; }
 
+  const cg = document.createElement('colgroup');
+  for (let c = 0; c < S.cols; c++) {
+    const col = document.createElement('col');
+    if (S.colWidths[c] != null) col.style.width = S.colWidths[c] + 'px';
+    cg.appendChild(col);
+  }
+  tbl.appendChild(cg);
+
   for (let r = 0; r < S.rows; r++) {
     const tr = document.createElement('tr');
+    if (S.rowHeights[r] != null) tr.style.height = S.rowHeights[r] + 'px';
     for (let c = 0; c < S.cols; c++) {
       const cell = S.data[r][c];
       if (cell.isHidden) continue;
@@ -150,6 +172,7 @@ function renderTable() {
       el.textContent = cell.text;
 
       el.addEventListener('mousedown',  (e) => onCellMouseDown(e, r, c), true);
+      el.addEventListener('dblclick',   (e) => onCellDblClick(e, r, c));
       el.addEventListener('input',      ()  => { S.data[r][c].text = el.textContent; });
       el.addEventListener('paste',      onCellPaste);
       el.addEventListener('keydown',    onCellKeydown);
@@ -180,10 +203,18 @@ function updateSelClasses() {
   document.querySelectorAll('#tbl-container [data-r]').forEach(el => {
     el.classList.toggle('sel', S.sel.has(`${el.dataset.r},${el.dataset.c}`));
   });
+  updateTblStatusBar();
 }
 
 function onCellMouseDown(e, r, c) {
   closeCtxMenu();
+  if (e.button !== 0) return;
+
+  // Near a cell's right/bottom edge → start a column/row resize instead of selecting
+  const zone = _resizeZone(e, e.currentTarget);
+  if (zone === 'col') { e.preventDefault(); startColResize(e, c + S.data[r][c].colspan - 1); return; }
+  if (zone === 'row') { e.preventDefault(); startRowResize(e, r + S.data[r][c].rowspan - 1); return; }
+
   if (e.shiftKey && S.anchor) {
     e.preventDefault();
     extendSel(r, c);
@@ -192,6 +223,8 @@ function onCellMouseDown(e, r, c) {
     // Only update selection state; do NOT call renderTable() which destroys focus
     S.anchor = { r, c };
     S.sel    = new Set([`${r},${c}`]);
+    _dragSel   = true;
+    _dragMoved = false;
     updateSelClasses();
   }
 }
@@ -204,6 +237,142 @@ function extendSel(toR, toC) {
   for (let r = minR; r <= maxR; r++)
     for (let c = minC; c <= maxC; c++)
       S.sel.add(`${r},${c}`);
+}
+
+/* ── Drag-to-select ────────────────────────── */
+let _dragSel   = false;  // mouse is down on a cell
+let _dragMoved = false;  // pointer has entered another cell since mousedown
+
+const _tblContainer = document.getElementById('tbl-container');
+
+_tblContainer.addEventListener('mouseover', (e) => {
+  if (!_dragSel || _rzDrag) return;
+  const cell = e.target.closest('[data-r]');
+  if (!cell || !S.anchor) return;
+  const r = +cell.dataset.r, c = +cell.dataset.c;
+  if (r !== S.anchor.r || c !== S.anchor.c) _dragMoved = true;
+  if (_dragMoved) {
+    // Cell-range selection takes over from in-cell text selection
+    window.getSelection().removeAllRanges();
+    extendSel(r, c);
+    updateSelClasses();
+  }
+});
+
+/* ── Column / row resize ───────────────────── */
+const RZ_EDGE = 6;   // px hit zone at a cell's right/bottom edge
+let _rzDrag = null;  // { type:'col'|'row', index, start, size, el }
+
+function _resizeZone(e, el) {
+  const rect = el.getBoundingClientRect();
+  if (e.clientX >= rect.right  - RZ_EDGE) return 'col';
+  if (e.clientY >= rect.bottom - RZ_EDGE) return 'row';
+  return null;
+}
+
+function _syncSizeArrays() {
+  while (S.colWidths.length  < S.cols) S.colWidths.push(null);
+  S.colWidths.length = S.cols;
+  while (S.rowHeights.length < S.rows) S.rowHeights.push(null);
+  S.rowHeights.length = S.rows;
+}
+
+/* First resize: freeze every column at its current rendered width so
+   nothing jumps when the table switches from % width to px columns. */
+function _ensureColWidths() {
+  if (S.colWidths.some(w => w != null)) return;
+  const tbl = document.querySelector('#tbl-container table');
+  if (!tbl) return;
+  const widths = Array(S.cols).fill(null);
+  tbl.querySelectorAll('td, th').forEach(el => {
+    const c = +el.dataset.c;
+    const r = +el.dataset.r;
+    if (S.data[r]?.[c]?.colspan === 1 && widths[c] == null) {
+      widths[c] = Math.round(el.getBoundingClientRect().width);
+    }
+  });
+  const fallback = Math.max(40, Math.round(tbl.getBoundingClientRect().width / S.cols));
+  for (let c = 0; c < S.cols; c++) S.colWidths[c] = widths[c] ?? fallback;
+  const cols = tbl.querySelectorAll('colgroup col');
+  cols.forEach((col, c) => { col.style.width = S.colWidths[c] + 'px'; });
+  tbl.style.width = 'auto';
+}
+
+function startColResize(e, colIdx) {
+  syncContent();
+  saveUndoState();
+  _ensureColWidths();
+  const tbl = document.querySelector('#tbl-container table');
+  const colEl = tbl && tbl.querySelectorAll('colgroup col')[colIdx];
+  if (!colEl) return;
+  _rzDrag = { type: 'col', index: colIdx, start: e.clientX, size: S.colWidths[colIdx], el: colEl };
+  document.body.classList.add('rz-col-active');
+}
+
+function startRowResize(e, rowIdx) {
+  syncContent();
+  saveUndoState();
+  const tbl = document.querySelector('#tbl-container table');
+  const trEl = tbl && tbl.querySelectorAll('tr')[rowIdx];
+  if (!trEl) return;
+  const size = S.rowHeights[rowIdx] ?? Math.round(trEl.getBoundingClientRect().height);
+  _rzDrag = { type: 'row', index: rowIdx, start: e.clientY, size, el: trEl };
+  document.body.classList.add('rz-row-active');
+}
+
+document.addEventListener('mousemove', (e) => {
+  if (!_rzDrag) return;
+  e.preventDefault();
+  if (_rzDrag.type === 'col') {
+    const w = Math.max(36, Math.round(_rzDrag.size + e.clientX - _rzDrag.start));
+    S.colWidths[_rzDrag.index] = w;
+    _rzDrag.el.style.width = w + 'px';
+  } else {
+    const h = Math.max(22, Math.round(_rzDrag.size + e.clientY - _rzDrag.start));
+    S.rowHeights[_rzDrag.index] = h;
+    _rzDrag.el.style.height = h + 'px';
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  if (_rzDrag) {
+    _rzDrag = null;
+    document.body.classList.remove('rz-col-active', 'rz-row-active');
+  }
+  _dragSel = false;
+  _dragMoved = false;
+});
+
+/* Edge-hover cursor feedback */
+let _rzHoverEl = null;
+_tblContainer.addEventListener('mousemove', (e) => {
+  if (_rzDrag || _dragSel) return;
+  const el = e.target.closest('[data-r]');
+  const zone = el ? _resizeZone(e, el) : null;
+  if (_rzHoverEl && (_rzHoverEl !== el || !zone)) {
+    _rzHoverEl.classList.remove('rz-col-hover', 'rz-row-hover');
+    _rzHoverEl = null;
+  }
+  if (el && zone) {
+    el.classList.toggle('rz-col-hover', zone === 'col');
+    el.classList.toggle('rz-row-hover', zone === 'row');
+    _rzHoverEl = el;
+  }
+});
+_tblContainer.addEventListener('mouseleave', () => {
+  if (_rzHoverEl) { _rzHoverEl.classList.remove('rz-col-hover', 'rz-row-hover'); _rzHoverEl = null; }
+});
+
+/* Double-click a column/row edge to reset it to automatic size */
+function onCellDblClick(e, r, c) {
+  const zone = _resizeZone(e, e.currentTarget);
+  if (!zone) return;
+  e.preventDefault();
+  syncContent();
+  saveUndoState();
+  if (zone === 'col') S.colWidths[c + S.data[r][c].colspan - 1] = null;
+  else                S.rowHeights[r + S.data[r][c].rowspan - 1] = null;
+  renderTable();
 }
 
 /* Only allow plain text when pasting into cells.
@@ -340,7 +509,7 @@ function resetTable() {
 
 /* ── Merge / Split ─────────────────────────── */
 function mergeCells() {
-  if (S.sel.size < 2) { alert('Select at least 2 cells to merge.'); return; }
+  if (S.sel.size < 2) { toast(_i18nText('tbl-msg-merge-sel', 'Select at least 2 cells to merge.')); return; }
   syncContent();
   saveUndoState();
 
@@ -381,7 +550,7 @@ function mergeCells() {
 }
 
 function splitCell() {
-  if (S.sel.size !== 1) { alert('Select exactly one merged cell to split.'); return; }
+  if (S.sel.size !== 1) { toast(_i18nText('tbl-msg-split-sel', 'Select exactly one merged cell to split.')); return; }
   syncContent();
   saveUndoState();
 
@@ -389,7 +558,7 @@ function splitCell() {
   const [r, c] = key.split(',').map(Number);
   const cell   = S.data[r][c];
 
-  if (cell.colspan === 1 && cell.rowspan === 1) { alert('Selected cell is not merged.'); return; }
+  if (cell.colspan === 1 && cell.rowspan === 1) { toast(_i18nText('tbl-msg-not-merged', 'Selected cell is not merged.')); return; }
 
   // Restore covered cells
   for (let dr = 0; dr < cell.rowspan; dr++)
@@ -447,7 +616,8 @@ function applyTableSettings() {
 
   const brd = ts.borderW > 0 ? `${ts.borderW}px solid ${ts.borderC}` : 'none';
 
-  tbl.style.width           = ts.width;
+  // Explicit px column widths take precedence over the table-width setting
+  tbl.style.width           = S.colWidths.some(w => w != null) ? 'auto' : ts.width;
   tbl.style.backgroundColor = ts.bg;
   if (ts.align === 'center') { tbl.style.marginLeft = tbl.style.marginRight = 'auto'; }
   else if (ts.align === 'right') { tbl.style.marginLeft = 'auto'; tbl.style.marginRight = ''; }
@@ -491,12 +661,22 @@ function switchTab(btn, tabId) {
 function buildHTMLTable() {
   const ts  = S.ts;
   const brd = ts.borderW > 0 ? `${ts.borderW}px solid ${ts.borderC}` : 'none';
-  let style = `border-collapse:collapse;width:${ts.width};`;
+  const hasW = S.colWidths.some(w => w != null);
+  let style = `border-collapse:collapse;width:${hasW ? 'auto' : ts.width};`;
   if (ts.bg) style += `background:${ts.bg};`;
 
   let html = `<table style="${style}">\n`;
+  if (hasW) {
+    html += '  <colgroup>\n';
+    for (let c = 0; c < S.cols; c++) {
+      html += S.colWidths[c] != null
+        ? `    <col style="width:${S.colWidths[c]}px">\n`
+        : '    <col>\n';
+    }
+    html += '  </colgroup>\n';
+  }
   for (let r = 0; r < S.rows; r++) {
-    html += '  <tr>\n';
+    html += S.rowHeights[r] != null ? `  <tr style="height:${S.rowHeights[r]}px">\n` : '  <tr>\n';
     for (let c = 0; c < S.cols; c++) {
       const cell = S.data[r][c];
       if (cell.isHidden) continue;
@@ -583,58 +763,113 @@ function buildCSV() {
   return csv;
 }
 
+function buildTSV() {
+  const lines = [];
+  for (let r = 0; r < S.rows; r++) {
+    const cells = [];
+    for (let c = 0; c < S.cols; c++) {
+      cells.push(S.data[r][c].isHidden ? '' : S.data[r][c].text.replace(/\t/g, ' ').replace(/\n/g, ' '));
+    }
+    lines.push(cells.join('\t'));
+  }
+  return lines.join('\n') + '\n';
+}
+
 const EXPORT_MAP = {
   html:     { build: buildHTMLTable, file: 'table.html', title: 'HTML' },
   markdown: { build: buildMarkdown,  file: 'table.md',   title: 'Markdown' },
   latex:    { build: buildLatex,     file: 'table.tex',  title: 'LaTeX' },
   csv:      { build: buildCSV,       file: 'table.csv',  title: 'CSV' },
+  tsv:      { build: buildTSV,       file: 'table.tsv',  title: 'TSV' },
 };
 
-function exportAs(type) {
+function openExportDlg() {
   syncContent();
-  const info          = EXPORT_MAP[type];
-  S.previewText       = info.build();
-  S.previewFile       = info.file;
-  document.getElementById('preview-title').textContent = info.title + ' Output';
-  document.getElementById('preview-code').textContent  = S.previewText;
+  setExportFormat(S.exportFormat || 'html');
   document.getElementById('preview-overlay').classList.add('visible');
 }
 
-function copyHTMLToClipboard() {
-  syncContent();
-  const html = buildHTMLTable();
-  navigator.clipboard.writeText(html).then(
-    () => alert('HTML copied to clipboard!'),
-    () => fallbackCopy(html)
-  );
+function setExportFormat(type) {
+  if (!EXPORT_MAP[type]) type = 'html';
+  S.exportFormat = type;
+  const info    = EXPORT_MAP[type];
+  S.previewText = info.build();
+  S.previewFile = info.file;
+  document.querySelectorAll('#export-pills .pill').forEach(b => {
+    b.classList.toggle('active', b.dataset.fmt === type);
+  });
+  document.getElementById('preview-title').textContent = info.title;
+  document.getElementById('preview-code').textContent  = S.previewText;
 }
 
-function fallbackCopy(text) {
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(
-      () => alert('Copied to clipboard!'),
-      () => _legacyCopy(text)
-    );
-  } else {
-    _legacyCopy(text);
-  }
+/* Kept for backward compatibility (opens the export dialog on that format) */
+function exportAs(type) {
+  syncContent();
+  setExportFormat(type);
+  document.getElementById('preview-overlay').classList.add('visible');
 }
-function _legacyCopy(text) {
+
+/* ── Clipboard helpers ─────────────────────── */
+function _i18nText(key, fallback) {
+  return (window.PeppyI18n && PeppyI18n.t(key) !== key) ? PeppyI18n.t(key) : fallback;
+}
+
+function toast(msg) {
+  let el = document.getElementById('pt-toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'pt-toast';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+function _fallbackCopyText(text) {
   const ta = document.createElement('textarea');
   ta.value = text;
-  ta.style.cssText = 'position:fixed;top:-9999px;opacity:0';
+  ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
   document.body.appendChild(ta);
+  ta.focus();
   ta.select();
   try { document.execCommand('copy'); } catch {}
   document.body.removeChild(ta);
-  alert('Copied to clipboard!');
+}
+
+/* Write both an HTML table and a plain-text flavor, so pasting into
+   Excel / Google Sheets / Word reproduces the table structure. */
+function _writeRichClipboard(html, plain) {
+  if (navigator.clipboard && window.ClipboardItem) {
+    return navigator.clipboard.write([new ClipboardItem({
+      'text/html':  new Blob([html],  { type: 'text/html' }),
+      'text/plain': new Blob([plain], { type: 'text/plain' }),
+    })]).catch(() => navigator.clipboard.writeText(plain));
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard.writeText(plain);
+  }
+  _fallbackCopyText(plain);
+  return Promise.resolve();
 }
 
 function copyPreview() {
-  navigator.clipboard.writeText(S.previewText).then(
-    () => alert('Copied!'),
-    () => fallbackCopy(S.previewText)
-  );
+  const done = () => toast(_i18nText('tbl-copied', 'Copied to clipboard!'));
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(S.previewText).then(done, () => { _fallbackCopyText(S.previewText); done(); });
+  } else {
+    _fallbackCopyText(S.previewText);
+    done();
+  }
+}
+
+/* One-click: copy the whole table so it pastes as a real table in
+   Excel, Google Sheets, Word, email, etc. */
+function copyTableForSpreadsheet() {
+  syncContent();
+  _writeRichClipboard(buildHTMLTable(), buildTSV())
+    .then(() => toast(_i18nText('tbl-copied', 'Copied to clipboard!')));
 }
 
 function downloadPreview() {
@@ -648,16 +883,9 @@ function downloadPreview() {
 
 /* ── Import ────────────────────────────────── */
 function showImportDlg(mode) {
-  S.importMode = mode;
-  const titles = { html: 'Import HTML Table', csv: 'Import CSV', markdown: 'Import Markdown Table', latex: 'Import LaTeX Table' };
-  const placeholders = {
-    html:     'Paste HTML with a <table> element\u2026',
-    csv:      'Paste CSV data\u2026',
-    markdown: 'Paste a Markdown pipe table\u2026',
-    latex:    'Paste a LaTeX \\begin{tabular}\u2026\\end{tabular} block\u2026',
-  };
-  document.getElementById('import-title').textContent = titles[mode] || 'Import';
-  document.getElementById('import-ta').placeholder = placeholders[mode] || 'Paste here\u2026';
+  S.importMode = mode || 'auto';
+  const fmtSel = document.getElementById('import-fmt');
+  if (fmtSel) fmtSel.value = S.importMode;
   document.getElementById('import-ta').value  = '';
   document.getElementById('import-msg').textContent = '';
   document.getElementById('import-msg').className   = 'dlg-msg';
@@ -665,11 +893,62 @@ function showImportDlg(mode) {
   document.getElementById('import-ta').focus();
 }
 
+/* Guess the format of pasted data */
+function detectImportFormat(text) {
+  const s = text.trim();
+  if (/<table[\s>]/i.test(s))          return 'html';
+  if (/\\begin\{tabular\}/.test(s))    return 'latex';
+  const lines = s.split('\n').map(l => l.trim()).filter(l => l.length);
+  if (lines.length >= 2 && /^\|/.test(lines[0]) && /^\|?[\s\-:|]+\|?$/.test(lines[1])) return 'markdown';
+  if (s.includes('\t'))                return 'tsv';
+  return 'csv';
+}
+
 function doImport() {
-  if (S.importMode === 'html')     importHTML();
-  else if (S.importMode === 'csv') importCSV();
-  else if (S.importMode === 'markdown') importMarkdown();
-  else if (S.importMode === 'latex')    importLatex();
+  const fmtSel = document.getElementById('import-fmt');
+  let mode = fmtSel ? fmtSel.value : S.importMode;
+  if (mode === 'auto') {
+    const text = document.getElementById('import-ta').value;
+    if (!text.trim()) return;
+    mode = detectImportFormat(text);
+  }
+  if (mode === 'html')          importHTML();
+  else if (mode === 'csv')      importCSV();
+  else if (mode === 'tsv')      importTSV();
+  else if (mode === 'markdown') importMarkdown();
+  else if (mode === 'latex')    importLatex();
+}
+
+/* Load a local file into the import textarea and pre-select its format */
+function importFromFile(input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    document.getElementById('import-ta').value = reader.result;
+    const ext = (file.name.split('.').pop() || '').toLowerCase();
+    const byExt = { html: 'html', htm: 'html', csv: 'csv', tsv: 'tsv', md: 'markdown', markdown: 'markdown', tex: 'latex' };
+    const fmtSel = document.getElementById('import-fmt');
+    if (fmtSel) fmtSel.value = byExt[ext] || 'auto';
+  };
+  reader.readAsText(file);
+  input.value = '';  // allow re-selecting the same file
+}
+
+/* Replace the table with imported data (shared by all importers) */
+function _applyImportedData(newData, maxCols) {
+  saveUndoState();
+  S.data = newData;
+  S.rows = newData.length;
+  S.cols = maxCols;
+  S.colWidths  = Array(maxCols).fill(null);
+  S.rowHeights = Array(S.rows).fill(null);
+  document.getElementById('inp-rows').value = S.rows;
+  document.getElementById('inp-cols').value = S.cols;
+  S.sel.clear();
+  S.anchor = null;
+  closeDlg('import-overlay');
+  renderTable();
 }
 
 function importHTML() {
@@ -705,15 +984,7 @@ function importHTML() {
 
   newData.forEach(row => { while (row.length < maxCols) row.push(mkCell()); });
 
-  saveUndoState();
-  S.data = newData;
-  S.rows = newData.length;
-  S.cols = maxCols;
-  document.getElementById('inp-rows').value = S.rows;
-  document.getElementById('inp-cols').value = S.cols;
-  S.sel.clear();
-  closeDlg('import-overlay');
-  renderTable();
+  _applyImportedData(newData, maxCols);
 }
 
 function importCSV() {
@@ -731,15 +1002,27 @@ function importCSV() {
     return row;
   });
 
-  saveUndoState();
-  S.data = newData;
-  S.rows = newData.length;
-  S.cols = maxCols;
-  document.getElementById('inp-rows').value = S.rows;
-  document.getElementById('inp-cols').value = S.cols;
-  S.sel.clear();
-  closeDlg('import-overlay');
-  renderTable();
+  _applyImportedData(newData, maxCols);
+}
+
+function importTSV() {
+  const input = document.getElementById('import-ta').value;
+  const msgEl = document.getElementById('import-msg');
+  if (!input.trim()) return;
+
+  const lines = input.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+  while (lines.length && lines[lines.length - 1] === '') lines.pop();
+  if (!lines.length) { msgEl.textContent = 'No data found.'; msgEl.className = 'dlg-msg err'; return; }
+
+  const grid    = lines.map(l => l.split('\t'));
+  const maxCols = Math.max(...grid.map(r => r.length));
+  const newData = grid.map(row => {
+    const cells = row.map(t => { const cell = mkCell(); cell.text = t; return cell; });
+    while (cells.length < maxCols) cells.push(mkCell());
+    return cells;
+  });
+
+  _applyImportedData(newData, maxCols);
 }
 
 function parseCSV(text) {
@@ -799,15 +1082,7 @@ function importMarkdown() {
     return cells;
   });
 
-  saveUndoState();
-  S.data = newData;
-  S.rows = newData.length;
-  S.cols = maxCols;
-  document.getElementById('inp-rows').value = S.rows;
-  document.getElementById('inp-cols').value = S.cols;
-  S.sel.clear();
-  closeDlg('import-overlay');
-  renderTable();
+  _applyImportedData(newData, maxCols);
 }
 
 function importLatex() {
@@ -860,15 +1135,7 @@ function importLatex() {
   const newData = lines.map(parseCells);
   const maxCols = Math.max(...newData.map(r => r.reduce((s, c) => s + (c.colspan || 1), 0)));
 
-  saveUndoState();
-  S.data = newData;
-  S.rows = newData.length;
-  S.cols = maxCols;
-  document.getElementById('inp-rows').value = S.rows;
-  document.getElementById('inp-cols').value = S.cols;
-  S.sel.clear();
-  closeDlg('import-overlay');
-  renderTable();
+  _applyImportedData(newData, maxCols);
 }
 
 /* ── Dialog helpers ────────────────────────── */
@@ -915,7 +1182,13 @@ document.addEventListener('mousedown', (e) => {
   if (!e.target.closest('#ctx-menu')) closeCtxMenu();
 });
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeCtxMenu();
+  if (e.key === 'Escape') {
+    closeCtxMenu();
+    // Close any open dialog first; otherwise clear the cell selection
+    const openDlg = document.querySelector('.dlg-overlay.visible');
+    if (openDlg) { openDlg.classList.remove('visible'); return; }
+    if (S.sel.size) { S.sel.clear(); S.anchor = null; updateSelClasses(); }
+  }
   if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'z') { e.preventDefault(); doUndo(); }
   if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.shiftKey && e.key === 'z'))) { e.preventDefault(); doRedo(); }
 });
@@ -925,7 +1198,9 @@ function ctxInsertRowAbove() {
   if (!S.ctxCell) return;
   const { r } = S.ctxCell;
   syncContent();
+  saveUndoState();
   S.data.splice(r, 0, Array.from({ length: S.cols }, mkCell));
+  S.rowHeights.splice(r, 0, null);
   S.rows++;
   document.getElementById('inp-rows').value = S.rows;
   S.sel.clear(); S.anchor = null;
@@ -937,7 +1212,9 @@ function ctxInsertRowBelow() {
   if (!S.ctxCell) return;
   const { r } = S.ctxCell;
   syncContent();
+  saveUndoState();
   S.data.splice(r + 1, 0, Array.from({ length: S.cols }, mkCell));
+  S.rowHeights.splice(r + 1, 0, null);
   S.rows++;
   document.getElementById('inp-rows').value = S.rows;
   S.sel.clear(); S.anchor = null;
@@ -949,7 +1226,9 @@ function ctxInsertColLeft() {
   if (!S.ctxCell) return;
   const { c } = S.ctxCell;
   syncContent();
+  saveUndoState();
   S.data.forEach(row => row.splice(c, 0, mkCell()));
+  S.colWidths.splice(c, 0, null);
   S.cols++;
   document.getElementById('inp-cols').value = S.cols;
   S.sel.clear(); S.anchor = null;
@@ -961,7 +1240,9 @@ function ctxInsertColRight() {
   if (!S.ctxCell) return;
   const { c } = S.ctxCell;
   syncContent();
+  saveUndoState();
   S.data.forEach(row => row.splice(c + 1, 0, mkCell()));
+  S.colWidths.splice(c + 1, 0, null);
   S.cols++;
   document.getElementById('inp-cols').value = S.cols;
   S.sel.clear(); S.anchor = null;
@@ -973,7 +1254,9 @@ function ctxDeleteRow() {
   if (!S.ctxCell || S.rows <= 1) return;
   const { r } = S.ctxCell;
   syncContent();
+  saveUndoState();
   S.data.splice(r, 1);
+  S.rowHeights.splice(r, 1);
   S.rows--;
   document.getElementById('inp-rows').value = S.rows;
   S.sel.clear(); S.anchor = null;
@@ -985,7 +1268,9 @@ function ctxDeleteCol() {
   if (!S.ctxCell || S.cols <= 1) return;
   const { c } = S.ctxCell;
   syncContent();
+  saveUndoState();
   S.data.forEach(row => row.splice(c, 1));
+  S.colWidths.splice(c, 1);
   S.cols--;
   document.getElementById('inp-cols').value = S.cols;
   S.sel.clear(); S.anchor = null;
@@ -1013,17 +1298,33 @@ function _selToTSV() {
   return lines.join('\n');
 }
 
+/* Build an HTML <table> fragment of the selection (same flat grid as the
+   TSV) so pasting into Excel / Google Sheets / Word keeps the structure. */
+function _selToHTMLGrid() {
+  const coords = [...S.sel].map(k => k.split(',').map(Number));
+  const minR = Math.min(...coords.map(([r]) => r));
+  const maxR = Math.max(...coords.map(([r]) => r));
+  const minC = Math.min(...coords.map(([, c]) => c));
+  const maxC = Math.max(...coords.map(([, c]) => c));
+  let html = '<table>';
+  for (let r = minR; r <= maxR; r++) {
+    html += '<tr>';
+    for (let c = minC; c <= maxC; c++) {
+      html += `<td>${escHtml(S.data[r]?.[c]?.text ?? '')}</td>`;
+    }
+    html += '</tr>';
+  }
+  return html + '</table>';
+}
+
 function ctxCopyCell() {
   closeCtxMenu();
   if (S.sel.size === 0) return;
   syncContent();
   const tsv = _selToTSV();
   S.clipCell = { text: tsv };
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(tsv).catch(() => _fallbackCopyText(tsv));
-  } else {
-    _fallbackCopyText(tsv);
-  }
+  _writeRichClipboard(_selToHTMLGrid(), tsv)
+    .then(() => toast(_i18nText('tbl-copied', 'Copied to clipboard!')));
 }
 
 function _fallbackCopyText(text) {
@@ -1157,6 +1458,35 @@ document.addEventListener('copy', (e) => {
   syncContent();
   const tsv = _selToTSV();
   e.clipboardData.setData('text/plain', tsv);
+  e.clipboardData.setData('text/html', _selToHTMLGrid());
   S.clipCell = { text: tsv };
+  toast(_i18nText('tbl-copied', 'Copied to clipboard!'));
+});
+
+/* Ctrl+X: copy the selected range, then clear it */
+document.addEventListener('cut', (e) => {
+  if (S.sel.size <= 1) return;
+  if (!e.target.closest('#tbl-container')) return;
+  e.preventDefault();
+  syncContent();
+  const tsv = _selToTSV();
+  e.clipboardData.setData('text/plain', tsv);
+  e.clipboardData.setData('text/html', _selToHTMLGrid());
+  S.clipCell = { text: tsv };
+  saveUndoState();
+  S.sel.forEach(k => {
+    const [r, c] = k.split(',').map(Number);
+    if (S.data[r]?.[c] && !S.data[r][c].isHidden) S.data[r][c].text = '';
+  });
+  renderTable();
+});
+
+/* Delete / Backspace with a multi-cell selection clears the cells */
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Delete' && e.key !== 'Backspace') return;
+  if (S.sel.size <= 1) return;
+  if (!e.target.closest || !e.target.closest('#tbl-container')) return;
+  e.preventDefault();
+  clearCells();
 });
 
