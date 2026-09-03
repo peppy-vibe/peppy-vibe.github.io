@@ -172,13 +172,45 @@ body {
 #tbl-container td,
 #tbl-container th {
   position: relative;
-  min-width: 80px;
+  min-width: 36px;
   min-height: 30px;
   cursor: text;
   outline: none;
   white-space: pre-wrap;
   word-break: break-word;
   vertical-align: top;
+}
+
+/* Resize affordances: cursor changes near a cell's right/bottom edge */
+#tbl-container td.rz-col-hover,
+#tbl-container th.rz-col-hover { cursor: col-resize; }
+#tbl-container td.rz-row-hover,
+#tbl-container th.rz-row-hover { cursor: row-resize; }
+#tbl-container td.rz-col-hover::after,
+#tbl-container th.rz-col-hover::after {
+  content: '';
+  position: absolute;
+  top: 0; right: -1px; bottom: 0;
+  width: 3px;
+  background: #5646F5;
+  pointer-events: none;
+}
+#tbl-container td.rz-row-hover::after,
+#tbl-container th.rz-row-hover::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 3px;
+  background: #5646F5;
+  pointer-events: none;
+}
+
+/* While dragging a resize, lock cursor & disable text selection */
+body.rz-col-active { cursor: col-resize; }
+body.rz-row-active { cursor: row-resize; }
+body.rz-col-active, body.rz-col-active *,
+body.rz-row-active, body.rz-row-active * {
+  user-select: none !important;
 }
 
 #tbl-container th {
@@ -341,6 +373,21 @@ body {
   border-color: #4535e0;
 }
 
+/* Accent button (main action in a bar or dialog) */
+.bar-primary {
+  background: #5646F5 !important;
+  color: #fff !important;
+  border-color: #4535e0 !important;
+}
+.bar-primary:hover { background: #4535e0 !important; }
+
+.export-formats {
+  margin-left: auto;
+  font-size: 11px;
+  color: #999;
+  white-space: nowrap;
+}
+
 .bar-sep {
   width: 1px;
   height: 20px;
@@ -447,6 +494,83 @@ body {
 }
 .dlg-msg.err { color: #c00; }
 .dlg-msg.ok  { color: #080; }
+
+/* Inline row inside a dialog (label + select + button) */
+.dlg-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.dlg-row label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+}
+.dlg-row select {
+  padding: 4px 6px;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  font-size: 12px;
+}
+.dlg-row button {
+  padding: 4px 10px;
+  border: 1px solid #bbb;
+  background: #f0f0f0;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.dlg-row button:hover {
+  background: #5646F5;
+  color: #fff;
+  border-color: #4535e0;
+}
+
+/* Export format pills */
+.fmt-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.fmt-pills .pill {
+  padding: 4px 14px;
+  border: 1px solid #bbb;
+  background: #f5f5f5;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.fmt-pills .pill:hover { border-color: #5646F5; color: #5646F5; }
+.fmt-pills .pill.active {
+  background: #5646F5;
+  color: #fff;
+  border-color: #4535e0;
+  font-weight: 600;
+}
+
+/* Toast notification */
+#pt-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 44px;
+  transform: translateX(-50%) translateY(12px);
+  background: #1e1e1e;
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 4000;
+  max-width: 90vw;
+}
+#pt-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
 
 .preview-code {
   background: #1e1e1e;
@@ -727,10 +851,42 @@ body {
 [data-theme="dark"] .dlg-x { color: var(--tg-text2); }
 [data-theme="dark"] .dlg-body { color: var(--tg-text); }
 [data-theme="dark"] .dlg-body textarea,
-[data-theme="dark"] .dlg-body input {
+[data-theme="dark"] .dlg-body input,
+[data-theme="dark"] .dlg-body select {
   background: var(--tg-bg3);
   border-color: var(--tg-border);
   color: var(--tg-text);
+}
+[data-theme="dark"] .dlg-row label { color: var(--tg-text); }
+[data-theme="dark"] .dlg-row button {
+  background: var(--tg-bg3);
+  border-color: var(--tg-border);
+  color: var(--tg-text);
+}
+[data-theme="dark"] .dlg-row button:hover {
+  background: var(--tg-accent);
+  color: #fff;
+}
+[data-theme="dark"] .fmt-pills .pill {
+  background: var(--tg-bg3);
+  border-color: var(--tg-border);
+  color: var(--tg-text);
+}
+[data-theme="dark"] .fmt-pills .pill:hover { border-color: var(--tg-accent); color: var(--tg-accent); }
+[data-theme="dark"] .fmt-pills .pill.active {
+  background: var(--tg-accent);
+  border-color: var(--tg-accent);
+  color: #fff;
+}
+[data-theme="dark"] .export-formats { color: var(--tg-text2); }
+[data-theme="dark"] .bar-primary {
+  background: var(--tg-accent) !important;
+  border-color: var(--tg-accent) !important;
+  color: #fff !important;
+}
+[data-theme="dark"] #pt-toast {
+  background: #f0f0f0;
+  color: #1e1e1e;
 }
 [data-theme="dark"] .dlg-btns button {
   background: var(--tg-bg3);
