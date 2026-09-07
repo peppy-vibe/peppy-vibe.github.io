@@ -693,7 +693,7 @@ function exportAsHtml() {
 <head>
 <meta charset="UTF-8">
 <title>${title.replace(/</g, '&lt;')}</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.47/dist/katex.min.css">
 <style>
   body { max-width: 860px; margin: 2rem auto; padding: 0 1rem; font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.75; color: #1e1e1e; }
   pre  { background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 6px; overflow-x: auto; }

@@ -49,7 +49,7 @@
 
   <div class="app-body">
 
-    <!-- â•â• Sidebar â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- ══ Sidebar ══════════════════════════════════════ -->
     <div class="sidebar">
       <div class="sidebar-groups" id="sidebar-groups">
 
@@ -66,6 +66,7 @@
             <button class="tab-btn"        data-tool="uuid"     data-grp="encoding" onclick="showTool('uuid')" data-i18n="dev-uuid">UUID Generator</button>
             <button class="tab-btn"        data-tool="jwt"      data-grp="encoding" onclick="showTool('jwt')" data-i18n="dev-jwt">JWT Decoder</button>
             <button class="tab-btn"        data-tool="html-ent" data-grp="encoding" onclick="showTool('html-ent')" data-i18n="dev-html-entities">HTML Entities</button>
+            <button class="tab-btn"        data-tool="base"     data-grp="encoding" onclick="showTool('base')" data-i18n="dev-base">Number Base Converter</button>
           </div>
         </div>
 
@@ -81,6 +82,7 @@
             <button class="tab-btn" data-tool="rand"  data-grp="text" onclick="showTool('rand')" data-i18n="dev-random-str">Random String</button>
             <button class="tab-btn" data-tool="lorem" data-grp="text" onclick="showTool('lorem')" data-i18n="dev-lorem">Lorem Ipsum</button>
             <button class="tab-btn" data-tool="stats" data-grp="text" onclick="showTool('stats')" data-i18n="dev-stats">Text Statistics</button>
+            <button class="tab-btn" data-tool="case"  data-grp="text" onclick="showTool('case')" data-i18n="dev-case">Text Case Converter</button>
           </div>
         </div>
 
@@ -98,6 +100,7 @@
             <button class="tab-btn" data-tool="yj"   data-grp="json" onclick="showTool('yj')" data-i18n="dev-yaml-json">YAML → JSON</button>
             <button class="tab-btn" data-tool="xf"   data-grp="json" onclick="showTool('xf')" data-i18n="dev-xml-fmt">XML Formatter</button>
             <button class="tab-btn" data-tool="xj"   data-grp="json" onclick="showTool('xj')" data-i18n="dev-xml-json">XML → JSON</button>
+            <button class="tab-btn" data-tool="cssmin" data-grp="json" onclick="showTool('cssmin')" data-i18n="dev-cssmin">CSS Minifier</button>
           </div>
         </div>
 
@@ -142,12 +145,12 @@
 
     </div><!-- /sidebar -->
 
-    <!-- â•â• Tool Area â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- ══ Tool Area ════════════════════════════════════ -->
     <div class="tool-area">
 
-      <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+      <!-- ─────────────────────────────────────────────
            ENCODING & SECURITY
-      â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+      ───────────────────────────────────────────── -->
 
       <!-- Base64 -->
       <div class="tool-panel active" id="panel-base64">
@@ -340,9 +343,9 @@
         </div>
       </div><!-- /panel-html-ent -->
 
-      <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+      <!-- ─────────────────────────────────────────────
            TEXT TOOLS
-      â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+      ───────────────────────────────────────────── -->
 
       <!-- Text Diff -->
       <div class="tool-panel" id="panel-diff">
@@ -550,9 +553,9 @@
         </div>
       </div><!-- /panel-stats -->
 
-      <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+      <!-- ─────────────────────────────────────────────
            JSON / YAML / XML
-      â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+      ───────────────────────────────────────────── -->
 
       <!-- JSON Formatter -->
       <div class="tool-panel" id="panel-jf">
@@ -624,7 +627,7 @@
         </div>
       </div><!-- /panel-jval -->
 
-      <!-- JSON â†’ CSV -->
+      <!-- JSON → CSV -->
       <div class="tool-panel" id="panel-jcsv">
         <div class="panel-title">JSON &rarr; CSV Converter</div>
         <p style="font-size:13px;color:var(--text2);flex-shrink:0">Input must be a JSON array of objects. Nested values are JSON-stringified.</p>
@@ -650,7 +653,7 @@
         </div>
       </div><!-- /panel-jcsv -->
 
-      <!-- JSON â†’ YAML -->
+      <!-- JSON → YAML -->
       <div class="tool-panel" id="panel-jy">
         <div class="panel-title">JSON &rarr; YAML Converter</div>
         <div class="io-wrap">
@@ -674,7 +677,7 @@
         </div>
       </div><!-- /panel-jy -->
 
-      <!-- YAML â†’ JSON -->
+      <!-- YAML → JSON -->
       <div class="tool-panel" id="panel-yj">
         <div class="panel-title">YAML &rarr; JSON Converter</div>
         <div class="io-wrap">
@@ -735,7 +738,7 @@
         </div>
       </div><!-- /panel-xf -->
 
-      <!-- XML â†’ JSON -->
+      <!-- XML → JSON -->
       <div class="tool-panel" id="panel-xj">
         <div class="panel-title">XML &rarr; JSON Converter</div>
         <p style="font-size:13px;color:var(--text2);flex-shrink:0">Attributes are prefixed with <code>@</code>. Repeated tags become arrays. Text content becomes <code>#text</code>.</p>
@@ -760,9 +763,9 @@
         </div>
       </div><!-- /panel-xj -->
 
-      <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+      <!-- ─────────────────────────────────────────────
            COLOR TOOLS
-      â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+      ───────────────────────────────────────────── -->
 
       <!-- Color Converter -->
       <div class="tool-panel" id="panel-convert">
@@ -886,9 +889,9 @@
         <span class="tool-msg" id="pal-msg"></span>
       </div><!-- /panel-palette -->
 
-      <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+      <!-- ─────────────────────────────────────────────
            TIMESTAMP TOOLS
-      â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+      ───────────────────────────────────────────── -->
 
       <!-- Unix Timestamp Converter -->
       <div class="tool-panel" id="panel-unix">
@@ -990,9 +993,9 @@
       </div><!-- /panel-format -->
 
 
-      <!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+      <!-- ─────────────────────────────────────────────
            REGEX
-      â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+      ───────────────────────────────────────────── -->
 
       <!-- Pattern Tester -->
       <div class="tool-panel" id="panel-tester">
@@ -1055,6 +1058,100 @@
       </div><!-- /panel-replace -->
 
       <!-- Regex Reference -->
+      <!-- Number Base Converter -->
+      <div class="tool-panel" id="panel-base">
+        <div class="panel-title" data-i18n="dev-base">Number Base Converter</div>
+        <p style="font-size:13px;color:var(--text2);flex-shrink:0" data-i18n="dev-base-info">Type in any field &mdash; the others update instantly. Arbitrary precision, negatives supported.</p>
+        <div class="form-row" style="flex-direction:column;align-items:stretch;gap:10px;max-width:520px">
+          <div class="form-group">
+            <label class="io-label">Binary (base 2)</label>
+            <input type="text" id="base-bin" class="result-input" spellcheck="false" placeholder="1010" oninput="baseConvertFrom('base-bin')">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Octal (base 8)</label>
+            <input type="text" id="base-oct" class="result-input" spellcheck="false" placeholder="12" oninput="baseConvertFrom('base-oct')">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Decimal (base 10)</label>
+            <input type="text" id="base-dec" class="result-input" spellcheck="false" placeholder="10" oninput="baseConvertFrom('base-dec')">
+          </div>
+          <div class="form-group">
+            <label class="io-label">Hexadecimal (base 16)</label>
+            <input type="text" id="base-hex" class="result-input" spellcheck="false" placeholder="A" oninput="baseConvertFrom('base-hex')">
+          </div>
+          <div class="form-row">
+            <button class="btn-secondary" onclick="baseClear()">Clear</button>
+            <span class="tool-msg" id="base-msg"></span>
+          </div>
+        </div>
+      </div><!-- /panel-base -->
+
+      <!-- Text Case Converter -->
+      <div class="tool-panel" id="panel-case">
+        <div class="panel-title" data-i18n="dev-case">Text Case Converter</div>
+        <div class="form-row" style="flex-wrap:wrap">
+          <button onclick="applyCase('lower')">lower case</button>
+          <button onclick="applyCase('upper')">UPPER CASE</button>
+          <button onclick="applyCase('title')">Title Case</button>
+          <button onclick="applyCase('sentence')">Sentence case</button>
+          <button class="btn-secondary" onclick="applyCase('camel')">camelCase</button>
+          <button class="btn-secondary" onclick="applyCase('pascal')">PascalCase</button>
+          <button class="btn-secondary" onclick="applyCase('snake')">snake_case</button>
+          <button class="btn-secondary" onclick="applyCase('constant')">CONSTANT_CASE</button>
+          <button class="btn-secondary" onclick="applyCase('kebab')">kebab-case</button>
+          <button class="btn-secondary" onclick="applyCase('slug')">url-slug</button>
+          <button class="btn-secondary" onclick="applyCase('invert')">iNVERT</button>
+          <button class="btn-secondary" onclick="clearPair('case-input','case-output','case-msg')">Clear</button>
+        </div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input</label>
+            <textarea id="case-input" class="io-area" style="flex:1;resize:none"
+              placeholder="Type or paste text&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns" style="justify-content:flex-start;padding-top:20px">
+            <button style="padding:6px 10px" onclick="swapIO('case-input','case-output')"><i class="bi bi-arrow-left-right" aria-hidden="true"></i></button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output</label>
+            <textarea id="case-output" class="io-area" style="flex:1;resize:none" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="case-msg"></span>
+              <button class="copy-btn" onclick="copyTA('case-output','case-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-case -->
+
+      <!-- CSS Minifier -->
+      <div class="tool-panel" id="panel-cssmin">
+        <div class="panel-title" data-i18n="dev-cssmin">CSS Minifier</div>
+        <div class="form-row">
+          <button onclick="cssMinify()"><i class="bi bi-code-slash" aria-hidden="true"></i> Minify</button>
+          <button class="btn-secondary" onclick="cssBeautify()"><i class="bi bi-braces" aria-hidden="true"></i> Beautify</button>
+          <button class="btn-secondary" onclick="swapIO('cssmin-input','cssmin-output')"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Swap</button>
+          <button class="btn-secondary" onclick="clearPair('cssmin-input','cssmin-output','cssmin-msg')">Clear</button>
+        </div>
+        <div class="io-wrap">
+          <div class="io-col">
+            <label class="io-label">Input CSS</label>
+            <textarea id="cssmin-input" class="io-area" style="flex:1;resize:none"
+              placeholder="Paste CSS here&#8230;" spellcheck="false"></textarea>
+          </div>
+          <div class="io-btns" style="justify-content:flex-start;padding-top:20px">
+            <button style="padding:6px 10px" onclick="cssMinify()"><i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+          </div>
+          <div class="io-col">
+            <label class="io-label">Output</label>
+            <textarea id="cssmin-output" class="io-area" style="flex:1;resize:none" readonly spellcheck="false"></textarea>
+            <div class="io-footer">
+              <span class="tool-msg" id="cssmin-msg"></span>
+              <button class="copy-btn" onclick="copyTA('cssmin-output','cssmin-msg')">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-cssmin -->
+
       <div class="tool-panel" id="panel-ref">
         <div class="panel-title">Regex Reference</div>
         <div class="ref-grid">
@@ -1173,7 +1270,7 @@
   </div>
 
   <!-- js-yaml v4 — YAML parsing (cached by SW for offline) -->
-  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js" integrity="sha384-ZeqCzuWczURac3RacSufGD7oSbzeaX7xxnnOr3PTcYTLx4Av0qBj0kBq7AeCtHLA" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.3.2/dist/js-yaml.min.js" integrity="sha384-uwLg6oO8ZhFG2SuQfgmkMtosjtrFYlkPspa/cXS+b3D8GLRTHMDl/mTwqImdlKQO" crossorigin="anonymous"></script>
 
   <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../lib/i18n.js"></script>

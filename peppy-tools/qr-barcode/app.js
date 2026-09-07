@@ -37,6 +37,20 @@ function jumpGroup(grpId, btn) {
 // ──────────────────────────────────────────
 // Utilities
 // ──────────────────────────────────────────
+/* Compose a QR canvas onto a larger canvas with a proper quiet zone
+   (white margin) so exported codes scan reliably. */
+function qrCanvasWithQuietZone(canvas, lightColor) {
+  const margin = Math.max(16, Math.round(canvas.width / 8));
+  const out = document.createElement('canvas');
+  out.width  = canvas.width  + margin * 2;
+  out.height = canvas.height + margin * 2;
+  const ctx = out.getContext('2d');
+  ctx.fillStyle = lightColor || '#ffffff';
+  ctx.fillRect(0, 0, out.width, out.height);
+  ctx.drawImage(canvas, margin, margin);
+  return out;
+}
+
 function downloadBlob(blob, filename) {
   const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: filename });
   a.click();
@@ -174,6 +188,9 @@ function qrGenerate() {
       colorLight: light,
       correctLevel: QRCode.CorrectLevel[ecl] ?? QRCode.CorrectLevel.M
     });
+    // quiet zone around the preview so it matches the exported PNG
+    outputEl.style.background = light;
+    outputEl.style.padding = Math.max(12, Math.round(size / 16)) + 'px';
   } catch (e) {
     outputEl.textContent = '';
     const errSpan = document.createElement('span');
@@ -250,7 +267,8 @@ function qrUpdateSize(val) {
 function qrDownload() {
   const canvas = document.querySelector('#qr-output canvas');
   if (!canvas) { alert('Generate a QR code first.'); return; }
-  canvas.toBlob(blob => downloadBlob(blob, 'qrcode_' + fmtDate() + '.png'), 'image/png');
+  const light = document.getElementById('qr-light')?.value || '#ffffff';
+  qrCanvasWithQuietZone(canvas, light).toBlob(blob => downloadBlob(blob, 'qrcode_' + fmtDate() + '.png'), 'image/png');
 }
 
 // ── Copy to clipboard ────────────────────────────────────
@@ -258,7 +276,8 @@ async function qrCopyClipboard() {
   const canvas = document.querySelector('#qr-output canvas');
   if (!canvas) { alert('Generate a QR code first.'); return; }
   try {
-    canvas.toBlob(async blob => {
+    const light = document.getElementById('qr-light')?.value || '#ffffff';
+    qrCanvasWithQuietZone(canvas, light).toBlob(async blob => {
       await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
       const hint = document.getElementById('qr-hint');
       if (hint) { hint.textContent = 'Copied to clipboard!'; setTimeout(() => hint.textContent = '', 2000); }
@@ -272,7 +291,10 @@ async function qrCopyClipboard() {
 function qrClear() {
   document.querySelectorAll('.qr-input-block input, .qr-input-block textarea').forEach(el => { el.value = ''; });
   if (qrInstance) { qrInstance.clear(); qrInstance = null; }
-  document.getElementById('qr-output').innerHTML = '';
+  const outEl = document.getElementById('qr-output');
+  outEl.innerHTML = '';
+  outEl.style.background = '';
+  outEl.style.padding = '';
   const hint = document.getElementById('qr-hint');
   if (hint) hint.textContent = 'Enter content above to generate a QR code.';
   qrUpdateShareEmbed();
@@ -512,7 +534,7 @@ function batchDownloadOne(idx, rawLabel) {
     const canvas = document.querySelector(`#bqr-${idx} canvas`);
     if (!canvas) { alert('QR canvas not found.'); return; }
     const label = rawLabel.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 40);
-    canvas.toBlob(blob => downloadBlob(blob, `qr_${label}_${idx}.png`), 'image/png');
+    qrCanvasWithQuietZone(canvas).toBlob(blob => downloadBlob(blob, `qr_${label}_${idx}.png`), 'image/png');
   }, 50);
 }
 
@@ -521,7 +543,7 @@ async function batchDownloadAll() {
   if (!canvases.length) { alert('Generate QR codes first.'); return; }
   for (let i = 0; i < canvases.length; i++) {
     await new Promise(resolve => {
-      canvases[i].toBlob(blob => {
+      qrCanvasWithQuietZone(canvases[i]).toBlob(blob => {
         downloadBlob(blob, `qr_batch_${i + 1}.png`);
         setTimeout(resolve, 200);
       }, 'image/png');
@@ -801,7 +823,7 @@ function bcBuildEmbedHtml() {
   const safeVal   = JSON.stringify(input)
     .replace(/</g, '\\u003C').replace(/>/g, '\\u003E').replace(/&/g, '\\u0026');
   return `<svg id="barcode-embed"></svg>
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3/dist/JsBarcode.all.min.js"></scr` + `ipt>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.12.3/dist/JsBarcode.all.min.js"></scr` + `ipt>
 <script>
   JsBarcode("#barcode-embed", ${safeVal}, {
     format:       "${format}",

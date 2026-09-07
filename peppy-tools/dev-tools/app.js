@@ -1,10 +1,10 @@
 ﻿'use strict';
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   PEPPY DEV TOOLS â€” COMBINED â€” app.js
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ═══════════════════════════════════════════
+   PEPPY DEV TOOLS — COMBINED — app.js
+═══════════════════════════════════════════ */
 
-/* â”€â”€ Tool labels â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Tool labels ─────────────────────────── */
 const ALL_TOOL_LABELS = {
   /* Encoding & Security */
   base64:    'Base64 Encoder / Decoder',
@@ -14,6 +14,7 @@ const ALL_TOOL_LABELS = {
   uuid:      'UUID Generator',
   jwt:       'JWT Decoder',
   'html-ent':'HTML Entity Encoder / Decoder',
+  base:      'Number Base Converter',
   /* Text Tools */
   diff:      'Text Diff Checker',
   sort:      'Text Sorter',
@@ -21,15 +22,17 @@ const ALL_TOOL_LABELS = {
   rand:      'Random String Generator',
   lorem:     'Lorem Ipsum Generator',
   stats:     'Text Statistics',
+  'case':    'Text Case Converter',
   /* JSON / Data */
   jf:        'JSON Formatter',
   jv:        'JSON Viewer (Tree)',
   jval:      'JSON Validator',
-  jcsv:      'JSON â†’ CSV Converter',
-  jy:        'JSON â†’ YAML Converter',
-  yj:        'YAML â†’ JSON Converter',
+  jcsv:      'JSON → CSV Converter',
+  jy:        'JSON → YAML Converter',
+  yj:        'YAML → JSON Converter',
   xf:        'XML Formatter',
-  xj:        'XML â†’ JSON Converter',
+  xj:        'XML → JSON Converter',
+  cssmin:    'CSS Minifier',
   /* Colors */
   convert:   'Color Converter',
   picker:    'Color Picker',
@@ -45,18 +48,18 @@ const ALL_TOOL_LABELS = {
   ref:       'Reference',
 };
 
-/* â”€â”€ Tool â†’ Group mapping â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Tool → Group mapping ────────────────── */
 const TOOL_GROUP_MAP = {
   base64: 'encoding', url: 'encoding', hash: 'encoding',
-  password: 'encoding', uuid: 'encoding', jwt: 'encoding', 'html-ent': 'encoding',
-  diff: 'text', sort: 'text', dedup: 'text', rand: 'text', lorem: 'text', stats: 'text',
-  jf: 'json', jv: 'json', jval: 'json', jcsv: 'json', jy: 'json', yj: 'json', xf: 'json', xj: 'json',
+  password: 'encoding', uuid: 'encoding', jwt: 'encoding', 'html-ent': 'encoding', base: 'encoding',
+  diff: 'text', sort: 'text', dedup: 'text', rand: 'text', lorem: 'text', stats: 'text', 'case': 'text',
+  jf: 'json', jv: 'json', jval: 'json', jcsv: 'json', jy: 'json', yj: 'json', xf: 'json', xj: 'json', cssmin: 'json',
   convert: 'colors', picker: 'colors', contrast: 'colors', palette: 'colors',
   unix: 'time', calc: 'time', format: 'time',
   tester: 'regex', replace: 'regex', ref: 'regex',
 };
 
-/* â”€â”€ Tab navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Tab navigation ──────────────────────── */
 function showTool(id) {
   document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -93,7 +96,7 @@ function jumpGroup(grpId) {
 
 /* Theme, fullscreen, mobile menu loaded from shared-ui.js */
 
-/* â”€â”€ Shared helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Shared helpers ──────────────────────── */
 function setMsg(id, text, type) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -216,11 +219,11 @@ function clearPair(inId, outId, msgId) {
   setMsg(msgId, '', '');
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════
    ENCODING TOOLS
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════ */
 
-/* â”€â”€ Base64 â”€â”€ */
+/* ── Base64 ── */
 function b64Encode() {
   const input = document.getElementById('b64-in').value;
   try {
@@ -251,7 +254,7 @@ function b64Swap() {
   setMsg('b64-msg', '', '');
 }
 
-/* â”€â”€ URL Encoder / Decoder â”€â”€ */
+/* ── URL Encoder / Decoder ── */
 function urlEncode() {
   const input = document.getElementById('url-in').value;
   try {
@@ -280,7 +283,7 @@ function urlSwap() {
   setMsg('url-msg', '', '');
 }
 
-/* â”€â”€ Hash Generator â”€â”€ */
+/* ── Hash Generator ── */
 function computeMD5(str) {
   function safeAdd(x, y) {
     const lsw = (x & 0xffff) + (y & 0xffff);
@@ -299,29 +302,29 @@ function computeMD5(str) {
   const W    = [];
   for (let i = 0; i < len; i++) W[i >> 2] |= (utf8.charCodeAt(i) & 0xff) << (i % 4 * 8);
   W[len >> 2] |= 0x80 << (len % 4 * 8);
-  W[(((len + 64) >>> 9) << 4) + 14] = len * 8;
+  W[(((len * 8 + 64) >>> 9) << 4) + 14] = len * 8;
 
   let a = 0x67452301, b = 0xefcdab89, c = 0x98badcfe, d = 0x10325476;
 
   for (let i = 0; i < W.length; i += 16) {
     const [oa, ob, oc, od] = [a, b, c, d];
     const m = j => W[i + j] | 0;
-    a=ff(a,b,c,d,m(0), 7,-680876936);  b=ff(d,a,b,c,m(1), 12,-389564586); c=ff(c,d,a,b,m(2), 17,606105819);   d=ff(b,c,d,a,m(3), 22,-1044525330);
-    a=ff(a,b,c,d,m(4), 7,-176418897);  b=ff(d,a,b,c,m(5), 12,1200080426); c=ff(c,d,a,b,m(6), 17,-1473231341); d=ff(b,c,d,a,m(7), 22,-45705983);
-    a=ff(a,b,c,d,m(8), 7,1770035416);  b=ff(d,a,b,c,m(9), 12,-1958414417);c=ff(c,d,a,b,m(10),17,-42063);       d=ff(b,c,d,a,m(11),22,-1990404162);
-    a=ff(a,b,c,d,m(12),7,1804603682);  b=ff(d,a,b,c,m(13),12,-40341101);  c=ff(c,d,a,b,m(14),17,-1502002290); d=ff(b,c,d,a,m(15),22,1236535329);
-    a=gg(a,b,c,d,m(1), 5,-165796510);  b=gg(d,a,b,c,m(6), 9,-1069501632); c=gg(c,d,a,b,m(11),14,643717713);  d=gg(b,c,d,a,m(0), 20,-373897302);
-    a=gg(a,b,c,d,m(5), 5,-701558691);  b=gg(d,a,b,c,m(10),9,38016083);    c=gg(c,d,a,b,m(15),14,-660478335); d=gg(b,c,d,a,m(4), 20,-405537848);
-    a=gg(a,b,c,d,m(9), 5,568446438);   b=gg(d,a,b,c,m(14),9,-1019803690); c=gg(c,d,a,b,m(3), 14,-187363961); d=gg(b,c,d,a,m(8), 20,1163531501);
-    a=gg(a,b,c,d,m(13),5,-1444681467); b=gg(d,a,b,c,m(2), 9,-51403784);   c=gg(c,d,a,b,m(7), 14,1735328473); d=gg(b,c,d,a,m(12),20,-1926607734);
-    a=hh(a,b,c,d,m(5), 4,-378558);     b=hh(d,a,b,c,m(8), 11,-2022574463);c=hh(c,d,a,b,m(11),16,1839030562); d=hh(b,c,d,a,m(14),23,-35309556);
-    a=hh(a,b,c,d,m(1), 4,-1530992060); b=hh(d,a,b,c,m(4), 11,1272893353); c=hh(c,d,a,b,m(7), 16,-155497632); d=hh(b,c,d,a,m(10),23,-1094730640);
-    a=hh(a,b,c,d,m(13),4,681279174);   b=hh(d,a,b,c,m(0), 11,-358537222); c=hh(c,d,a,b,m(3), 16,-722521979); d=hh(b,c,d,a,m(6), 23,76029189);
-    a=hh(a,b,c,d,m(9), 4,-640364487);  b=hh(d,a,b,c,m(12),11,-421815835); c=hh(c,d,a,b,m(15),16,530742520);  d=hh(b,c,d,a,m(2), 23,-995338651);
-    a=ii(a,b,c,d,m(0), 6,-198630844);  b=ii(d,a,b,c,m(7), 10,1126891415); c=ii(c,d,a,b,m(14),15,-1416354905);d=ii(b,c,d,a,m(5), 21,-57434055);
-    a=ii(a,b,c,d,m(12),6,1700485571);  b=ii(d,a,b,c,m(3), 10,-1894986606);c=ii(c,d,a,b,m(10),15,-1051523);   d=ii(b,c,d,a,m(1), 21,-2054922799);
-    a=ii(a,b,c,d,m(8), 6,1873313359);  b=ii(d,a,b,c,m(15),10,-30611744);  c=ii(c,d,a,b,m(6), 15,-1560198380);d=ii(b,c,d,a,m(13),21,1309151649);
-    a=ii(a,b,c,d,m(4), 6,-145523070);  b=ii(d,a,b,c,m(11),10,-1120210379);c=ii(c,d,a,b,m(2), 15,718787259);  d=ii(b,c,d,a,m(9), 21,-343485551);
+    a=ff(a,b,c,d,m(0), 7,-680876936);  d=ff(d,a,b,c,m(1), 12,-389564586); c=ff(c,d,a,b,m(2), 17,606105819);   b=ff(b,c,d,a,m(3), 22,-1044525330);
+    a=ff(a,b,c,d,m(4), 7,-176418897);  d=ff(d,a,b,c,m(5), 12,1200080426); c=ff(c,d,a,b,m(6), 17,-1473231341); b=ff(b,c,d,a,m(7), 22,-45705983);
+    a=ff(a,b,c,d,m(8), 7,1770035416);  d=ff(d,a,b,c,m(9), 12,-1958414417);c=ff(c,d,a,b,m(10),17,-42063);       b=ff(b,c,d,a,m(11),22,-1990404162);
+    a=ff(a,b,c,d,m(12),7,1804603682);  d=ff(d,a,b,c,m(13),12,-40341101);  c=ff(c,d,a,b,m(14),17,-1502002290); b=ff(b,c,d,a,m(15),22,1236535329);
+    a=gg(a,b,c,d,m(1), 5,-165796510);  d=gg(d,a,b,c,m(6), 9,-1069501632); c=gg(c,d,a,b,m(11),14,643717713);  b=gg(b,c,d,a,m(0), 20,-373897302);
+    a=gg(a,b,c,d,m(5), 5,-701558691);  d=gg(d,a,b,c,m(10),9,38016083);    c=gg(c,d,a,b,m(15),14,-660478335); b=gg(b,c,d,a,m(4), 20,-405537848);
+    a=gg(a,b,c,d,m(9), 5,568446438);   d=gg(d,a,b,c,m(14),9,-1019803690); c=gg(c,d,a,b,m(3), 14,-187363961); b=gg(b,c,d,a,m(8), 20,1163531501);
+    a=gg(a,b,c,d,m(13),5,-1444681467); d=gg(d,a,b,c,m(2), 9,-51403784);   c=gg(c,d,a,b,m(7), 14,1735328473); b=gg(b,c,d,a,m(12),20,-1926607734);
+    a=hh(a,b,c,d,m(5), 4,-378558);     d=hh(d,a,b,c,m(8), 11,-2022574463);c=hh(c,d,a,b,m(11),16,1839030562); b=hh(b,c,d,a,m(14),23,-35309556);
+    a=hh(a,b,c,d,m(1), 4,-1530992060); d=hh(d,a,b,c,m(4), 11,1272893353); c=hh(c,d,a,b,m(7), 16,-155497632); b=hh(b,c,d,a,m(10),23,-1094730640);
+    a=hh(a,b,c,d,m(13),4,681279174);   d=hh(d,a,b,c,m(0), 11,-358537222); c=hh(c,d,a,b,m(3), 16,-722521979); b=hh(b,c,d,a,m(6), 23,76029189);
+    a=hh(a,b,c,d,m(9), 4,-640364487);  d=hh(d,a,b,c,m(12),11,-421815835); c=hh(c,d,a,b,m(15),16,530742520);  b=hh(b,c,d,a,m(2), 23,-995338651);
+    a=ii(a,b,c,d,m(0), 6,-198630844);  d=ii(d,a,b,c,m(7), 10,1126891415); c=ii(c,d,a,b,m(14),15,-1416354905);b=ii(b,c,d,a,m(5), 21,-57434055);
+    a=ii(a,b,c,d,m(12),6,1700485571);  d=ii(d,a,b,c,m(3), 10,-1894986606);c=ii(c,d,a,b,m(10),15,-1051523);   b=ii(b,c,d,a,m(1), 21,-2054922799);
+    a=ii(a,b,c,d,m(8), 6,1873313359);  d=ii(d,a,b,c,m(15),10,-30611744);  c=ii(c,d,a,b,m(6), 15,-1560198380);b=ii(b,c,d,a,m(13),21,1309151649);
+    a=ii(a,b,c,d,m(4), 6,-145523070);  d=ii(d,a,b,c,m(11),10,-1120210379);c=ii(c,d,a,b,m(2), 15,718787259);  b=ii(b,c,d,a,m(9), 21,-343485551);
     a=safeAdd(a,oa); b=safeAdd(b,ob); c=safeAdd(c,oc); d=safeAdd(d,od);
   }
   const h2 = n => { let s=''; for(let j=0;j<4;j++) s+=('0'+((n>>>(j*8))&0xff).toString(16)).slice(-2); return s; };
@@ -346,13 +349,13 @@ async function computeHash() {
       result = await computeSHA(algo, input);
     }
     document.getElementById('hash-out').value = result;
-    setMsg('hash-msg', algo + ' Â· ' + (result.length * 4) + ' bits', 'ok');
+    setMsg('hash-msg', algo + ' · ' + (result.length * 4) + ' bits', 'ok');
   } catch (err) {
     setMsg('hash-msg', 'Error: ' + err.message, 'err');
   }
 }
 
-/* â”€â”€ Password Generator â”€â”€ */
+/* ── Password Generator ── */
 const AMBIGUOUS = new Set([...'0Ol1I']);
 
 function generatePassword() {
@@ -430,7 +433,7 @@ function updateStrength(pwd) {
   document.getElementById('strength-label').textContent = lvl.label;
 }
 
-/* â”€â”€ UUID Generator â”€â”€ */
+/* ── UUID Generator ── */
 function generateUUIDs() {
   const ver   = document.querySelector('input[name="uuid-ver"]:checked').value;
   const count = Math.min(100, Math.max(1, parseInt(document.getElementById('uuid-count').value, 10) || 1));
@@ -463,7 +466,7 @@ function clearUUIDs() {
   setMsg('uuid-msg', '', '');
 }
 
-/* â”€â”€ JWT Decoder â”€â”€ */
+/* ── JWT Decoder ── */
 function decodeJWT() {
   const raw    = document.getElementById('jwt-in').value.trim();
   const result = document.getElementById('jwt-result');
@@ -474,7 +477,7 @@ function decodeJWT() {
   const parts = raw.split('.');
   if (parts.length !== 3) {
     result.style.display = 'none';
-    msgEl.textContent    = 'Invalid JWT â€” expected 3 dot-separated parts';
+    msgEl.textContent    = 'Invalid JWT — expected 3 dot-separated parts';
     msgEl.className      = 'tool-msg err';
     return;
   }
@@ -496,7 +499,7 @@ function decodeJWT() {
 
   if (headerRaw === null || payloadRaw === null) {
     result.style.display = 'none';
-    msgEl.textContent    = 'Could not decode â€” invalid Base64url encoding';
+    msgEl.textContent    = 'Could not decode — invalid Base64url encoding';
     msgEl.className      = 'tool-msg err';
     return;
   }
@@ -507,7 +510,7 @@ function decodeJWT() {
   msgEl.textContent    = '';
 }
 
-/* â”€â”€ HTML Entity Encoder / Decoder â”€â”€ */
+/* ── HTML Entity Encoder / Decoder ── */
 function hentEncode() {
   const input = document.getElementById('hent-in').value;
   const div   = document.createElement('div');
@@ -535,9 +538,9 @@ function hentSwap() {
   setMsg('hent-msg', '', '');
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════
    TEXT TOOLS
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════ */
 
 let _diffScrolling = false;
 
@@ -733,7 +736,7 @@ function generateRandom() {
   setMsg('rand-msg', `${count} string${count !== 1 ? 's' : ''} generated`, 'ok');
 }
 
-/* â”€â”€ Lorem Ipsum â”€â”€ */
+/* ── Lorem Ipsum ── */
 const LOREM_WORDS = [
   'lorem','ipsum','dolor','sit','amet','consectetur','adipiscing','elit',
   'sed','do','eiusmod','tempor','incididunt','ut','labore','et','dolore',
@@ -859,9 +862,9 @@ function analyzeText() {
   freq.style.display = 'block';
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════
    JSON / YAML / XML
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════ */
 
 function jsonFormat() {
   const input  = document.getElementById('jf-input').value.trim();
@@ -896,13 +899,13 @@ function jsonViewTree() {
 
 function jsonExpandAll() {
   document.querySelectorAll('#jv-tree .jt-toggle').forEach(btn => {
-    if (btn.textContent === 'â–¸') btn.click();
+    if (btn.textContent === '▸') btn.click();
   });
 }
 
 function jsonCollapseAll() {
   document.querySelectorAll('#jv-tree .jt-toggle').forEach(btn => {
-    if (btn.textContent === 'â–¾') btn.click();
+    if (btn.textContent === '▾') btn.click();
   });
 }
 
@@ -943,7 +946,7 @@ function buildTreeNode(value, key) {
   if (entries.length > 0) {
     toggle = document.createElement('button');
     toggle.className = 'jt-toggle';
-    toggle.textContent = 'â–¾';
+    toggle.textContent = '▾';
     header.appendChild(toggle);
   }
   if (key !== null && key !== undefined) {
@@ -969,8 +972,8 @@ function buildTreeNode(value, key) {
   el.appendChild(childContainer);
   el.appendChild(closeEl);
   toggle.addEventListener('click', () => {
-    const isOpen = toggle.textContent === 'â–¾';
-    toggle.textContent = isOpen ? 'â–¸' : 'â–¾';
+    const isOpen = toggle.textContent === '▾';
+    toggle.textContent = isOpen ? '▸' : '▾';
     childContainer.style.display = isOpen ? 'none' : '';
     closeEl.style.display        = isOpen ? 'none' : '';
     countEl.textContent = isOpen
@@ -1073,7 +1076,7 @@ function yamlToJSON() {
   const input = document.getElementById('yj-input').value.trim();
   if (!input) { setMsg('yj-msg', 'No input', 'err'); return; }
   if (typeof jsyaml === 'undefined') {
-    setMsg('yj-msg', 'js-yaml library failed to load â€” check internet connection', 'err');
+    setMsg('yj-msg', 'js-yaml library failed to load — check internet connection', 'err');
     return;
   }
   try {
@@ -1182,9 +1185,9 @@ function xmlNodeToObj(node) {
   return obj;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════
    COLOR TOOLS
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════ */
 
 function hexToRgb(hex) {
   hex = hex.replace(/^#/, '');
@@ -1371,7 +1374,7 @@ function onPickerChange() {
   document.getElementById('pv-rgb').textContent  = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
   document.getElementById('pv-hsl').textContent  = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
   document.getElementById('pv-cmyk').textContent = `cmyk(${cmyk.c}%, ${cmyk.m}%, ${cmyk.y}%, ${cmyk.k}%)`;
-  document.getElementById('pv-name').textContent = CSS_NAMES[hex.toUpperCase()] || 'â€”';
+  document.getElementById('pv-name').textContent = CSS_NAMES[hex.toUpperCase()] || '—';
 }
 
 const CSS_NAMES = {
@@ -1428,7 +1431,7 @@ function setBadge(id, pass) {
   const el = document.getElementById(id);
   el.classList.toggle('pass', pass);
   el.classList.toggle('fail', !pass);
-  el.textContent = el.textContent.replace(/ âœ“| âœ—/, '') + (pass ? ' âœ“' : ' âœ—');
+  el.textContent = el.textContent.replace(/ ✓| ✗/, '') + (pass ? ' ✓' : ' ✗');
 }
 
 function relativeLum({ r, g, b }) {
@@ -1506,9 +1509,9 @@ function copyPalette() {
   copyText(hexes.join('\n'), 'pal-msg');
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════
    TIMESTAMP TOOLS
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════ */
 
 function relativeTime(ms) {
   const diff = Date.now() - ms;
@@ -1726,7 +1729,7 @@ function runTester() {
   matches.forEach((m, i) => {
     const div = document.createElement('div');
     div.className = 'mg-entry';
-    let inner = `<div class="mg-title">Match ${i+1}${m[0].length > 0 ? ' â€” "' + escHtml(m[0]) + '"' : ' (empty)'} @ index ${m.index}</div>`;
+    let inner = `<div class="mg-title">Match ${i+1}${m[0].length > 0 ? ' — "' + escHtml(m[0]) + '"' : ' (empty)'} @ index ${m.index}</div>`;
     if (hasGroups && m.length > 1) {
       for (let g = 1; g < m.length; g++) {
         const gVal = m[g] !== undefined ? '"' + escHtml(m[g]) + '"' : '<em>undefined</em>';
@@ -1780,7 +1783,7 @@ function runReplace() {
   const cnt = matches.length;
   sumEl.innerHTML = cnt
     ? `<strong>${cnt}</strong> replacement${cnt !== 1 ? 's' : ''} made`
-    : 'No matches â€” input unchanged';
+    : 'No matches — input unchanged';
 }
 
 function copyReplaceResult() {
@@ -1789,9 +1792,9 @@ function copyReplaceResult() {
   navigator.clipboard.writeText(val).then(() => flashMsg('rp-msg', 'Copied!'));
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════
    INIT
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
 
@@ -1816,3 +1819,135 @@ document.addEventListener('DOMContentLoaded', () => {
   const diffTo = document.getElementById('diff-to');
   if (diffTo) diffTo.value = todayStr;
 });
+
+
+/* ═══════════════════════════════════════════
+   NUMBER BASE CONVERTER
+═══════════════════════════════════════════ */
+const BASE_FIELDS = { 'base-bin': 2, 'base-oct': 8, 'base-dec': 10, 'base-hex': 16 };
+
+/** Update every base field from one edited field. Empty/invalid clears the rest. */
+function baseConvertFrom(srcId) {
+  const srcBase = BASE_FIELDS[srcId];
+  const raw = document.getElementById(srcId).value.trim().replace(/[\s_]/g, '');
+  const others = Object.keys(BASE_FIELDS).filter(id => id !== srcId);
+
+  if (!raw) {
+    others.forEach(id => { document.getElementById(id).value = ''; });
+    setMsg('base-msg', '', 'ok');
+    return;
+  }
+  const neg = raw.startsWith('-');
+  const body = neg ? raw.slice(1) : raw;
+  const valid = { 2: /^[01]+$/, 8: /^[0-7]+$/, 10: /^\d+$/, 16: /^[0-9a-fA-F]+$/ }[srcBase];
+  if (!valid.test(body)) {
+    others.forEach(id => { document.getElementById(id).value = ''; });
+    setMsg('base-msg', 'Invalid digits for base ' + srcBase, 'err');
+    return;
+  }
+  let val;
+  try { val = BigInt((neg ? '-' : '') + ({ 2: '0b', 8: '0o', 10: '', 16: '0x' }[srcBase]) + body); }
+  catch (e) { setMsg('base-msg', 'Value too large', 'err'); return; }
+
+  others.forEach(id => {
+    const b = BASE_FIELDS[id];
+    const abs = val < 0n ? -val : val;
+    document.getElementById(id).value = (val < 0n ? '-' : '') + abs.toString(b).toUpperCase();
+  });
+  const bits = (val < 0n ? -val : val).toString(2).length;
+  setMsg('base-msg', 'OK · ' + bits + ' bit' + (bits === 1 ? '' : 's'), 'ok');
+}
+
+function baseClear() {
+  Object.keys(BASE_FIELDS).forEach(id => { document.getElementById(id).value = ''; });
+  setMsg('base-msg', '', 'ok');
+}
+
+/* ═══════════════════════════════════════════
+   TEXT CASE CONVERTER
+═══════════════════════════════════════════ */
+/** Split arbitrary text into words for re-casing (handles camelCase, snake, kebab). */
+function _caseWords(text) {
+  return text
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .split(/[\s_\-.]+/)
+    .filter(Boolean);
+}
+
+const CASE_FNS = {
+  lower:    t => t.toLowerCase(),
+  upper:    t => t.toUpperCase(),
+  title:    t => t.replace(/\w\S*/g, w => w[0].toUpperCase() + w.slice(1).toLowerCase()),
+  sentence: t => t.toLowerCase().replace(/(^\s*\w|[.!?]\s+\w)/g, c => c.toUpperCase()),
+  camel:    t => _caseWords(t).map((w, i) => i === 0 ? w.toLowerCase() : w[0].toUpperCase() + w.slice(1).toLowerCase()).join(''),
+  pascal:   t => _caseWords(t).map(w => w[0].toUpperCase() + w.slice(1).toLowerCase()).join(''),
+  snake:    t => _caseWords(t).map(w => w.toLowerCase()).join('_'),
+  constant: t => _caseWords(t).map(w => w.toUpperCase()).join('_'),
+  kebab:    t => _caseWords(t).map(w => w.toLowerCase()).join('-'),
+  slug:     t => _caseWords(t.normalize('NFKD').replace(/[\u0300-\u036f]/g, ''))
+                   .join('-').toLowerCase().replace(/[^a-z0-9-]/g, ''),
+  invert:   t => [...t].map(c => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join(''),
+};
+
+function applyCase(kind) {
+  const inEl = document.getElementById('case-input');
+  const text = inEl.value;
+  if (!text.trim()) { setMsg('case-msg', 'Enter some text first', 'err'); return; }
+  const fn = CASE_FNS[kind];
+  if (!fn) return;
+  document.getElementById('case-output').value = fn(text);
+  setMsg('case-msg', kind + ' case applied', 'ok');
+}
+
+/* ═══════════════════════════════════════════
+   CSS MINIFIER
+═══════════════════════════════════════════ */
+/** Minify CSS while preserving string literals and important comments. */
+function cssMinify() {
+  const src = document.getElementById('cssmin-input').value;
+  if (!src.trim()) { setMsg('cssmin-msg', 'Paste some CSS first', 'err'); return; }
+  try {
+    // Protect quoted strings and url() so we never touch their contents
+    const store = [];
+    let out = src.replace(/(["'])(?:\\.|(?!\1)[^\\\n])*\1/g, m => {
+      store.push(m); return '\u0000' + (store.length - 1) + '\u0000';
+    });
+    out = out
+      .replace(/\/\*(?!!)[\s\S]*?\*\//g, '')     // drop comments except /*! ... */
+      .replace(/\s+/g, ' ')                          // collapse whitespace
+      .replace(/\s*([{}:;,>~+])\s*/g, '$1')         // trim around punctuation
+      .replace(/;}/g, '}')                            // drop last semicolon in a block
+      .replace(/(^|[{;])\s*/g, '$1')
+      .replace(/\s*!important/g, '!important')
+      .replace(/:\s*0(px|em|rem|%|pt|vh|vw)\b/g, ':0')  // 0px -> 0
+      .replace(/(\W)0\.(\d)/g, '$1.$2')             // 0.5 -> .5
+      .trim();
+    out = out.replace(/\u0000(\d+)\u0000/g, (_, i) => store[+i]);
+
+    document.getElementById('cssmin-output').value = out;
+    const before = src.length, after = out.length;
+    const pct = before ? Math.max(0, ((1 - after / before) * 100)).toFixed(1) : '0';
+    setMsg('cssmin-msg', before + ' → ' + after + ' bytes (−' + pct + '%)', 'ok');
+  } catch (err) {
+    setMsg('cssmin-msg', 'Error: ' + err.message, 'err');
+  }
+}
+
+/** Expand minified CSS back into a readable, indented form. */
+function cssBeautify() {
+  const src = document.getElementById('cssmin-input').value;
+  if (!src.trim()) { setMsg('cssmin-msg', 'Paste some CSS first', 'err'); return; }
+  const compact = src.replace(/\s+/g, ' ').replace(/\s*([{}:;,])\s*/g, '$1').trim();
+  let depth = 0, out = '';
+  for (let i = 0; i < compact.length; i++) {
+    const ch = compact[i];
+    if (ch === '{') { depth++; out += ' {\n' + '  '.repeat(depth); }
+    else if (ch === '}') { depth = Math.max(0, depth - 1); out = out.replace(/\s+$/, '') + '\n' + '  '.repeat(depth) + '}\n' + '  '.repeat(depth); }
+    else if (ch === ';') { out += ';\n' + '  '.repeat(depth); }
+    else if (ch === ',' && depth === 0) { out += ',\n'; }
+    else if (ch === ':' && depth > 0) { out += ': '; }
+    else out += ch;
+  }
+  document.getElementById('cssmin-output').value = out.replace(/\n\s*\n/g, '\n').trim();
+  setMsg('cssmin-msg', 'Beautified', 'ok');
+}

@@ -5,23 +5,23 @@
 ═══════════════════════════════════════════ */
 'use strict';
 
-const CACHE = 'peppy-v7';
+const CACHE = 'peppy-v8';
 
 /* ── CDN dependencies (jsDelivr) ── */
 const CDN_DEPS = [
   /* marked v9 — Markdown parser */
-  'https://cdn.jsdelivr.net/npm/marked@9/marked.min.js',
+  'https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js',
   /* KaTeX v0.16 — LaTeX math rendering */
-  'https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.css',
-  'https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.js',
+  'https://cdn.jsdelivr.net/npm/katex@0.16.47/dist/katex.min.css',
+  'https://cdn.jsdelivr.net/npm/katex@0.16.47/dist/katex.min.js',
   /* qrcodejs — QR code generation */
   'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js',
   /* JsBarcode v3 — Barcode generation */
-  'https://cdn.jsdelivr.net/npm/jsbarcode@3/dist/JsBarcode.all.min.js',
+  'https://cdn.jsdelivr.net/npm/jsbarcode@3.12.3/dist/JsBarcode.all.min.js',
   /* js-yaml v4 — YAML parsing */
-  'https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js',
-  /* pdf-lib v1.17.1 — PDF creation & modification */
-  'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js',
+  'https://cdn.jsdelivr.net/npm/js-yaml@4.3.2/dist/js-yaml.min.js',
+  /* @cantoo/pdf-lib v2.6.2 — PDF creation, modification & AES-256 encryption */
+  'https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.6.2/dist/pdf-lib.min.js',
   /* PDF.js v3.11.174 — PDF rendering */
   'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js',
   'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js',
